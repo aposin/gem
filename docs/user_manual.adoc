@@ -1,0 +1,155 @@
+= User Manual
+:toc:
+:sectnums:
+:imagesdir: images/user_manual/
+
+GEM (Git Environment Manager) is a git branch manager that:
+
+* Defines environments based on one or several shared repositories for protected branches,
+  using worktrees to minimize number of clones.
+* Enforces a feature-branch workflow to work with different providers of issues,
+  including branch creation, and local/remote handling.
+* Is extensible by plug-ins.
+
+== Concepts
+
+* `Environment`: an environment in GEM is a set of git repositories with associated branches, where the sources represent a common development environment.
+* `Project`: a project is a container for environments with something in common. For example, a project could be an application where different branches (environments) are under maintenance, or a pluggable application where each environment contains different set of plug-ins under development.
+* `Feature Branch`: in GEM, a feature-branch is common between different repositories within the same environment. This is a key feature to identify work that is related accross multiple repositories.
+* `Actions`: GEM contains a set of buttons called within this document "actions", which could be performed by environment or repository. Default GEM actions are always present in GEM, but custom actions can be added by the GEM plug-in framework (e.g., GitHub integration).
+
+== Usage
+
+GEM have the following sections:
+
+. `Menu`: general application options and/or operations. 
+. `Environment Setup` tab: setup the environment, which is represented as a set of repository definitions that will be checkout as worktrees. Usage of worktrees support environments which share a base repository.
+. Environment Actions (buttons always visible on the bottom): actions to perform commands at the environment level, as opening the worktree location or the IDE with the defined projects.
+. `Feature Branches` tab: setup the feature-branches (for different providers of issues, containing also helper actions for different kind of commands (e.g., git push or GitHub PullRequest). In addition, under the repository table (see bellow), this section contains Feature-Branches specific actions.
+. Repository table and actions: the table on both tabs (`Environment Setup` and `Feature Branches`) containing information of managed repositories and current status, in addition to actions to be performed in a per-repository basis.
+
+// TODO: add numbers to the sections
+image::usage.jpg[]
+
+=== Menu
+
+* `File`:
+  - `Refresh Session`: re-load the configuration and repository information.
+  - `Open App Folder` (advanced): opens the application directory where the configuration, logs or preferences could be found.
+  - `Quit`: exits the application.
+* `Theme`: choose the theme for the application. Note: in the future this menu will be removed in favor of more general user-preferences.
+* `Help`
+
+=== Environment Setup
+
+On the `Environment Setup` tab, the buttons to help starting a worktree from scratch are available. This actions are performed by environment independently of the number of repositories.
+
+image::environment_setup.jpg[]
+
+* `Project` (dropdown): selects the project where you want the environment.
+* `Environment` (dropdown): selects the environment within the project.
+* `Clone`: clone the repository. Only required once per repository (if repositories are added to an environment, it might be required again)
+* `Create worktree`: cretaes the worktrees for each repo on the GEM worktree location. Normally only needed once, worktrees should be rarely deleted.
+* `Pull/Fetch (Env Branches)`: pull in the repository the default branch (required sometimes for the health of GEM) and fetch all branches related with the environment. This action is useful to get remote branches populated into GEM without refreshing the whole session or updating the branch (better efficiency).
+* `Remove worktree`: removes all related worktrees for the environment (not the clone).
+
+=== Environment actions
+
+Environment actions are available in both `Environment Setup` and `Feature Branches` tabs. This actions are performed by environment independently of the number of repositories, and aren't attached to the feature branch where the worktree(s) are in.
+
+image:environment_actions.jpg[]
+
+* `Open / Worktree(s)`: Opens the folder where the worktrees are.
+
+=== Feature Branches
+
+On the `Feature Branches` tab, the buttons to handle feature branches (create/update/remove) on the setup worktree are available. This actions are performed by environment independently of the number of repositories.
+
+image::feature_branches.jpg[]
+
+* `Project` (dropdown): same as in Environment Setup tab.
+* `Environment` (dropdown): same as in Environment Setup tab.
+* `Pull/Fetch (Env Branches)`: same as in Environment Setup tab.
+* `Fetch & Merge (Base)`: fetch the environment branch (e.g., master) and merges it in the current feature branch.
+* `Feature Branch Provider`: service provider for the feature branches. This allows to select from where you want to get the feature branches, which are plug-in dependent. By default [... TODO]. It does help organizing where you are working on and searching for the correct branch for it.
+* `Feature Branch`: the actual feature branch (FB) that you want to handle. All the following buttons are actions on this concrete feature branch (if they are disabled, it means that the action cannot be perform due to the status where the branch is in: checkout or not, existing or not, etc.).
+* `Fetch & Checkout`: fetches the latest changes for the base branch and checkouts the FB. The fetch is useful when the branch doesn't exists yet, as it ensures that the newly created branch is up-to-date with the latest changes. Checkout creates a new branch if not existing or change the local filesystem representation to the branch latest state committed locally.
+* `Pull`: Pulls (fetch+merge from remote branch) the latest changes from the FB itself. Used to update the branch with remote changes, but for itself.
+* `Clean/Restore Worktree`: gets rid of changes that makes the worktree "dirty". WARNING: this action removes local changes without any backup and should be used with caution.
+* `Remove Branch`: removes the branch currently selected. Note that the button is disabled unless other branch is checkout, as a branch cannot be deleted if it is locally used.
+
+=== Feature Branches actions
+
+TODO: write and image
+
+=== Repository table and actions
+
+Repository table and actions is shown in both the `Environment Setup` and `Feature Branches` tabs, with the only difference that actions that are related witht the currently selected feature-branch are not shown in the first tab. Common actions in both tabs do exactly the same. All the actions are related with the selected repository on the table and might change on the table selection. You can check the header of the actions to know in which repository they will have an effect.
+
+image::repository_table_and_actions.jpg[]
+
+Table columns are different depending on the tab that you are in.
+
+.Environment Setup tab
+* **Name**: name of the repository.
+* **Base branch**: branch in which the environment is based on (branch name used for git).
+* **Status**: shows the status of the repository/worktree. It should be the first place to look at before doing an action to be sure if something is required before an action (e.g., almost all buttons disabled).
+* **Worktree location**: location on the filesystem of the worktree.
+
+.Feature Branches tab
+* **Worktree definition**: combination of repository name (e.g., opin/abs) follow by the \@ symbol and the currently checkout branch name.
+* **Status**: same as in the `Environment Setup` tab.
+* **Base branch**: same as in the `Environment Setup` tab.
+* **Target branch**: full branch name of the selected feature-branch (branch name used for git). The special string including "(internal)" is representing a branch only used by GEM (and which should never be used by the user).
+
+Buttons used for the selected repository, which can also be accessed by right-click on the table (contextmenu).
+
+* **Open / Server**: open the git server url on the default browser.
+* **Copy to Clipboard / {{field}}**: copies to the clipboard any `{{field}}` from the table (e,.g., base-branch, target-branch). Useful to use those fields on the command line.
+* **Git / Push**: push the local changes into the selected FB to the remote (see section Push to remote).
+
+== Extensions
+
+Several plug-ins are bundled in the default distribution of GEM. Those plug-ins include contributions to the default actions defined above, but might require configuration before being functional.
+
+This extensions are included in the `GEM Extras Feature`.
+
+=== Eclipse OOMPH
+
+This extension provides the `Eclipse` button under <<_environment_actions>>.
+It allows to open Eclipse for the project with the help of Eclipse Oomph and an already installed Eclipse.
+
+Future plans for this extension includes the instalation of Eclipse in an environment-specific manner.
+
+=== GitHub
+
+This extension provides integration with GitHub repositories:
+
+* `PullRequest` button under <<_repository_table_and_actions>>. This button provides an easy way to open a Pull Request with extra information for the feature branch and repository if it is a GitHub repository.
+* `${repository}@${branch}` button under <<_feature_branches_actions>> to open GitHub at the base branch for the repository.
+
+=== TortoiseGit (Windows-only)
+
+This extension provides integration with TortoiseGit to perform different actions under <<_repository_table_and_actions>>, such log, status and commit.
+
+=== Configuration
+
+The product delivered on this repository contains:
+
+* All the extensions described in this document.
+* Configuration based on the link:https://github.com/aposin/gem-config[gem-config example repository].
+
+To configure your own product, there are different options:
+
+* Modify the GEM.ini file to point to your own configuration files (see the link:https://github.com/aposin/gem-config[gem-config example repository] as a starting point).
+  This will include the basic GEM plus the extras provided in this repository.
+* Create your own product with the desired plug-ins/features.
+  This will allow to use extensions that are not included in the default product (e.g., customized plug-ins) and have a different hardcoded configuration on the ini file.
+
+=== Basic configuration
+
+TODO
+
+=== Extensions configuration
+
+TODO

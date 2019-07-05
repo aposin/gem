@@ -1,0 +1,21 @@
+Button, Group, Composite, Label, Combo, Shell {
+	background-color: rgb(44, 49, 53);
+	color: rgb(235, 237, 239);
+}
+
+Table {
+	background-color: rgb(50, 57, 62);
+	color: rgb(216, 220, 223);
+	swt-header-background-color: rgb(50, 57, 62);
+	swt-header-color: rgb(216, 220, 223);
+}
+
+CTabFolder {
+	 background-color: rgb(44, 49, 53);
+	 color: rgb(151,153,155);
+}
+
+CTabItem:selected {
+	 background-color: rgb(28,31,34);
+	 color: rgb(244,245,246);
+}

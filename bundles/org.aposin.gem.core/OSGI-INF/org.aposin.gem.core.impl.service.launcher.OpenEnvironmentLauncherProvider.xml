@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.aposin.gem.core.impl.service.launcher.OpenEnvironmentLauncherProvider">
+   <service>
+      <provide interface="org.aposin.gem.core.api.service.launcher.IEnvironmentLauncherProvider"/>
+   </service>
+   <implementation class="org.aposin.gem.core.impl.service.launcher.OpenEnvironmentLauncherProvider"/>
+</scr:component>

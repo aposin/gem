@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GEM Logging
+Bundle-SymbolicName: org.aposin.gem.logging
+Bundle-Version: 0.3.0.qualifier
+Bundle-Activator: org.aposin.gem.logging.Activator
+Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Förderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)
+Require-Bundle: org.slf4j.api,
+ ch.qos.logback.core,
+ ch.qos.logback.classic
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: org.aposin.gem.logging
+Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.e4.core.services.log,
+ org.osgi.framework
+Export-Package: org.aposin.gem.logging,
+ org.aposin.gem.logging.e4,
+ org.aposin.gem.logging.utils

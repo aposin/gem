@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%level] %date %message - [%thread] %logger%n%exception</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="THIRDPARTY_FILE" class="ch.qos.logback.core.FileAppender">
+		<file>${user.home}/GEM/logs/thirdparty.log</file>
+		<encoder>
+			<outputPatternAsHeader>true</outputPatternAsHeader>
+			<pattern>[%level - %date] %message  [%thread] %logger%n%exception</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="GEM_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${user.home}/GEM/logs/gem.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${user.home}/GEM/logs/gem.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 30 days' worth of history capped at 3GB total size -->
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>3GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<outputPatternAsHeader>true</outputPatternAsHeader>
+			<pattern>[%level - %date] %message  [%thread] %logger%n%exception</pattern>
+		</encoder>
+	</appender>
+
+	<!-- logger for org.aposin.gem  -->
+	<logger name="org.aposin.gem" level="INFO" additivity="false">
+		<appender-ref ref="GEM_FILE" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<!-- TODO: change root logger to WARNING -->
+	<root level="WARN">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="THIRDPARTY_FILE" />
+	</root>
+
+</configuration>

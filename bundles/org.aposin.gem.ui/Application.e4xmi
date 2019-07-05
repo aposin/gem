@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_c3AF0MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.application" bindingContexts="_c3AF2cjYEeSyMNYR5xypkQ">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_c3AF0cjYEeSyMNYR5xypkQ" elementId="org.aposin.gem.ui.window.main" label="%application_name" iconURI="" tooltip="%application_name_short">
+    <children xsi:type="basic:PartSashContainer" xmi:id="_JmPwUK4ZEemLQudKrjEUbA" elementId="org.aposin.gem.ui.partsashcontainer.main">
+      <children xsi:type="basic:PartStack" xmi:id="_KOI2wK4ZEemLQudKrjEUbA" elementId="org.aposin.gem.ui.partstack.environment_setup" containerData="2000" selectedElement="_KwO3MK4ZEemLQudKrjEUbA">
+        <children xsi:type="basic:Part" xmi:id="_KwO3MK4ZEemLQudKrjEUbA" elementId="org.aposin.gem.ui.part.environment_setup" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.part.EnvironmentSetupPart" label="Environment Setup"/>
+        <children xsi:type="basic:Part" xmi:id="_L5eXMK4ZEemLQudKrjEUbA" elementId="org.aposin.gem.ui.part.feature_branches" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.part.FeatureBranchesPart" label="Feature Branches"/>
+      </children>
+      <children xsi:type="basic:Part" xmi:id="_D96d4AIjEeqlf5L9KJu-JQ" elementId="org.aposin.gem.ui.part.environmentlauncher" containerData="200" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.part.EnvironmentLauncherPart" label="Environment Launcher"/>
+    </children>
+    <mainMenu xmi:id="_cIVYsKMnEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.menu.main">
+      <children xsi:type="menu:Menu" xmi:id="_r0vlwKOsEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.menu.file" label="%menu.file.label">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_4v3WcP_EEemqj5Pw1D22oA" elementId="org.aposin.gem.ui.menu.file.refreshsession" label="%menu.file.refreshsession.label" command="_kThtwP_HEemqj5Pw1D22oA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_DUWxQP-3Eemqj5Pw1D22oA" elementId="org.aposin.gem.ui.menu.file.openappfolder" label="%menu.file.openappfolder.label" command="_cmPWIP_AEemqj5Pw1D22oA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_BDGPgKPREemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.menu.file.quit" label="%menu.file.quit.label" iconURI="" mnemonics="" command="_iyBwoKPDEemd7Jqw5_7M9Q"/>
+      </children>
+      <children xsi:type="menu:Menu" xmi:id="_JeRPEE2FEeqZq6PSrBq7tA" elementId="org.aposin.gem.ui.menu.theme" label="%menu.theme.label">
+        <children xsi:type="menu:DynamicMenuContribution" xmi:id="_NFm3QE2HEeqZq6PSrBq7tA" elementId="org.aposin.gem.ui.dynamicmenucontribution.theme" label="" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.handler.ThemeMenuContribution"/>
+      </children>
+      <children xsi:type="menu:Menu" xmi:id="_wH0NkKPlEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.menu.help" label="%menu.help.label">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_0CFqwKPlEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.menu.help.about" label="%menu.help.about.label" command="_uRbMUKPoEemd7Jqw5_7M9Q"/>
+      </children>
+    </mainMenu>
+  </children>
+  <handlers xmi:id="_9jFFYKPQEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.handler.quit" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.handler.QuitHandler" command="_iyBwoKPDEemd7Jqw5_7M9Q"/>
+  <handlers xmi:id="_szlVUKPoEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.handler.about" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.handler.AboutHandler" command="_uRbMUKPoEemd7Jqw5_7M9Q"/>
+  <handlers xmi:id="_iy33gP_AEemqj5Pw1D22oA" elementId="org.aposin.gem.ui.handler.open_app_folder" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.handler.OpenAppFolderHandler" command="_cmPWIP_AEemqj5Pw1D22oA"/>
+  <handlers xmi:id="_uCAlQP_HEemqj5Pw1D22oA" elementId="org.aposin.gem.ui.handler.refresh_session" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.handler.RefreshSessionHandler" command="_kThtwP_HEemqj5Pw1D22oA"/>
+  <bindingTables xmi:id="_8bbgQK0lEem4JM6QkCZ5OA" elementId="org.aposin.gem.ui.bindingtable" bindingContext="_c3AF2cjYEeSyMNYR5xypkQ">
+    <bindings xmi:id="_IyEFwK0mEem4JM6QkCZ5OA" elementId="org.aposin.gem.ui.keybinding.m1q" keySequence="M1+Q" command="_iyBwoKPDEemd7Jqw5_7M9Q"/>
+    <bindings xmi:id="_S7JOkK0mEem4JM6QkCZ5OA" elementId="org.aposin.gem.ui.keybinding.m1a" keySequence="M1+A" command="_uRbMUKPoEemd7Jqw5_7M9Q"/>
+  </bindingTables>
+  <rootContext xmi:id="_c3AF2cjYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
+    <children xmi:id="_c3AF2sjYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
+    <children xmi:id="_c3AF28jYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
+  </rootContext>
+  <commands xmi:id="_iyBwoKPDEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.command.quit" commandName="commandQuit"/>
+  <commands xmi:id="_uRbMUKPoEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.command.about" commandName="commandAbout"/>
+  <commands xmi:id="_cmPWIP_AEemqj5Pw1D22oA" elementId="org.aposin.gem.ui.command.open_app_folder" commandName="commandOpenAppFolder"/>
+  <commands xmi:id="_kThtwP_HEemqj5Pw1D22oA" elementId="org.aposin.gem.ui.command.refresh_session" commandName="commandRefreshSession"/>
+  <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
+  <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
+  <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
+  <addons xmi:id="_c3AF1cjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.commands.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.CommandProcessingAddon"/>
+  <addons xmi:id="_c3AF1sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.handler.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
+  <addons xmi:id="_c3AF18jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.contexts.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.ContextProcessingAddon"/>
+  <addons xmi:id="_c3AF2MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.bindings.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.swt/org.eclipse.e4.ui.workbench.swt.util.BindingProcessingAddon"/>
+</application:Application>

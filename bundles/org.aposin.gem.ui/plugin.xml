@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.e4.ui.workbench.swt.E4Application"
+            name="org.aposin.gem.ui">
+         <property
+               name="lifeCycleURI"
+               value="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.lifecycle.E4LifeCycle">
+         </property>
+         <property
+               name="appName"
+               value="org.aposin.gem.ui">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.e4.ui.css.swt.theme">
+      <theme
+            basestylesheeturi="css/default.css"
+            id="org.aposin.gem.ui.css.theme.default"
+            label="Default Theme">
+      </theme>
+      <theme
+            basestylesheeturi="css/dark.css"
+            id="org.aposin.gem.ui.css.theme.dark"
+            label="Dark Theme">
+      </theme>
+   </extension>
+
+</plugin>

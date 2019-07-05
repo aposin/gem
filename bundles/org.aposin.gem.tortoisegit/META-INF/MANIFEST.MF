@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GEM Integration for TortoiseGit
+Bundle-SymbolicName: org.aposin.gem.tortoisegit;singleton:=true
+Bundle-Version: 0.3.0.qualifier
+Bundle-Activator: org.aposin.gem.tortoisegit.Activator
+Require-Bundle: org.aposin.gem.core,
+ org.aposin.gem.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Förderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)
+Automatic-Module-Name: org.aposin.gem.tortoisegit
+Bundle-ActivationPolicy: lazy
+Import-Package: org.osgi.framework,
+ org.osgi.service.component.annotations,
+ org.slf4j
+Service-Component: OSGI-INF/org.aposin.gem.tortoisegit.TortoiseLauncherProvider.xml
+Export-Package: org.aposin.gem.tortoisegit,
+ org.aposin.gem.tortoisegit.launcher

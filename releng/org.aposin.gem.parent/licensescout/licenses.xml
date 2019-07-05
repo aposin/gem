@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<licenses>
+	<!-- NOTE: to maintain overview, licenses should be ordered by their id. -->
+
+	<license id='Apache-1.0'>
+		<spdxIdentifier>Apache-1.0</spdxIdentifier>
+		<name>Apache License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Apache Software Foundation</author>
+		<version>1.0</version>
+		<publicUrl>http://www.apache.org/licenses/LICENSE-1.0</publicUrl>
+		<licenseText>See http://www.apache.org/licenses/LICENSE-1.0
+		</licenseText>
+	</license>
+	<license id='Apache-1.1'>
+		<spdxIdentifier>Apache-1.1</spdxIdentifier>
+		<name>Apache License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Apache Software Foundation</author>
+		<version>1.1</version>
+		<publicUrl>http://www.apache.org/licenses/LICENSE-1.1</publicUrl>
+		<licenseText>See http://www.apache.org/licenses/LICENSE-1.1
+		</licenseText>
+	</license>
+	<license id='Apache-2.0'>
+		<spdxIdentifier>Apache-2.0</spdxIdentifier>
+		<name>Apache License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Apache Software Foundation</author>
+		<version>2.0</version>
+		<publicUrl>http://www.apache.org/licenses/LICENSE-2.0</publicUrl>
+		<secondaryUrl>http://www.apache.org/licenses/LICENSE-2.0.txt
+		</secondaryUrl>
+		<secondaryUrl>http://www.apache.org/licenses/LICENSE-2.0.html
+		</secondaryUrl>
+		<secondaryUrl>https://www.apache.org/licenses/LICENSE-2.0.txt
+		</secondaryUrl>
+		<secondaryUrl>https://www.apache.org/licenses/LICENSE-2.0.html
+		</secondaryUrl>
+		<licenseText>See http://www.apache.org/licenses/LICENSE-2.0
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='Apache-1.0' />
+		<license idref='Apache-1.1' />
+		<license idref='Apache-2.0' />
+		<detectionString>APACHE SOFTWARE LICENSE</detectionString>
+		<detectionString>APACHE LICENSE</detectionString>
+	</licenseSet>
+
+	<license id='BSD'>
+		<spdxIdentifier>BSD</spdxIdentifier>
+		<name>BSD license</name>
+		<legalStatus>UNKNOWN</legalStatus>
+		<author>Regents of the University of California</author>
+		<version></version>
+		<publicUrl>http://www.opensource.org/licenses/bsd-license.php
+		</publicUrl>
+		<licenseText>See http://www.opensource.org/licenses/bsd-license.php
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='BSD' />
+		<detectionString>BSD LICENSE</detectionString>
+	</licenseSet>
+
+	<license id='BSD-like'>
+		<spdxIdentifier>BSD-like</spdxIdentifier>
+		<name>BSD-like license</name>
+		<legalStatus>UNKNOWN</legalStatus>
+		<author></author>
+		<version></version>
+		<publicUrl></publicUrl>
+		<licenseText>(no text)</licenseText>
+	</license>
+
+	<license id='BSD-1-Clause'>
+		<spdxIdentifier>BSD-1-Clause</spdxIdentifier>
+		<name>BSD 1-Clause License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Regents of the University of California</author>
+		<version></version>
+		<publicUrl>https://spdx.org/licenses/BSD-1-Clause.html</publicUrl>
+		<licenseText>See https://spdx.org/licenses/BSD-1-Clause.html
+		</licenseText>
+	</license>
+
+	<license id='BSD-2-Clause'>
+		<spdxIdentifier>BSD-2-Clause</spdxIdentifier>
+		<name>BSD 2-clause "Simplified" License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Regents of the University of California</author>
+		<version></version>
+		<publicUrl>https://spdx.org/licenses/BSD-2-Clause.html</publicUrl>
+		<licenseText>See https://spdx.org/licenses/BSD-2-Clause.html
+		</licenseText>
+	</license>
+
+	<license id='BSD-3-Clause'>
+		<spdxIdentifier>BSD-3-Clause</spdxIdentifier>
+		<name>BSD 3-clause "New" or "Revised" License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Regents of the University of California</author>
+		<version></version>
+		<publicUrl>https://opensource.org/licenses/BSD-3-Clause</publicUrl>
+		<licenseText>See https://opensource.org/licenses/BSD-3-Clause
+		</licenseText>
+	</license>
+
+	<license id='BSD-4-Clause'>
+		<spdxIdentifier>BSD-4-Clause</spdxIdentifier>
+		<name>BSD 4-clause "Original" or "Old" License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Regents of the University of California</author>
+		<version></version>
+		<publicUrl>https://spdx.org/licenses/BSD-4-Clause.html</publicUrl>
+		<licenseText>See https://spdx.org/licenses/BSD-4-Clause.html
+		</licenseText>
+	</license>
+
+	<license id='CC-BY-2.5'>
+		<spdxIdentifier>CC-BY-2.5</spdxIdentifier>
+		<name>Creative Commons Attribution</name>
+		<legalStatus>NOT_ACCEPTED</legalStatus>
+		<author></author>
+		<version>2.5</version>
+		<publicUrl>https://spdx.org/licenses/CC-BY-2.5.html</publicUrl>
+		<licenseText>See https://spdx.org/licenses/CC-BY-2.5.html
+		</licenseText>
+	</license>
+
+	<license id='CC0-1.0'>
+		<spdxIdentifier>CC0-1.0</spdxIdentifier>
+		<name>CC0</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author></author>
+		<version>1.0</version>
+		<publicUrl>https://creativecommons.org/publicdomain/zero/1.0/
+		</publicUrl>
+		<secondaryUrl>http://creativecommons.org/publicdomain/zero/1.0/
+		</secondaryUrl>
+		<licenseText>See https://creativecommons.org/publicdomain/zero/1.0/
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='CC0-1.0' />
+		<detectionString>CREATIVE COMMONS ZERO</detectionString>
+	</licenseSet>
+
+	<license id='CDDL-1.0'>
+		<spdxIdentifier>CDDL-1.0</spdxIdentifier>
+		<name>Common Development and Distribution License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Sun Microsystems</author>
+		<version>1.0</version>
+		<publicUrl>https://opensource.org/licenses/CDDL-1.0</publicUrl>
+		<secondaryUrl>http://www.opensource.org/licenses/cddl1.php
+		</secondaryUrl>
+		<secondaryUrl>http://opensource.org/licenses/cddl1.php
+		</secondaryUrl>
+		<secondaryUrl>https://opensource.org/licenses/cddl1.php
+		</secondaryUrl>
+		<licenseText>See https://opensource.org/licenses/cddl1.php
+		</licenseText>
+	</license>
+
+	<license id='CDDL-1.1'>
+		<spdxIdentifier>CDDL-1.1</spdxIdentifier>
+		<name>Common Development and Distribution License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Sun Microsystems</author>
+		<version>1.1</version>
+		<publicUrl>https://spdx.org/licenses/CDDL-1.1.html</publicUrl>
+		<secondaryUrl>https://opensource.org/licenses/CDDL-1.1
+		</secondaryUrl>
+		<licenseText>See https://opensource.org/licenses/CDDL-1.1
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='CDDL-1.0' />
+		<license idref='CDDL-1.1' />
+		<detectionString>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE
+		</detectionString>
+	</licenseSet>
+
+	<license id='DOM4J'>
+		<spdxIdentifier>DOM4J</spdxIdentifier>
+		<name>DOM4J License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author></author>
+		<version></version>
+		<publicUrl>https://github.com/dom4j/dom4j/blob/master/LICENSE
+		</publicUrl>
+		<licenseText>See https://github.com/dom4j/dom4j/blob/master/LICENSE
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='DOM4J' />
+		<detectionString>DOM4J License</detectionString>
+	</licenseSet>
+
+	<license id='EDL-1.0'>
+		<spdxIdentifier>EDL-1.0</spdxIdentifier>
+		<name>Eclipse Distribution License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Eclipse Foundation</author>
+		<version>1.0</version>
+		<publicUrl>https://www.eclipse.org/org/documents/edl-v10.php
+		</publicUrl>
+		<secondaryUrl>http://www.eclipse.org/org/documents/edl-v10.php
+		</secondaryUrl>
+		<licenseText>See https://www.eclipse.org/org/documents/edl-v10.php
+		</licenseText>
+	</license>
+
+	<license id='EPL-1.0'>
+		<spdxIdentifier>EPL-1.0</spdxIdentifier>
+		<name>Eclipse Public License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Eclipse Foundation</author>
+		<version>1.0</version>
+		<publicUrl>http://www.eclipse.org/legal/epl-v10.html</publicUrl>
+		<secondaryUrl>http://www.eclipse.org/org/documents/epl-v10.php
+		</secondaryUrl>
+		<secondaryUrl>www.eclipse.org/legal/epl-v10.html
+		</secondaryUrl>
+		<licenseText>See http://www.eclipse.org/org/documents/epl-v10.php
+		</licenseText>
+	</license>
+	<license id='EPL-2.0'>
+		<spdxIdentifier>EPL-2.0</spdxIdentifier>
+		<name>Eclipse Public License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Eclipse Foundation</author>
+		<version>2.0</version>
+		<publicUrl>http://www.eclipse.org/legal/epl-2.0</publicUrl>
+		<secondaryUrl>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt
+		</secondaryUrl>
+		<licenseText>See https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='EPL-1.0' />
+		<license idref='EPL-2.0' />
+		<detectionString>ECLIPSE PUBLIC LICENSE</detectionString>
+		<detectionString>Public License Version 2.0 (&amp;quot;EPL&amp;quot;)
+		</detectionString>
+	</licenseSet>
+
+	<license id='ExtremeLab-1.1.1'>
+		<spdxIdentifier>ExtremeLab-1.1.1</spdxIdentifier>
+		<name>Indiana University Extreme! Lab Software License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Extreme! Lab, Indiana University</author>
+		<version>1.1.1</version>
+		<publicUrl>https://docs.oracle.com/cd/E90714_01/E64079/html/vmlic-license-indiana.html
+		</publicUrl>
+		<secondaryUrl>http://www.extreme.indiana.edu/viewcvs/~checkout~/XPP3/java/LICENSE.txt
+		</secondaryUrl>
+		<licenseText>See http://www.extreme.indiana.edu/viewcvs/~checkout~/XPP3/java/LICENSE.txt
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='ExtremeLab-1.1.1' />
+		<detectionString>Indiana University Extreme! Lab Software License
+		</detectionString>
+	</licenseSet>
+
+	<license id='GPL-1.0'>
+		<spdxIdentifier>GPL-1.0</spdxIdentifier>
+		<name>GNU General Public License</name>
+		<legalStatus>NOT_ACCEPTED</legalStatus>
+		<author>Free Software Foundation</author>
+		<version>1.0</version>
+		<publicUrl>http://www.gnu.org/licenses/gpl-1.0.html</publicUrl>
+		<licenseText>See http://www.gnu.org/licenses/gpl-1.0.html
+		</licenseText>
+	</license>
+	<license id='GPL-2.0'>
+		<spdxIdentifier>GPL-2.0</spdxIdentifier>
+		<name>GNU General Public License</name>
+		<legalStatus>NOT_ACCEPTED</legalStatus>
+		<author>Free Software Foundation</author>
+		<version>2.0</version>
+		<alternativeVersion>2</alternativeVersion>
+		<publicUrl>http://www.gnu.org/licenses/gpl-2.0.html</publicUrl>
+		<licenseText>See http://www.gnu.org/licenses/gpl-2.0.html
+		</licenseText>
+	</license>
+	<license id='GPL-3.0'>
+		<spdxIdentifier>GPL-3.0</spdxIdentifier>
+		<name>GNU General Public License</name>
+		<legalStatus>NOT_ACCEPTED</legalStatus>
+		<author>Free Software Foundation</author>
+		<version>3.0</version>
+		<publicUrl>http://www.gnu.org/licenses/gpl-3.0.html</publicUrl>
+		<licenseText>See http://www.gnu.org/licenses/gpl-3.0.html
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='GPL-1.0' />
+		<license idref='GPL-2.0' />
+		<license idref='GPL-3.0' />
+		<detectionString>GNU GENERAL PUBLIC LICENSE</detectionString>
+	</licenseSet>
+
+	<license id='JSON'>
+		<spdxIdentifier>JSON</spdxIdentifier>
+		<name>The JSON License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>unknown</author>
+		<version></version>
+		<publicUrl>http://json.org/license.html</publicUrl>
+		<licenseText>See http://json.org/license.html</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='JSON' />
+		<detectionString>JSON LICENSE</detectionString>
+	</licenseSet>
+
+	<license id='LGPL-2.0'>
+		<spdxIdentifier>LGPL-2.0</spdxIdentifier>
+		<name>Gnu Library General Public License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Free Software Foundation</author>
+		<version>2.0</version>
+		<publicUrl>http://www.gnu.org/licenses/old-licenses/lgpl-2.0.txt
+		</publicUrl>
+		<secondaryUrl>http://www.gnu.org/licenses/lgpl-2.0.html</secondaryUrl>
+		<secondaryUrl>https://www.gnu.org/licenses/lgpl-2.0.html
+		</secondaryUrl>
+		<licenseText>See https://www.gnu.org/licenses/lgpl-2.0.html
+		</licenseText>
+	</license>
+	<license id='LGPL-2.1'>
+		<spdxIdentifier>LGPL-2.1</spdxIdentifier>
+		<name>GNU Lesser General Public License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Free Software Foundation</author>
+		<version>2.1</version>
+		<publicUrl>http://www.gnu.org/licenses/lgpl-2.1.html</publicUrl>
+		<licenseText>See http://www.gnu.org/licenses/lgpl-2.1.html
+		</licenseText>
+	</license>
+	<license id='LGPL-3.0'>
+		<spdxIdentifier>LGPL-3.0</spdxIdentifier>
+		<name>GNU Lesser General Public License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author>Free Software Foundation</author>
+		<version>3.0</version>
+		<publicUrl>http://www.gnu.org/licenses/lgpl-3.0.txt</publicUrl>
+		<secondaryUrl>http://www.gnu.org/licenses/lgpl-3.0.html</secondaryUrl>
+		<secondaryUrl>https://www.gnu.org/licenses/lgpl-3.0.html
+		</secondaryUrl>
+		<licenseText>See https://www.gnu.org/licenses/lgpl-3.0.html
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='LGPL-2.0' />
+		<license idref='LGPL-2.1' />
+		<license idref='LGPL-3.0' />
+		<detectionString>GNU LIBRARY GENERAL PUBLIC LICENSE</detectionString>
+		<detectionString>GNU LESSER GENERAL PUBLIC LICENSE</detectionString>
+	</licenseSet>
+
+	<license id='MIT'>
+		<spdxIdentifier>MIT</spdxIdentifier>
+		<name>MIT License</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author></author>
+		<version></version>
+		<publicUrl>https://opensource.org/licenses/mit-license.php</publicUrl>
+		<secondaryUrl>http://www.opensource.org/licenses/mit-license.php
+		</secondaryUrl>
+		<licenseText>See https://opensource.org/licenses/mit-license.php
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='MIT' />
+		<detectionString>MIT LICENSE</detectionString>
+		<detectionString>Licence (MIT)</detectionString>
+	</licenseSet>
+
+	<license id='PublicDomain'>
+		<spdxIdentifier>PublicDomain</spdxIdentifier>
+		<name>Public domain</name>
+		<legalStatus>ACCEPTED</legalStatus>
+		<author></author>
+		<version></version>
+		<publicUrl>https://creativecommons.org/licenses/publicdomain/
+		</publicUrl>
+		<licenseText>See https://creativecommons.org/licenses/publicdomain/
+		</licenseText>
+	</license>
+	<licenseSet>
+		<license idref='PublicDomain' />
+		<detectionString>PublicDomain</detectionString>
+		<detectionString>Public Domain</detectionString>
+	</licenseSet>
+	<license id='NLIL'>
+		<spdxIdentifier>NLIL</spdxIdentifier>
+		<name>No License Info License</name>
+		<legalStatus>UNKNOWN</legalStatus>
+		<licenseText>(No license text)</licenseText>
+	</license>
+
+</licenses>

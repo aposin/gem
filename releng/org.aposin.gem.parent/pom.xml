@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.aposin.gem</groupId>
+	<artifactId>org.aposin.gem.parent</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.release>11</maven.compiler.release>
+		<!-- Plug-in versions -->
+		<tycho-plugin.version>1.7.0</tycho-plugin.version>
+		<maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+		<maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+		<license-maven-plugin.version>3.0</license-maven-plugin.version>
+		<org.aposin.licensescout.version>1.4.0.RC17</org.aposin.licensescout.version>
+		<!-- Packaging varilables -->
+		<package.qualifier.format>'alpha_'yyyyMMddHHmm</package.qualifier.format>
+		<!-- image directory -->
+		<gem.images.directory>${basedir}/../../docs/images/</gem.images.directory>
+		<gem.ico.file>gem.ico</gem.ico.file>
+		<license-check.skip>false</license-check.skip>
+		<!-- license-scout config -->
+		<licensescout.skip>false</licensescout.skip>
+		<licensescout-configuration.dir>../../releng/org.aposin.gem.parent/licensescout</licensescout-configuration.dir>
+		<licensescout.nexusCentralBaseUrl>https://repo.maven.apache.org/maven2/</licensescout.nexusCentralBaseUrl>
+		<licensescout.writeResultsToDatabase>false</licensescout.writeResultsToDatabase>
+	</properties>
+	
+	<!-- TODO: add more information (license, organization, etc) -->
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Förderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)</name>
+		<url>http://www.aposin.org</url>
+	</organization>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-plugin.version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-plugin.version}</version>
+				<configuration>
+					<target>
+						<artifact>
+							<groupId>org.aposin.gem</groupId>
+							<artifactId>org.aposin.gem.targetdefinition</artifactId>
+							<version>${project.version}</version>
+						</artifact>
+					</target>
+					<environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+			<!-- Add an easy way to check/format license headers -->
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>${license-maven-plugin.version}</version>
+				<configuration>
+					<skip>${license-check.skip}</skip>
+					<!-- WARNING: do not format the inline header as it is used as-is in the plug-in -->
+					<inlineHeader>
+Copyright 2020 ${project.organization.name}
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+					</inlineHeader>
+					<includes combine.children="append">
+						<!-- include all sources -->
+						<include>src/**</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>license-check</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Add an easy way to update versions -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+				<version>${tycho-plugin.version}</version>
+			</plugin>
+			<!--Enable the replacement of the SNAPSHOT version based on the alpha/release status-->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho-plugin.version}</version>
+				<configuration>
+					<format>${package.qualifier.format}</format>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.aposin.licensescout</groupId>
+				<artifactId>licensescout-maven-plugin</artifactId>
+				<version>${org.aposin.licensescout.version}</version>
+				<configuration>
+					<skip>${licensescout.skip}</skip>
+					<outputs>
+						<output>
+							<type>HTML</type>
+						</output>
+						<output>
+							<type>CSV</type>
+						</output>
+						<output>
+							<type>TXT</type>
+						</output>
+					</outputs>
+					<!-- config files -->
+					<checkedArchivesFilename>${licensescout-configuration.dir}/checkedarchives.csv</checkedArchivesFilename>
+					<globalFiltersFilename>${licensescout-configuration.dir}/globalfilters.csv</globalFiltersFilename>
+					<providersFilename>${licensescout-configuration.dir}/providers.xml</providersFilename>
+					<noticesFilename>${licensescout-configuration.dir}/notices.xml</noticesFilename>
+					<licensesFilename>${licensescout-configuration.dir}/licenses.xml</licensesFilename>
+					<providersFilename>${licensescout-configuration.dir}/providers.xml</providersFilename>
+					<noticesFilename>${licensescout-configuration.dir}/notices.xml</noticesFilename>
+					<checkedArchivesFilename>${licensescout-configuration.dir}/checkedarchives.csv</checkedArchivesFilename>
+					<licenseUrlMappingsFilename>${licensescout-configuration.dir}/urlmappings.csv</licenseUrlMappingsFilename>
+					<licenseNameMappingsFilename>${licensescout-configuration.dir}/namemappings.csv</licenseNameMappingsFilename>
+					<globalFiltersFilename>${licensescout-configuration.dir}/globalfilters.csv</globalFiltersFilename>
+					<filteredVendorNamesFilename>${licensescout-configuration.dir}/filteredvendornames.csv</filteredVendorNamesFilename>
+					<!-- maven and DB config -->
+					<nexusCentralBaseUrl>${licensescout.nexusCentralBaseUrl}</nexusCentralBaseUrl>
+					<writeResultsToDatabase>${licensescout.writeResultsToDatabase}</writeResultsToDatabase>
+					<writeResultsToDatabaseForSnapshotBuilds>false</writeResultsToDatabaseForSnapshotBuilds>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<activation>
+				<property>
+					<name>release</name>
+				</property>
+			</activation>
+			<properties>
+				<!-- overwrite alpha modifier -->
+				<package.qualifier.format>yyyyMMddHHmm</package.qualifier.format>
+			</properties>
+		</profile>
+	</profiles>
+
+</project>

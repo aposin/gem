@@ -1,0 +1,2 @@
+# filter dependencies from the project itself
+==/org\.aposin\.gem\.[_a-z0-9\.]+\.jar
