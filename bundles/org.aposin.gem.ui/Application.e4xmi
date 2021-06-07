@@ -17,6 +17,9 @@
       <children xsi:type="menu:Menu" xmi:id="_JeRPEE2FEeqZq6PSrBq7tA" elementId="org.aposin.gem.ui.menu.theme" label="%menu.theme.label">
         <children xsi:type="menu:DynamicMenuContribution" xmi:id="_NFm3QE2HEeqZq6PSrBq7tA" elementId="org.aposin.gem.ui.dynamicmenucontribution.theme" label="" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.handler.ThemeMenuContribution"/>
       </children>
+      <children xsi:type="menu:Menu" xmi:id="_4Q0QgLI2EeuLodbff8_mHw" elementId="org.aposin.gem.ui.menu.clean" label="%menu.clean.label">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_AKmQMLI3EeuLodbff8_mHw" elementId="org.aposin.gem.ui.menu.clean.obsoleteenvironments" label="%menu.clean.obsoleteenvironments.label" command="_LJQ9MLI3EeuLodbff8_mHw"/>
+      </children>
       <children xsi:type="menu:Menu" xmi:id="_wH0NkKPlEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.menu.help" label="%menu.help.label">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_0CFqwKPlEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.menu.help.about" label="%menu.help.about.label" command="_uRbMUKPoEemd7Jqw5_7M9Q"/>
       </children>
@@ -26,6 +29,7 @@
   <handlers xmi:id="_szlVUKPoEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.handler.about" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.handler.AboutHandler" command="_uRbMUKPoEemd7Jqw5_7M9Q"/>
   <handlers xmi:id="_iy33gP_AEemqj5Pw1D22oA" elementId="org.aposin.gem.ui.handler.open_app_folder" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.handler.OpenAppFolderHandler" command="_cmPWIP_AEemqj5Pw1D22oA"/>
   <handlers xmi:id="_uCAlQP_HEemqj5Pw1D22oA" elementId="org.aposin.gem.ui.handler.refresh_session" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.handler.RefreshSessionHandler" command="_kThtwP_HEemqj5Pw1D22oA"/>
+  <handlers xmi:id="_xeaTILI3EeuLodbff8_mHw" elementId="org.aposin.gem.ui.handler.clean_obsolete_environments" contributionURI="bundleclass://org.aposin.gem.ui/org.aposin.gem.ui.handler.CleanObsoleteEnvironmentsHandler" command="_LJQ9MLI3EeuLodbff8_mHw"/>
   <bindingTables xmi:id="_8bbgQK0lEem4JM6QkCZ5OA" elementId="org.aposin.gem.ui.bindingtable" bindingContext="_c3AF2cjYEeSyMNYR5xypkQ">
     <bindings xmi:id="_IyEFwK0mEem4JM6QkCZ5OA" elementId="org.aposin.gem.ui.keybinding.m1q" keySequence="M1+Q" command="_iyBwoKPDEemd7Jqw5_7M9Q"/>
     <bindings xmi:id="_S7JOkK0mEem4JM6QkCZ5OA" elementId="org.aposin.gem.ui.keybinding.m1a" keySequence="M1+A" command="_uRbMUKPoEemd7Jqw5_7M9Q"/>
@@ -38,6 +42,7 @@
   <commands xmi:id="_uRbMUKPoEemd7Jqw5_7M9Q" elementId="org.aposin.gem.ui.command.about" commandName="commandAbout"/>
   <commands xmi:id="_cmPWIP_AEemqj5Pw1D22oA" elementId="org.aposin.gem.ui.command.open_app_folder" commandName="commandOpenAppFolder"/>
   <commands xmi:id="_kThtwP_HEemqj5Pw1D22oA" elementId="org.aposin.gem.ui.command.refresh_session" commandName="commandRefreshSession"/>
+  <commands xmi:id="_LJQ9MLI3EeuLodbff8_mHw" elementId="org.aposin.gem.ui.command.clean_obsolete_environments" commandName="commandCleanObsoleteEnvironments"/>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

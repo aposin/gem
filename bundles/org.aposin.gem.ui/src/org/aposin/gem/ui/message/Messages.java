@@ -107,4 +107,15 @@ public class Messages {
     public String featureBranchWorkflowView_label_dashboardViewWorktreeDefinitionColumn;
     public String featureBranchWorkflowView_tooltip_dashboardViewWorktreeDefinitionColumn;
 
+    // cleanObsoleteEnvironments 
+    public String cleanObsoleteEnvironmentsHandler_message_fetchWorktreesProgressMonitor;
+
+    public String cleanObsoleteEnvironmentsHandler_title_commandProgressDialog;
+    public String cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog;
+    public String cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog;
+    public String cleanObsoleteEnvironmentsHandler_message_nothingSelectedDialog;
+
+    // ObsoleteEnvironmentDialog label
+    public String worktree_label;
+    public String branch_label;
 }
