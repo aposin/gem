@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.aposin.gem</groupId>
 		<artifactId>org.aposin.gem.root</artifactId>
-		<version>0.3.0-SNAPSHOT</version>
+		<version>0.3.1-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>org.aposin.gem.features</artifactId>

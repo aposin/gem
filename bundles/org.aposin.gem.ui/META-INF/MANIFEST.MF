@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GEM Core UI
 Bundle-SymbolicName: org.aposin.gem.ui;singleton:=true
-Bundle-Version: 0.3.0.qualifier
+Bundle-Version: 0.3.1.qualifier
 Bundle-Activator: org.aposin.gem.ui.Activator
 Require-Bundle: org.aposin.gem.core,
  org.aposin.gem.logging,
