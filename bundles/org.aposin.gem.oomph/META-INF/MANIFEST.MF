@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.aposin.gem.oomph;singleton:=true
 Bundle-Version: 0.3.1.qualifier
 Automatic-Module-Name: org.aposin.gem.oomph
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Förderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)
+Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Foerderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.aposin.gem.core,
  org.aposin.gem.ui

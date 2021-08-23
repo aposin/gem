@@ -29,7 +29,7 @@ Automatic-Module-Name: org.aposin.gem.ui
 Import-Package: javax.annotation;version="0.0.0",
  org.slf4j
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Förderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)
+Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Foerderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)
 Export-Package: org.aposin.gem.ui;x-internal:=true;uses:="org.osgi.framework",
  org.aposin.gem.ui.dialog;x-internal:=true,
  org.aposin.gem.ui.dialog.progress;x-internal:=true,
