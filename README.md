@@ -1,4 +1,5 @@
 # Git Environment Manager (GEM)
+![Build](https://github.com/aposin/gem/actions/workflows/build.yml/badge.svg?branch=main)
 ![GitHub top language](https://img.shields.io/github/languages/top/aposin/gem.svg)
 [![CLA assistant](https://cla-assistant.io/readme/badge/aposin/gem)](https://cla-assistant.io/aposin/gem)
 [![GitHub](https://img.shields.io/github/license/aposin/gem.svg)](https://github.com/aposin/gem/blob/main/LICENSE)

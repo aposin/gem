@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          architecture: x64
+      
+      - name: License Headers Check
+        run: mvn -Dtycho.mode=maven clean license:check
+      
+      - name: Tycho Build
+        run: mvn -Dlicense-check.skip=true verify
+      
+      # Then upload the artifacts to the workflow
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: GEM-bin
+          path: products/org.aposin.gem.product/target/products/*.zip
+          if-no-files-found: error
