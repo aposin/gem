@@ -7,7 +7,7 @@ Bundle-Activator: org.aposin.gem.tortoisegit.Activator
 Require-Bundle: org.aposin.gem.core,
  org.aposin.gem.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Förderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)
+Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Foerderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)
 Automatic-Module-Name: org.aposin.gem.tortoisegit
 Bundle-ActivationPolicy: lazy
 Import-Package: org.osgi.framework,

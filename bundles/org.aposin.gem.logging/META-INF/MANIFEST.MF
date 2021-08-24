@@ -4,7 +4,7 @@ Bundle-Name: GEM Logging
 Bundle-SymbolicName: org.aposin.gem.logging
 Bundle-Version: 0.3.1.qualifier
 Bundle-Activator: org.aposin.gem.logging.Activator
-Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Förderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)
+Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Foerderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)
 Require-Bundle: org.slf4j.api,
  ch.qos.logback.core,
  ch.qos.logback.classic
