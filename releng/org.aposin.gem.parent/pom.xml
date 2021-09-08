@@ -170,6 +170,8 @@ limitations under the License.
 					<nexusCentralBaseUrl>${licensescout.nexusCentralBaseUrl}</nexusCentralBaseUrl>
 					<writeResultsToDatabase>${licensescout.writeResultsToDatabase}</writeResultsToDatabase>
 					<writeResultsToDatabaseForSnapshotBuilds>false</writeResultsToDatabaseForSnapshotBuilds>
+					<errorLegalStates>NOT_ACCEPTED,CONFLICTING,UNKNOWN</errorLegalStates>
+					<failOnError>true</failOnError>
 				</configuration>
 			</plugin>
 
