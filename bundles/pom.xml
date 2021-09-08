@@ -18,6 +18,7 @@
 		<module>org.aposin.gem.github</module>
 		<module>org.aposin.gem.logging</module>
 		<module>org.aposin.gem.ui</module>
+		<module>org.aposin.gem.jira.thirdparty.libs</module>
 	</modules>
 	
 </project>
