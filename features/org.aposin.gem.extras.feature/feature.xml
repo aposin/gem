@@ -5,8 +5,8 @@
       version="0.4.1.qualifier"
       provider-name="Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Foerderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description>
+      All extra plug-ins/features provided by the the APOSIN organization.
    </description>
 
    <copyright url="http://www.example.com/copyright">
@@ -16,6 +16,10 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
+
+   <includes
+         id="org.aposin.gem.jira.feature"
+         version="0.0.0"/>
 
    <plugin
          id="org.aposin.gem.oomph"
