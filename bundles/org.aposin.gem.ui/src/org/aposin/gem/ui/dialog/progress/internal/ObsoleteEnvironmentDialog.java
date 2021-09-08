@@ -26,6 +26,7 @@ import org.aposin.gem.ui.lifecycle.Session;
 import org.aposin.gem.ui.message.Messages;
 import org.aposin.gem.ui.view.ObsoleteEnvironmentsView;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -47,7 +48,6 @@ public class ObsoleteEnvironmentDialog extends Dialog {
     private Object[] selectedItems;
     private ObsoleteEnvironmentsView view;
 
-
     /**
      * Constructor
      * @param parent
@@ -56,18 +56,22 @@ public class ObsoleteEnvironmentDialog extends Dialog {
     private ObsoleteEnvironmentDialog(final Shell parent, final List<IProject> obsoleteEnvironments) {
         super(parent);
         this.obsoleteEnvironments = obsoleteEnvironments;
-
     }
 
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(Session.messages.cleanObsoleteEnvironmentsHandler_title_commandProgressDialog);
+        newShell.setText(Session.bundleProperties.menuCleanObsoleteenvironments_label);
+    }
+
+    protected boolean isResizable() {
+        return true;
     }
 
     @Override
-    protected boolean isResizable() {
-        return true;
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
 
     @Override
@@ -81,14 +85,43 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         Messages messages = Session.messages;
         view.getColumnProject().getColumn().setText(messages.project_label_common);
         view.getColumnEnvironment().getColumn().setText(messages.environment_label_common);
-        view.getColumnWorktree().getColumn().setText(messages.worktree_label);
-        view.getColumnBranch().getColumn().setText(messages.branch_label);
+        view.getColumnWorktree().getColumn().setText(messages.worktree_label_common);
         view.getCheckboxTreeViewer().setContentProvider(new TreeContentProvider());
         CheckboxTreeViewer checkboxTreeViewer = view.getCheckboxTreeViewer();
         checkboxTreeViewer.addCheckStateListener(event -> {
             checkboxTreeViewer.setSubtreeChecked(event.getElement(), event.getChecked());
-            selectedItems = checkboxTreeViewer.getCheckedElements();
+            Object currentNode = event.getElement();
+            // if child node check changed, update parent node accordingly.
+            if (currentNode instanceof IEnvironment) {
+                ITreeContentProvider provider = (ITreeContentProvider) checkboxTreeViewer.getContentProvider();
+                final Object parentChangedNode = provider.getParent(currentNode);
+                // if unchecked
+                if (!event.getChecked()) {
+                    if (checkboxTreeViewer.getChecked(parentChangedNode)) {
+                        final boolean noneChecked = Arrays.stream( //
+                                provider.getChildren(parentChangedNode)) //
+                                .noneMatch(checkboxTreeViewer::getChecked);
+                        if (noneChecked) {
+                            checkboxTreeViewer.setChecked(parentChangedNode, false);
+                        }
+                    }
+                }
+                //if checked
+                else {
+                    if (!checkboxTreeViewer.getChecked(parentChangedNode)) {
+                        final boolean allChecked = Arrays.stream( //
+                                provider.getChildren(parentChangedNode)) //
+                                .allMatch(checkboxTreeViewer::getChecked);
+                        if (allChecked) {
+                            checkboxTreeViewer.setChecked(parentChangedNode, true);
+                        }
+                    }
 
+                }
+            }
+
+            selectedItems = checkboxTreeViewer.getCheckedElements();
+            getButton(IDialogConstants.OK_ID).setEnabled(selectedItems.length > 0 ? true : false);
         });
 
         view.getColumnProject().setLabelProvider(new ColumnLabelProvider() {
@@ -130,19 +163,6 @@ public class ObsoleteEnvironmentDialog extends Dialog {
             }
         });
 
-        view.getColumnBranch().setLabelProvider(new ColumnLabelProvider() {
-
-            @Override
-            public String getText(Object element) {
-                if (element instanceof IEnvironment) {
-                    return ((IEnvironment) element).getGemInternalBranchName();
-                } else if (element instanceof IProject) {
-                    return ((IProject) element).getBranchPrefix();
-                }
-                return super.getText(element);
-            }
-        });
-
         GridLayoutFactory.fillDefaults().generateLayout(parent);
         checkboxTreeViewer.setInput(this.obsoleteEnvironments);
         applyDialogFont(tableComposite);
@@ -154,7 +174,6 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         checkboxTreeViewer.refresh();
         return tableComposite;
     }
-
 
     private class TreeContentProvider implements ITreeContentProvider {
 
@@ -183,8 +202,11 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         public boolean hasChildren(Object element) {
             return element instanceof IProject;
         }
+    }
 
-
+    @Override
+    protected void cancelPressed() {
+        super.cancelPressed();
     }
 
     /**
@@ -197,7 +219,8 @@ public class ObsoleteEnvironmentDialog extends Dialog {
     public static List<IEnvironment> open(final Shell parentShell, final List<IProject> obsoleteEnvironments) {
         final ObsoleteEnvironmentDialog dialog = new ObsoleteEnvironmentDialog(parentShell, obsoleteEnvironments);
         if (dialog.open() == Window.CANCEL) {
-            return Collections.emptyList();
+            dialog.close();
+            return null;
         } else {
             if (dialog.selectedItems != null) {
                 List<Object> checkedElementsList = Arrays.asList(dialog.selectedItems);

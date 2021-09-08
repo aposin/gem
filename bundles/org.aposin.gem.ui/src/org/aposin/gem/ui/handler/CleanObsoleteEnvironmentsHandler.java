@@ -16,19 +16,26 @@
 package org.aposin.gem.ui.handler;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
+import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.launcher.ILauncher;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
 import org.aposin.gem.core.api.workflow.ICommand;
+import org.aposin.gem.ui.BundleProperties;
 import org.aposin.gem.ui.dialog.progress.CommandProgressDialog;
 import org.aposin.gem.ui.dialog.progress.internal.ObsoleteEnvironmentDialog;
 import org.aposin.gem.ui.lifecycle.Session;
 import org.aposin.gem.ui.message.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.services.nls.Translation;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -42,17 +49,20 @@ public class CleanObsoleteEnvironmentsHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CleanObsoleteEnvironmentsHandler.class);
 
+    @Inject
+    @Translation
+    private static BundleProperties bundleProperties;
+
     @Execute
     private void execute(final Session session, final Shell shell) {
         final List<IProject> obsoleteEnvironments = new ArrayList<>();
         ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
         Messages messages = Session.messages;
         try {
-            dialog.run(true, true, monitor -> {
+            dialog.run(true, false, monitor -> {
                 monitor.beginTask(
                         messages.cleanObsoleteEnvironmentsHandler_message_fetchWorktreesProgressMonitor,
                         IProgressMonitor.UNKNOWN);
-
                 for (final IProject project : session.getConfiguration().getProjects()) {
                     LOGGER.info(
                             String.format("Searching for obsolete environments in project : %s", project.getName()));
@@ -61,42 +71,41 @@ public class CleanObsoleteEnvironmentsHandler {
                     }
                 }
                 monitor.done();
-
             });
         } catch (InvocationTargetException | InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error("Some error occurred while fetching obsolete worktrees", e);
+            throw new GemException("Error while fetching obsolete worktrees", e);
         }
-        if (!dialog.getProgressMonitor().isCanceled()) {
-            if (obsoleteEnvironments.isEmpty()) {
-                MessageDialog.openInformation(shell,
-                        messages.cleanObsoleteEnvironmentsHandler_title_commandProgressDialog,
-                        messages.cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog);
+        if (obsoleteEnvironments.isEmpty()) {
+            MessageDialog.openInformation(shell, bundleProperties.menuCleanObsoleteenvironments_label,
+                    messages.cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog);
+        } else {
+            List<IEnvironment> selectedItems = ObsoleteEnvironmentDialog.open(shell, obsoleteEnvironments);
+            if (selectedItems == null) {
+                return;
             } else {
-                List<IEnvironment> selectedItems = ObsoleteEnvironmentDialog.open(shell,
-                        obsoleteEnvironments);
-                if (!selectedItems.isEmpty()) {
-                    boolean openConfirm = MessageDialog.openConfirm(shell,
-                            messages.cleanObsoleteEnvironmentsHandler_title_commandProgressDialog,
-                            messages.cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog);
-                    if (openConfirm) {
-                        final List<ICommand> cmds = new ArrayList<ICommand>();
-                        for (IEnvironment selectedItem : selectedItems) {
-                            ILauncher removeWorktree = selectedItem.getWorkflow().getRemoveWorktreeLauncher();
-                            if (removeWorktree.canLaunch()) {
-                                cmds.addAll(removeWorktree.launch());
-                            }
-                        }
-                        if (!cmds.isEmpty()) {
-                            CommandProgressDialog.open(shell,
-                                    messages.cleanObsoleteEnvironmentsHandler_title_commandProgressDialog,
-                                    messages, cmds);
+                final String selectionString = selectedItems.stream() //
+                        .map(env -> "\t- " + env.getDisplayName()) //
+                        .collect(Collectors.joining("\n"));
+                boolean openConfirm = MessageDialog.openConfirm(shell,
+                        bundleProperties.menuCleanObsoleteenvironments_label,
+                        MessageFormat.format(messages.cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog,
+                                selectionString));
+                if (openConfirm) {
+                    final List<ICommand> cmds = new ArrayList<ICommand>();
+                    for (IEnvironment selectedItem : selectedItems) {
+                        ILauncher removeWorktree = selectedItem.getWorkflow().getRemoveWorktreeLauncher();
+                        if (removeWorktree.canLaunch()) {
+                            cmds.addAll(removeWorktree.launch());
+                        } else {
+                            // TODO: [#16] - should inform end-user
+                            LOGGER.warn("Cannot launch worktree removal");
                         }
                     }
-                }
-                else {
-                    MessageDialog.openInformation(shell,
-                            messages.cleanObsoleteEnvironmentsHandler_title_commandProgressDialog,
-                            messages.cleanObsoleteEnvironmentsHandler_message_nothingSelectedDialog);
+                    if (!cmds.isEmpty()) {
+                        CommandProgressDialog.open(shell, bundleProperties.menuCleanObsoleteenvironments_label,
+                                messages, cmds);
+                    }
                 }
             }
         }

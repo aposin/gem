@@ -17,7 +17,9 @@ package org.aposin.gem.ui;
 
 import java.text.MessageFormat;
 import java.util.regex.Pattern;
+
 import javax.annotation.PostConstruct;
+
 import org.eclipse.e4.core.services.nls.Message;
 import org.osgi.framework.Version;
 
@@ -43,6 +45,8 @@ public final class BundleProperties {
     public String menuFileQuit_label;
     public String menuHelp_label;
     public String menuHelpAbout_label;
+    public String menuClean_label;
+    public String menuCleanObsoleteenvironments_label;
 
     @PostConstruct
     public void format() {

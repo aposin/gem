@@ -62,6 +62,7 @@ public class Messages {
     public String environment_label_common;
     public String featureBranch_label_common;
     public String featureBranchProvider_label_common;
+    public String worktree_label_common;
 
     ///////////////////////////////
     // workflow common labels
@@ -109,13 +110,7 @@ public class Messages {
 
     // cleanObsoleteEnvironments 
     public String cleanObsoleteEnvironmentsHandler_message_fetchWorktreesProgressMonitor;
-
-    public String cleanObsoleteEnvironmentsHandler_title_commandProgressDialog;
     public String cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog;
     public String cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog;
     public String cleanObsoleteEnvironmentsHandler_message_nothingSelectedDialog;
-
-    // ObsoleteEnvironmentDialog label
-    public String worktree_label;
-    public String branch_label;
 }

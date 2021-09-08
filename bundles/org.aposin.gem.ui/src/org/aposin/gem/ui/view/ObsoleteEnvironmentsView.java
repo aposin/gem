@@ -34,7 +34,6 @@ public class ObsoleteEnvironmentsView extends Composite {
     private final TreeViewerColumn columnProject;
     private final TreeViewerColumn columnEnvironment;
     private final TreeViewerColumn columnWorktree;
-    private final TreeViewerColumn columnBranch;
 
     /**
      * Constructor for Obsolete Environments View
@@ -61,7 +60,6 @@ public class ObsoleteEnvironmentsView extends Composite {
         columnProject = createNewColumn(1);
         columnEnvironment = createNewColumn(1);
         columnWorktree = createNewColumn(2);
-        columnBranch = createNewColumn(2);
     }
 
     private TreeViewerColumn createNewColumn(final int weightData) {
@@ -90,13 +88,6 @@ public class ObsoleteEnvironmentsView extends Composite {
      */
     public TreeViewerColumn getColumnWorktree() {
         return columnWorktree;
-    }
-
-    /**
-     * @return branch column
-     */
-    public TreeViewerColumn getColumnBranch() {
-        return columnBranch;
     }
 
     /**
