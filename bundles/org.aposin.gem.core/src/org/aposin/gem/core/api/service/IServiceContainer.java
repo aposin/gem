@@ -17,6 +17,7 @@ package org.aposin.gem.core.api.service;
 
 import java.util.Collection;
 import java.util.Map;
+
 import org.aposin.gem.core.api.IRefreshable;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.IConfigurable;
@@ -84,13 +85,12 @@ public interface IServiceContainer extends IRefreshable, IConfigurable {
     public <T extends IGemService> Collection<T> getGemServices(final Class<T> type);
 
     /**
-     * Gets a map of misconfigured services and the exception causing it.
+     * Gets a map of misconfigured services and creators and the exception causing it.
      * 
      * @param <T> the type of the service.
      * @param type class for the service.
-     * @return map of the misconfigured service and the exception.
+     * @return map of the misconfigured service (or its creator) and the exception.
      */
-    public <T extends IGemService> Map<T, GemConfigurationException> getMisconfiguredServices(
-            final Class<T> type);
+    public <T extends IGemService> Map<IGemService, GemConfigurationException> getMisconfiguredServices(final Class<T> type);
 
 }

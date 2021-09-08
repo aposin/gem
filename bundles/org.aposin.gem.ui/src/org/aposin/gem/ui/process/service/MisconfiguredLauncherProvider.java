@@ -16,10 +16,10 @@
 package org.aposin.gem.ui.process.service;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.INamedObject;
@@ -29,6 +29,7 @@ import org.aposin.gem.core.api.launcher.AbstractNoParamsLauncher;
 import org.aposin.gem.core.api.launcher.ILauncher;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IRepository;
+import org.aposin.gem.core.api.service.IFeatureBranchProvider;
 import org.aposin.gem.core.api.service.IGemService;
 import org.aposin.gem.core.api.service.IServiceContainer;
 import org.aposin.gem.core.api.service.launcher.IEnvironmentLauncherProvider;
@@ -120,27 +121,38 @@ public class MisconfiguredLauncherProvider
 
     @Override
     public List<ILauncher> getLaunchers(final IEnvironment environment) {
-        return getLaunchers(IEnvironmentLauncherProvider.class);
+        return getMisconfiguredLaunchers(IEnvironmentLauncherProvider.class);
     }
     
     @Override
     public List<ILauncher> getLaunchers(final IFeatureBranch featureBranch) {
-        return getLaunchers(IFeatureBranchLauncherProvider.class);
+        return getMisconfiguredLaunchers(IFeatureBranchLauncherProvider.class, IFeatureBranchProvider.class);
+    }
+    
+    private List<ILauncher> getMisconfiguredLaunchers(final Class<? extends IGemService> mainType, final Class<? extends IGemService>... otherTypes) {
+        final List<ILauncher> launchers = new ArrayList<ILauncher>();
+        final IServiceContainer serviceContainer = config.getServiceContainer();
+        populateMisconfiguredLaunchers(mainType, serviceContainer, launchers);
+        for (final Class<? extends IGemService> type : otherTypes) {
+            populateMisconfiguredLaunchers(type, serviceContainer, launchers);
+        }
+
+        // first check the misconfigured services
+        if (launchers.isEmpty() //
+                && serviceContainer.getGemServices(mainType).size() == 1 //
+                && serviceContainer.getGemServices(mainType).contains(this)) {
+            return Collections.singletonList(NONE_LAUNCHER);
+        }
+        return Collections.unmodifiableList(launchers);
     }
 
-    private List<ILauncher> getLaunchers(final Class<? extends IGemService> type) {
-        final IServiceContainer serviceContainer = config.getServiceContainer();
-        if (serviceContainer.getMisconfiguredServices(type).isEmpty()) {
-            if (serviceContainer.getGemServices(type).size() == 1
-                    && serviceContainer.getGemServices(type).contains(this)) {
-                return Collections.singletonList(NONE_LAUNCHER);
-            }
-        } else {
-            return serviceContainer.getMisconfiguredServices(type).entrySet().stream() //
-                    .map(entry -> new MisconfiguredLauncher(entry.getKey(), entry.getValue())) //
-                    .collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+    private void populateMisconfiguredLaunchers(final Class<? extends IGemService> type,
+                                                final IServiceContainer serviceContainer,
+                                                final List<ILauncher> accumulator) {
+        // check first the misconfigured creators for the service itself
+        serviceContainer.getMisconfiguredServices(type).entrySet().stream() //
+                .map(entry -> new MisconfiguredLauncher(entry.getKey(), entry.getValue())) //
+                .forEach(accumulator::add);
     }
 
     @Override

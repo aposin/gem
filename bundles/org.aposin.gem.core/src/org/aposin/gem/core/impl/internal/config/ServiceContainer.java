@@ -15,13 +15,16 @@
  */
 package org.aposin.gem.core.impl.internal.config;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
 import org.aposin.gem.core.Activator;
 import org.aposin.gem.core.api.IRefreshable;
 import org.aposin.gem.core.api.config.GemConfigurationException;
@@ -29,6 +32,7 @@ import org.aposin.gem.core.api.config.IConfigurable;
 import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.service.IFeatureBranchProvider;
 import org.aposin.gem.core.api.service.IGemService;
+import org.aposin.gem.core.api.service.IGemServiceCreator;
 import org.aposin.gem.core.api.service.IServiceContainer;
 import org.aposin.gem.core.impl.internal.service.GemGitBranchProvider;
 import org.osgi.framework.InvalidSyntaxException;
@@ -42,20 +46,54 @@ public class ServiceContainer implements IServiceContainer, IConfigurable {
 
     private final ConfigurationImpl configuration;
 
+    // track all services
     private final Set<IRefreshable> refreshableServices = new HashSet<>();
+    // track services creators (configured or misconfigured)
+    @SuppressWarnings("rawtypes")
+    private final Map<Class<? extends IGemService>, List<IGemServiceCreator>> serviceCreators = new HashMap<>();
+    @SuppressWarnings("rawtypes")
+    private final Map<Class<? extends IGemService>, Map<? extends IGemServiceCreator, GemConfigurationException>> misconfiguredServiceCreators = new HashMap<>();
+    // track loaded/misconfigured services
     private final Map<Class<? extends IGemService>, Map<String, ? extends IGemService>> loadedServices =
             new HashMap<>();
     private final Map<Class<? extends IGemService>, Map<? extends IGemService, GemConfigurationException>> misconfiguredServices =
             new HashMap<>();
 
+
     /* package */ ServiceContainer(final ConfigurationImpl configuration) {
         this.configuration = configuration;
+        loadServiceCreators();
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void loadServiceCreators() {
+        serviceCreators.clear();
+        try {
+            final Collection<ServiceReference<IGemServiceCreator>> serviceRefs = Activator.getBundleContext()
+                    .getServiceReferences(IGemServiceCreator.class, null);
+            for (final ServiceReference<IGemServiceCreator> s : serviceRefs) {
+                final IGemServiceCreator serviceCreator = Activator.getBundleContext().getService(s);
+                serviceCreators.compute(serviceCreator.getType(), (k, v) -> {
+                    if (v == null) {
+                        v = new ArrayList<>();
+                    }
+                    v.add(serviceCreator);
+                    if (serviceCreator instanceof IRefreshable) {
+                        refreshableServices.add((IRefreshable) serviceCreator);
+                    }
+                    return v;
+                });
+            }
+        } catch (final InvalidSyntaxException e) {
+            LOGGER.error("Error loading service creators", e);
+        }
     }
 
     @Override
     public IConfiguration getConfiguration() {
         return configuration;
     }
+
 
     @Override
     public IFeatureBranchProvider getDefaultFeatureBranchProvider() {
@@ -85,38 +123,42 @@ public class ServiceContainer implements IServiceContainer, IConfigurable {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends IGemService> Map<T, GemConfigurationException> getMisconfiguredServices(
+    public <T extends IGemService> Map<IGemService, GemConfigurationException> getMisconfiguredServices(
             final Class<T> type) {
         // triggers the loading (if not yet done)
         getGemServices(type);
-        return Collections.unmodifiableMap(
-                (Map<T, GemConfigurationException>) misconfiguredServices.get(type));
+        final Map<IGemService, GemConfigurationException> allMisconfigurations = //
+                new HashMap<>(misconfiguredServiceCreators.get(type));
+        allMisconfigurations.putAll(misconfiguredServices.get(type));
+
+        return Collections.unmodifiableMap(allMisconfigurations);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private <T extends IGemService> Map<String, T> loadService(final Class<T> type) {
         LOGGER.info("Loading {} service(s)", type.getSimpleName());
         Map<String, T> configuredServices = new TreeMap<>();
         Map<T, GemConfigurationException> misconfigured = new TreeMap<>();
+        Map<IGemServiceCreator<? extends IGemService>, GemConfigurationException> misconfiguredCreators = new TreeMap<>();
         try {
             final Collection<ServiceReference<T>> serviceRefs =
                     Activator.getBundleContext().getServiceReferences(type, null);
             for (final ServiceReference<T> s : serviceRefs) {
                 final T service = Activator.getBundleContext().getService(s);
-                LOGGER.info("Found service: {}", service.getId());
-                if (service instanceof IRefreshable) {
-                    refreshableServices.add((IRefreshable) service);
-                }
-                try {
-                    service.setConfig(getConfiguration());
-                    configuredServices.put(service.getId(), service);
-                } catch (final GemConfigurationException e) {
-                    misconfigured.put(service, e);
-                    LOGGER.error("Miss-configured service {}: ignored", service.getId());
-                    LOGGER.debug("Exception", e);
-                }
+                configureServiceAndTrack(service, configuredServices, misconfigured);
             }
         } catch (final InvalidSyntaxException e) {
             LOGGER.error("Error loading service: " + type, e);
+        }
+
+        final List<IGemServiceCreator> creators = serviceCreators.getOrDefault(type,
+                Collections.emptyList());
+        for (final IGemServiceCreator<? extends IGemService> sCreator : creators) {
+            if (configureService(sCreator, misconfiguredCreators)) {
+                for (final IGemService createdService : sCreator.createServices()) {
+                    configureServiceAndTrack((T) createdService, configuredServices, misconfigured);
+                }
+            }
         }
 
         if (configuredServices.isEmpty()) {
@@ -124,16 +166,45 @@ public class ServiceContainer implements IServiceContainer, IConfigurable {
         }
 
         misconfiguredServices.put(type, misconfigured);
+        misconfiguredServiceCreators.put(type, misconfiguredCreators);
 
         return configuredServices;
+    }
+
+    private <T extends IGemService> void configureServiceAndTrack(T service, Map<String, T> configured,
+                                                                  final Map<T, GemConfigurationException> misconfigured) {
+        if (configureService(service, misconfigured)) {
+            configured.put(service.getId(), service);
+        }
+    }
+
+    private <T extends IGemService> boolean configureService(T service,
+                                                             final Map<T, GemConfigurationException> misconfigured) {
+        LOGGER.info("Found service: {}", service.getId());
+        if (service instanceof IRefreshable) {
+            refreshableServices.add((IRefreshable) service);
+        }
+        try {
+            service.setConfig(getConfiguration());
+        } catch (final GemConfigurationException e) {
+            misconfigured.put(service, e);
+            LOGGER.error("Miss-configured service {}: ignored", service.getId());
+            LOGGER.debug("Exception", e);
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void refresh() {
         // refresh the services that are refreshable
         refreshableServices.forEach(IRefreshable::refresh);
+        // reload the service creators
+        loadServiceCreators();
+        // clean the cached services
         refreshableServices.clear();
         loadedServices.clear();
         misconfiguredServices.clear();
+        misconfiguredServiceCreators.clear();
     }
 }
