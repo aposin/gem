@@ -19,6 +19,7 @@
 		<module>org.aposin.gem.logging</module>
 		<module>org.aposin.gem.ui</module>
 		<module>org.aposin.gem.jira.thirdparty.libs</module>
+		<module>org.aposin.gem.jira</module>
 	</modules>
 	
 </project>
