@@ -3,3 +3,15 @@ JAVA,com.typesafe.config.jar,1.4.1,,,,Apache-2.0
 JAVA,org.zeroturnaround.zt-exec.jar,F513AF3998FD4024F993E8B259EFD36B34A0CF1C793E93B4A25ADC3498D011FD,,,,Apache-2.0
 JAVA,com.ibm.icu_64.2.0.v20190507-1337.jar,64.2.0.v20190507-1337,,EclipseFoundation,,EPL-1.0
 JAVA,javax.annotation_1.2.0.v201602091430.jar,1.2.0.v201602091430,,EclipseFoundation,,EPL-1.0
+JAVA,com.sun.jersey.jersey-client.jar,1.19.0,,Orable,,GPL_CDDL_CPE
+JAVA,com.sun.jersey.jersey-core.jar,1.19.0,,Oracle,,GPL_CDDL_CPE
+JAVA,com.sun.jersey.jersey-json.jar,1.19.0,,Oracle,,GPL_CDDL_CPE
+JAVA,com.sun.xml.bind.jaxb-impl.jar,2.2.3,,Oracle,,GPL_CDDL_CPE
+JAVA,javax.xml.stream.stax-api.jar,E8C70EBD76F982C9582A82EF82CF6CE14A7D58A4A4DCA5CB7B7FC988C80089B7,https://search.maven.org/artifact/javax.xml.stream/stax-api/1.0-2/jar,,,GPL_CDDL_CPE
+JAVA,com.google.code.findbugs.jsr305.jar,BEC0B24DCB23F9670172724826584802B80AE6CBDABA03BDEBDEF9327B962F6A,https://search.maven.org/artifact/com.google.code.findbugs/jsr305/3.0.2/jar,,,Apache-2.0
+JAVA,org.checkerframework.checker-qual.jar,2.5.2,https://search.maven.org/artifact/org.checkerframework/checker-qual/2.5.2/jar,,,MIT
+JAVA,com.atlassian.jira.jira-rest-java-client-api.jar,7B961520F61B32B20FD1FD7B18F1DC6A0F55A43A42E9E001AD35D9D8A33CC3D4,https://mvnrepository.com/artifact/com.atlassian.jira/jira-rest-java-client-api/5.2.2,,,Apache-2.0
+JAVA,com.atlassian.jira.jira-rest-java-client-core.jar,FE7CA96B2F4C6B9B177F925E1B9A6A9946546B37044F149609AEA336E81CBC31,https://mvnrepository.com/artifact/com.atlassian.jira/jira-rest-java-client-core/5.2.2,,,Apache-2.0
+JAVA,com.atlassian.sal.sal-api.jar,C8CC0D6D9C29ADA71CEFF11C5BFCA52C083BAC87C773DF170692A52EE6C37766,https://mvnrepository.com/artifact/com.atlassian.sal/sal-api/4.5.2,,,BSD-3-Clause
+JAVA,com.atlassian.event.atlassian-event.jar,69AC32BD12D5A65EC2032FF0332C8A9AA37D900BB99F5F2CAD549654237D1A33,https://mvnrepository.com/artifact/com.atlassian.event/atlassian-event/4.1.1,,,BSD-3-Clause
+JAVA,javax.xml.bind.jaxb-api.jar,2.2.2,,,,GPL_CDDL_CPE
