@@ -128,7 +128,7 @@ Apache License Version 2.0
 
 * org.w3c.dom.svg_1.1.0.v201011041433.jar
 
-* org.zeroturnaround.zt-exec-sources.jar
+* org.zeroturnaround.zt-exec.jar
 
 
 

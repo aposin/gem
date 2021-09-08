@@ -1,4 +1,5 @@
 Type,Filename or Regex,Version or Message digest,Documentation URL,Provider,Notice,License 1,License 2, License 3
 JAVA,com.typesafe.config.jar,1.4.0,,,,Apache-2.0
+JAVA,org.zeroturnaround.zt-exec.jar,5B9131CA9DE1477E3F38BB4E6EF951ED13D1EDF34329D1A98D6F48E174523233,,,,Apache-2.0
 JAVA,com.ibm.icu_64.2.0.v20190507-1337.jar,64.2.0.v20190507-1337,,EclipseFoundation,,EPL-1.0
-JAVA,javax.annotation_1.2.0.v201602091430.jar,1.2.0.v201602091430,,EclipseFoundation,,EPL-1.0,,
+JAVA,javax.annotation_1.2.0.v201602091430.jar,1.2.0.v201602091430,,EclipseFoundation,,EPL-1.0
