@@ -112,5 +112,4 @@ public class Messages {
     public String cleanObsoleteEnvironmentsHandler_message_fetchWorktreesProgressMonitor;
     public String cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog;
     public String cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog;
-    public String cleanObsoleteEnvironmentsHandler_message_nothingSelectedDialog;
 }
