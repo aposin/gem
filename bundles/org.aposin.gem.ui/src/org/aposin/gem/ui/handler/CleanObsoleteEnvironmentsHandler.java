@@ -84,13 +84,13 @@ public class CleanObsoleteEnvironmentsHandler {
             if (selectedItems == null) {
                 return;
             } else {
-                final String selectionString = selectedItems.stream() //
+                final String messageFormatSelectionString = selectedItems.stream() //
                         .map(env -> "\t- " + env.getDisplayName()) //
                         .collect(Collectors.joining("\n"));
                 boolean openConfirm = MessageDialog.openConfirm(shell,
                         bundleProperties.menuCleanObsoleteenvironments_label,
                         MessageFormat.format(messages.cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog,
-                                selectionString));
+                                messageFormatSelectionString));
                 if (openConfirm) {
                     final List<ICommand> cmds = new ArrayList<ICommand>();
                     for (IEnvironment selectedItem : selectedItems) {
