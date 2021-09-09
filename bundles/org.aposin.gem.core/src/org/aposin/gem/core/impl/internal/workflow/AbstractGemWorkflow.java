@@ -176,12 +176,12 @@ abstract class AbstractGemWorkflow implements IEnvironmentWorkflow {
                             // remove worktree using git
                             command = command.and(worktree.getCommandBuilder().buildRemoveWorktreeCommand(//
                                     worktree.getDestinationLocation()));
-                            // remove also the internal branch from the repository (otherwise appear as an obsolete environment)
-                            command = command.and(worktree.getRepository().getCommandBuilder()//
-                                    .buildRemoveBranchCommand(environment.getGemInternalBranchName()));
-                            // TODO: also remove environment-based branches that are found by GEM
-                            // TODO: this requires probably to use a parameter-based launcher
                         }
+                        // remove also the internal branch from the repository (otherwise appear as an obsolete environment)
+                        command = command.and(worktree.getRepository().getCommandBuilder()//
+                                .buildRemoveBranchCommand(environment.getGemInternalBranchName()));
+                        // TODO: also remove environment-based branches that are found by GEM
+                        // TODO: this requires probably to use a parameter-based launcher
                     }
 
                     command = command.and(new CallableCommand(environment, "Delete worktree(s) folder container", //

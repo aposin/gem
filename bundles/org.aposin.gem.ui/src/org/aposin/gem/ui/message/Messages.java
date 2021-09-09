@@ -62,6 +62,7 @@ public class Messages {
     public String environment_label_common;
     public String featureBranch_label_common;
     public String featureBranchProvider_label_common;
+    public String worktree_label_common;
 
     ///////////////////////////////
     // workflow common labels
@@ -107,4 +108,8 @@ public class Messages {
     public String featureBranchWorkflowView_label_dashboardViewWorktreeDefinitionColumn;
     public String featureBranchWorkflowView_tooltip_dashboardViewWorktreeDefinitionColumn;
 
+    // cleanObsoleteEnvironments 
+    public String cleanObsoleteEnvironmentsHandler_message_fetchWorktreesProgressMonitor;
+    public String cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog;
+    public String cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog;
 }
