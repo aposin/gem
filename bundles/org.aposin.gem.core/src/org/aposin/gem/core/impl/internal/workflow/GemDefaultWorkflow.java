@@ -250,8 +250,8 @@ public final class GemDefaultWorkflow extends AbstractGemWorkflow {
             return new WorkflowLauncherBuilder(featureBranch, "remove_branch") //
                     .displayName("Remove " + featureBranch.getDisplayName()) //
                     .canLaunch(() -> {
-                        if (!(requiresClone() || requiresCheckout())) {
-                            // if it is checkout already, cannot delete
+                        if (requiresClone() || !requiresCheckout()) {
+                            // if it is not cloned checkout already, cannot delete
                             // should change to a different branch
                             return false;
                         }
