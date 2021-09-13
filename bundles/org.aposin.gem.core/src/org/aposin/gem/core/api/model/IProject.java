@@ -18,11 +18,12 @@ package org.aposin.gem.core.api.model;
 import java.util.List;
 
 import org.aposin.gem.core.api.INamedObject;
+import org.aposin.gem.core.api.IRefreshable;
 
 /**
  * Definition of a project.
  */
-public interface IProject extends INamedObject {
+public interface IProject extends INamedObject, IRefreshable {
 
     /**
      * Gets the name of the project.

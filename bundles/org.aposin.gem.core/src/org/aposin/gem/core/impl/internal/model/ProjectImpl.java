@@ -71,6 +71,12 @@ public final class ProjectImpl implements IProject {
         return project.displayname;
     }
 
+    @Override
+    public void refresh() {
+        // only used by now for obsolete environments
+        obsoleteEnvironments = null;
+    }
+
     /**
      * {@inheritDoc}
      */
