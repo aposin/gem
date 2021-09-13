@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
@@ -218,15 +219,11 @@ public class ObsoleteEnvironmentDialog extends Dialog {
      */
     public static List<IEnvironment> open(final Shell parentShell, final List<IProject> obsoleteEnvironments) {
         final ObsoleteEnvironmentDialog dialog = new ObsoleteEnvironmentDialog(parentShell, obsoleteEnvironments);
-        if (dialog.open() == Window.CANCEL) {
-            dialog.close();
-            return null;
-        } else {
-            if (dialog.selectedItems != null) {
-                List<Object> checkedElementsList = Arrays.asList(dialog.selectedItems);
-                return checkedElementsList.stream().filter(IEnvironment.class::isInstance)
-                        .map(IEnvironment.class::cast).collect(Collectors.toList());
-            }
+        if (dialog.open() != Window.CANCEL && dialog.selectedItems != null) {
+            return Stream.of(dialog.selectedItems) //
+                    .filter(IEnvironment.class::isInstance) //
+                    .map(IEnvironment.class::cast) //
+                    .collect(Collectors.toList());
         }
         return Collections.emptyList();
     }

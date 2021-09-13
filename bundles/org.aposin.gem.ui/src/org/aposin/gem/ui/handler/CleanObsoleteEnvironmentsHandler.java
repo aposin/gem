@@ -15,99 +15,85 @@
  */
 package org.aposin.gem.ui.handler;
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
-import org.aposin.gem.core.api.launcher.ILauncher;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
 import org.aposin.gem.core.api.workflow.ICommand;
-import org.aposin.gem.core.exception.GemException;
-import org.aposin.gem.ui.BundleProperties;
 import org.aposin.gem.ui.dialog.progress.CommandProgressDialog;
 import org.aposin.gem.ui.dialog.progress.internal.ObsoleteEnvironmentDialog;
 import org.aposin.gem.ui.lifecycle.Session;
-import org.aposin.gem.ui.message.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.e4.core.services.nls.Translation;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Handler for clean obsolete environment
+ * Handler for clean obsolete environment.
  */
-public class CleanObsoleteEnvironmentsHandler {
+public class CleanObsoleteEnvironmentsHandler extends GemAbstractSessionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CleanObsoleteEnvironmentsHandler.class);
 
-    @Inject
-    @Translation
-    private static BundleProperties bundleProperties;
-
-    @Execute
-    private void execute(final Session session, final Shell shell) {
-        final List<IProject> obsoleteEnvironments = new ArrayList<>();
-        ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
-        Messages messages = Session.messages;
-        try {
-            dialog.run(true, false, monitor -> {
-                monitor.beginTask(
-                        messages.cleanObsoleteEnvironmentsHandler_message_fetchWorktreesProgressMonitor,
-                        IProgressMonitor.UNKNOWN);
-                for (final IProject project : session.getConfiguration().getProjects()) {
-                    LOGGER.info(
-                            String.format("Searching for obsolete environments in project : %s", project.getName()));
-                    if (!project.getObsoleteEnvironments().isEmpty()) {
-                        obsoleteEnvironments.add(project);
-                    }
-                }
-                monitor.done();
-            });
-        } catch (InvocationTargetException | InterruptedException e) {
-            LOGGER.error("Some error occurred while fetching obsolete worktrees", e);
-            throw new GemException("Error while fetching obsolete worktrees", e);
-        }
+    @Override
+    public void doExecute(final Session session) throws Exception {
+        final List<IProject> obsoleteEnvironments = loadObsoleteWorkspacesWithProgressDialog(session);
         if (obsoleteEnvironments.isEmpty()) {
-            MessageDialog.openInformation(shell, bundleProperties.menuCleanObsoleteenvironments_label,
-                    messages.cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog);
+            MessageDialog.openInformation(null, session.bundleProperties.menuCleanObsoleteenvironments_label,
+                    session.messages.cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog);
         } else {
-            List<IEnvironment> selectedItems = ObsoleteEnvironmentDialog.open(shell, obsoleteEnvironments);
-            if (selectedItems == null) {
-                return;
-            } else {
-                final String selectionStringMessageFormat = selectedItems.stream() //
-                        .map(env -> "\t- " + env.getDisplayName()) //
-                        .collect(Collectors.joining("\n"));
-                boolean openConfirm = MessageDialog.openConfirm(shell,
-                        bundleProperties.menuCleanObsoleteenvironments_label,
-                        MessageFormat.format(messages.cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog,
-                                selectionStringMessageFormat));
-                if (openConfirm) {
-                    final List<ICommand> cmds = new ArrayList<ICommand>();
-                    for (IEnvironment selectedItem : selectedItems) {
-                        ILauncher removeWorktree = selectedItem.getWorkflow().getRemoveWorktreeLauncher();
-                        if (removeWorktree.canLaunch()) {
-                            cmds.addAll(removeWorktree.launch());
-                        } else {
-                            // TODO: [#16] - should inform end-user
-                            LOGGER.warn("Cannot launch worktree removal");
-                        }
-                    }
-                    if (!cmds.isEmpty()) {
-                        CommandProgressDialog.open(shell, bundleProperties.menuCleanObsoleteenvironments_label,
-                                messages, cmds);
-                    }
-                }
+            List<IEnvironment> selectedItems = ObsoleteEnvironmentDialog.open(null, obsoleteEnvironments);
+            if (confirmDeletion(session, selectedItems)) {
+                // all the commands should be able to launch (otherwise the obsolete algorithm is wrong)
+                // so canLaunch should be true for all
+                final List<ICommand> cmds = selectedItems.stream() //
+                        .flatMap(env -> env.getWorkflow().getRemoveWorktreeLauncher().launch().stream()) //
+                        .collect(Collectors.toList());
+                CommandProgressDialog.open(null, //
+                        session.bundleProperties.menuCleanObsoleteenvironments_label, //
+                        session.messages, //
+                        cmds);
             }
         }
     }
+
+    private List<IProject> loadObsoleteWorkspacesWithProgressDialog(final Session session) throws Exception {
+        final List<IProject> obsoleteEnvironments = new ArrayList<>();
+        ProgressMonitorDialog dialog = new ProgressMonitorDialog(null);
+        dialog.run(true, false, monitor -> {
+            monitor.beginTask(session.messages.cleanObsoleteEnvironmentsHandler_message_fetchWorktreesProgressMonitor,
+                    IProgressMonitor.UNKNOWN);
+            for (final IProject project : session.getConfiguration().getProjects()) {
+                LOGGER.debug("Searching for obsolete environments in project: {}", project.getName());
+                if (!project.getObsoleteEnvironments().isEmpty()) {
+                    obsoleteEnvironments.add(project);
+                }
+            }
+            monitor.done();
+        });
+        return obsoleteEnvironments;
+    }
+
+    private boolean confirmDeletion(final Session session, List<IEnvironment> obsoleteEnvironments) {
+        if (!obsoleteEnvironments.isEmpty()) {
+            final String selectionStringMessageFormat = obsoleteEnvironments.stream() //
+                    .map(this::formatEnvironmentList) //
+                    .collect(Collectors.joining("\n"));
+            return MessageDialog.openConfirm(null, //
+                    session.bundleProperties.menuCleanObsoleteenvironments_label,
+                    MessageFormat.format(
+                            session.messages.cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog,
+                            selectionStringMessageFormat));
+        }
+        return false;
+    }
+
+    private String formatEnvironmentList(final IEnvironment env) {
+        return MessageFormat.format("\t- {0} / {1}", env.getProject().getDisplayName(), env.getDisplayName());
+    }
+
 }
