@@ -222,7 +222,7 @@ public final class ConfigurationImpl implements IConfiguration {
     private void loadProjects() {
         projects = config.projects.stream() //
                 .map(project -> new ProjectImpl(this, project)) //
-                .sorted() //
+                .sorted(getServiceContainer().getGemSorter().getProjectComparator()) //
                 .collect(Collectors.toList());
     }
 

@@ -37,6 +37,7 @@ Export-Package: org.aposin.gem.core;uses:="org.osgi.framework,org.slf4j",
  org.aposin.gem.core.impl.internal.workflow.command;x-internal:=true,
  org.aposin.gem.core.impl.internal.workflow.command.base;x-internal:=true,
  org.aposin.gem.core.impl.model.repo,
+ org.aposin.gem.core.impl.service,
  org.aposin.gem.core.impl.service.launcher,
  org.aposin.gem.core.utils
 Bundle-ClassPath: .,

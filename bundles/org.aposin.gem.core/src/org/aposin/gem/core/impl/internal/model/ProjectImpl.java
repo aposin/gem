@@ -18,7 +18,6 @@ package org.aposin.gem.core.impl.internal.model;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -129,7 +128,7 @@ public final class ProjectImpl implements IProject {
         // maybeObsoleteBranches only contain obsoleteBranches
         obsoleteEnvironments = maybeObsoleteBranches.stream() //
                 .map(branch -> new ObsoleteKnownEnvironment(config, this, projectInternalBranch, branch, branchToRepos.get(branch))) //
-                .sorted(Comparator.reverseOrder()) //
+                .sorted(config.getServiceContainer().getGemSorter().getEnvironmentComparator()) //
                 .collect(Collectors.toList());
     }
 
@@ -148,10 +147,8 @@ public final class ProjectImpl implements IProject {
             }
             environments.add(new EnvironmentImpl(config, this, env));
         }
-        // finally, sort environments (reverse order, as it is usually the version number)
-        // TODO - maybe it is worth to provide a configuration to short the environments
-        // TODO - or do it at the UI level instead of here...
-        environments.sort(Comparator.reverseOrder());
+        // sort environments using the sorter extension
+        environments.sort(config.getServiceContainer().getGemSorter().getEnvironmentComparator());
     }
 
     /**
