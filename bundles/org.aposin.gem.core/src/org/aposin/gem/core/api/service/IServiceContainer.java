@@ -18,16 +18,39 @@ package org.aposin.gem.core.api.service;
 import java.util.Collection;
 import java.util.Map;
 
+import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.IRefreshable;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.IConfigurable;
 import org.aposin.gem.core.api.service.launcher.IEnvironmentLauncherProvider;
 import org.aposin.gem.core.api.service.launcher.IFeatureBranchLauncherProvider;
+import org.aposin.gem.core.impl.service.DefaultGemSorter;
 
 /**
  * Container class for the services implemented by core and/or extensions.
  */
 public interface IServiceContainer extends IRefreshable, IConfigurable {
+
+    /**
+     * Gets the configured {@link IGemSorter}.
+     * </br>
+     * Default implementation checks for an optional unique gem-sorter.
+     * 
+     * @return sorter.
+     * 
+     * @throws GemException if more than one sorter is provided.
+     */
+    public default IGemSorter getGemSorter() {
+        final Collection<IGemSorter> sorters = getGemServices(IGemSorter.class);
+        switch (sorters.size()) {
+            case 0:
+                return new DefaultGemSorter();
+            case 1:
+                return sorters.iterator().next();
+            default:
+                throw new GemException("Several gem-sorters provided");
+        }
+    }
 
     /**
      * Gets the configured default feature branch provider.
