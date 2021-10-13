@@ -31,6 +31,7 @@ import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.ICommand.IResult;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
 import org.aposin.gem.core.api.workflow.IFeatureBranchWorkflow;
+import org.aposin.gem.core.api.workflow.IRepositoryCommandBuilder;
 import org.aposin.gem.core.api.workflow.WorkflowException;
 import org.aposin.gem.core.api.workflow.exception.MergeConflictException;
 import org.aposin.gem.core.impl.internal.workflow.command.CallableCommand;
@@ -250,7 +251,7 @@ public final class GemDefaultWorkflow extends AbstractGemWorkflow {
             return new WorkflowLauncherBuilder(featureBranch, "remove_branch") //
                     .displayName("Remove " + featureBranch.getDisplayName()) //
                     .canLaunch(() -> {
-                        if (requiresClone() || !requiresCheckout()) {
+                        if (requiresClone()) {
                             // if it is not cloned we cannot delete anything repository-related
                             // if it is checkout already, cannot delete as it should change to a different branch
                             return false;
@@ -271,8 +272,28 @@ public final class GemDefaultWorkflow extends AbstractGemWorkflow {
                         return anyMatch;
                     }) //
                     .build(() -> getCommandListByWorktree(w -> true, // all worktrees
-                                w -> w.getCommandBuilder().buildRemoveBranchCommand(
-                                    featureBranch.getCheckoutBranch(w.getRepository()))));
+                            this::createRemoveBranchCommand));
+        }
+
+        // creates a removeFeatureBranch command for the worktree
+        private ICommand createRemoveBranchCommand(final IWorktreeDefinition worktree) {
+            final IRepository repo = worktree.getRepository();
+            final String checkoutBranch = featureBranch.getCheckoutBranch(repo);
+            final IRepositoryCommandBuilder cmdBuilder = worktree.getCommandBuilder();
+            // remove command always
+            ICommand command = cmdBuilder.buildRemoveBranchCommand(checkoutBranch);
+            if (worktree.getBranch().equals(checkoutBranch)) {
+                final String baseBranch = featureBranch.getEnvironment().getEnvironmentBranch(repo);
+                final String internalBranchName = featureBranch.getEnvironment().getGemInternalBranchName();
+                final ICommand checkoutInternalBranch = cmdBuilder.buildCheckoutCommand(internalBranchName, baseBranch);
+                // before it should checkout the internal branch in this case
+                command = checkoutInternalBranch.and(command);
+                if (!worktree.isClean()) {
+                    // in case that it is dirty, do a clean before (it will delete everything)
+                    command = cmdBuilder.buildCleanCommand().and(command);
+                }
+            }
+            return command;
         }
 
         private ICommand composeWithMergeConflictRetryOrAbort(final IWorktreeDefinition worktree,
