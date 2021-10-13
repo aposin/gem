@@ -77,8 +77,7 @@ image::feature_branches.jpg[]
 * `Pull`: Pulls (fetch+merge from remote branch) the latest changes from the FB itself. Used to update the branch with remote changes, but for itself.
 * `Clean/Restore Worktree`: gets rid of changes that makes the worktree "dirty". WARNING: this action removes local changes without any backup and should be used with caution.
 * `Remove Branch`: removes the branch currently selected.
-  Note that if it is currently checked-out before the deletion, the worktree will switch to the configured branch for the environment, as a branch cannot be deleted if it is locally used.
-  This means that if the repository is dirty this action will fail.
+  Note that if it is currently checked-out before the deletion, the worktree will switch to the configured branch for the environment (and a force clean will be performed), as a branch cannot be deleted if it is locally used.
 
 === Feature Branches actions
 
