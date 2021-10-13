@@ -31,6 +31,7 @@ import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.ICommand.IResult;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
 import org.aposin.gem.core.api.workflow.IFeatureBranchWorkflow;
+import org.aposin.gem.core.api.workflow.IRepositoryCommandBuilder;
 import org.aposin.gem.core.api.workflow.WorkflowException;
 import org.aposin.gem.core.api.workflow.exception.MergeConflictException;
 import org.aposin.gem.core.impl.internal.workflow.command.CallableCommand;
@@ -278,15 +279,19 @@ public final class GemDefaultWorkflow extends AbstractGemWorkflow {
         private ICommand createRemoveBranchCommand(final IWorktreeDefinition worktree) {
             final IRepository repo = worktree.getRepository();
             final String checkoutBranch = featureBranch.getCheckoutBranch(repo);
+            final IRepositoryCommandBuilder cmdBuilder = worktree.getCommandBuilder();
             // remove command always
-            ICommand command = worktree.getCommandBuilder().buildRemoveBranchCommand(checkoutBranch);
+            ICommand command = cmdBuilder.buildRemoveBranchCommand(checkoutBranch);
             if (worktree.getBranch().equals(checkoutBranch)) {
                 final String baseBranch = featureBranch.getEnvironment().getEnvironmentBranch(repo);
                 final String internalBranchName = featureBranch.getEnvironment().getGemInternalBranchName();
-                final ICommand checkoutInternalBranch = worktree.getCommandBuilder()
-                        .buildCheckoutCommand(internalBranchName, baseBranch);
-                // befroe it should chekcout the internal branch in this case
+                final ICommand checkoutInternalBranch = cmdBuilder.buildCheckoutCommand(internalBranchName, baseBranch);
+                // before it should checkout the internal branch in this case
                 command = checkoutInternalBranch.and(command);
+                if (!worktree.isClean()) {
+                    // in case that it is dirty, do a clean before (it will delete everything)
+                    command = cmdBuilder.buildCleanCommand().and(command);
+                }
             }
             return command;
         }
