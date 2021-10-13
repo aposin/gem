@@ -16,7 +16,7 @@
 	
 	<properties>
 		<lib-output-folder>lib</lib-output-folder>
-		<config.version>1.4.0</config.version>
+		<config.version>1.4.1</config.version>
 		<zt-exec.version>1.11</zt-exec.version>
 	</properties>
 	
