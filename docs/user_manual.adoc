@@ -76,7 +76,9 @@ image::feature_branches.jpg[]
 * `Fetch & Checkout`: fetches the latest changes for the base branch and checkouts the FB. The fetch is useful when the branch doesn't exists yet, as it ensures that the newly created branch is up-to-date with the latest changes. Checkout creates a new branch if not existing or change the local filesystem representation to the branch latest state committed locally.
 * `Pull`: Pulls (fetch+merge from remote branch) the latest changes from the FB itself. Used to update the branch with remote changes, but for itself.
 * `Clean/Restore Worktree`: gets rid of changes that makes the worktree "dirty". WARNING: this action removes local changes without any backup and should be used with caution.
-* `Remove Branch`: removes the branch currently selected. Note that the button is disabled unless other branch is checkout, as a branch cannot be deleted if it is locally used.
+* `Remove Branch`: removes the branch currently selected.
+  Note that if it is currently checked-out before the deletion, the worktree will switch to the configured branch for the environment, as a branch cannot be deleted if it is locally used.
+  This means that if the repository is dirty this action will fail.
 
 === Feature Branches actions
 
