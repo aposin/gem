@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.config.ConfigurationLoader;
 import org.aposin.gem.core.api.config.IConfiguration;
-import org.aposin.gem.core.api.config.IPreferences;
+import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
 import org.aposin.gem.core.api.config.provider.git.GitConfigFileProvider;
 import org.aposin.gem.core.api.config.provider.git.GitConfigProviderHook;

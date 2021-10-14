@@ -17,7 +17,7 @@ package org.aposin.gem.core.api.config.provider;
 
 import java.nio.file.Path;
 import org.aposin.gem.core.GemException;
-import org.aposin.gem.core.api.config.IPreferences;
+import org.aposin.gem.core.api.config.prefs.IPreferences;
 
 /**
  * Configuration file provider interface.

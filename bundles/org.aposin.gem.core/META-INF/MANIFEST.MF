@@ -9,6 +9,7 @@ Bundle-Vendor: Association for the promotion of open-source insurance software a
 Export-Package: org.aposin.gem.core;uses:="org.osgi.framework,org.slf4j",
  org.aposin.gem.core.api,
  org.aposin.gem.core.api.config;uses:="org.aposin.gem.core.api.service,org.slf4j",
+ org.aposin.gem.core.api.config.prefs,
  org.aposin.gem.core.api.config.provider,
  org.aposin.gem.core.api.config.provider.git,
  org.aposin.gem.core.api.launcher,

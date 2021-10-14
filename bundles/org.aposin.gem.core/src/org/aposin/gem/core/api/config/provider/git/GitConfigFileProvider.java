@@ -23,7 +23,7 @@ import java.text.MessageFormat;
 
 import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.config.GemConfigurationException;
-import org.aposin.gem.core.api.config.IPreferences;
+import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
 import org.aposin.gem.core.impl.internal.util.GitConstants;
 import org.slf4j.Logger;

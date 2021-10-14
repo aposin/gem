@@ -18,7 +18,7 @@ package org.aposin.gem.core.impl.internal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.aposin.gem.core.GemException;
-import org.aposin.gem.core.api.config.IPreferences;
+import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.impl.internal.config.bean.GemPrefsBean;
 import org.aposin.gem.core.utils.ExecUtils;
 
