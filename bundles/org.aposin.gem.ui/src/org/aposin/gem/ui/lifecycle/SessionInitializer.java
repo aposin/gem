@@ -50,8 +50,10 @@ public class SessionInitializer extends GitConfigProviderHook implements IRunnab
 
     /**
      * File where the user preferences are stored.
+     * </br>
+     * This file is a HOCON file (.conf)
      */
-    public static final Path PREFS_FILE = Activator.APP_USER_PATH.resolve("user_prefs.properties");
+    public static final Path PREFS_FILE = Activator.APP_USER_PATH.resolve("user_prefs.conf");
 
     //TODO make file and folder configurable
     private final IConfigFileProvider configFileProvider = new GitConfigFileProvider(PREFS_FILE, CONFIG_FOLDER, this);

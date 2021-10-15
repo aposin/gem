@@ -10,6 +10,7 @@ import org.aposin.gem.core.api.IRefreshable;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
+import org.aposin.gem.core.utils.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,14 +120,14 @@ public class HoconFilesManager implements IRefreshable {
     // cache the persist options cause they can be re-used
     private ConfigRenderOptions getPreferencesPersistOptions() {
         if (prefPersistOptions == null) {
-            final String fileName = getConfigFileProvider().getPrefFile().getFileName().toString();
-            if (fileName.endsWith(".json")) {
+            final Path prefFile = getConfigFileProvider().getPrefFile();
+            if (ConfigUtils.isJson(prefFile)) {
                 // json-like but formatted (user friendly)
                 prefPersistOptions = ConfigRenderOptions.concise().setFormatted(true);
-            } else if (fileName.endsWith(".conf")) {
+            } else if (ConfigUtils.isHocon(prefFile)) {
                 prefPersistOptions = ConfigRenderOptions.defaults().setOriginComments(false);
             } else {
-                throw new GemConfigurationException("Unsupported preference file formant: " + fileName);
+                throw new GemConfigurationException("Unsupported preference file formant: " + prefFile);
             }
         }
         return prefPersistOptions;
