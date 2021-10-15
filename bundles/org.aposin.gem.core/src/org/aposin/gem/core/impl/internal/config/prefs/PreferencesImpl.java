@@ -17,30 +17,25 @@ package org.aposin.gem.core.impl.internal.config.prefs;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import org.aposin.gem.core.GemException;
+import org.aposin.gem.core.api.IRefreshable;
+import org.aposin.gem.core.api.config.ConfigConstants;
 import org.aposin.gem.core.api.config.prefs.IPreferences;
+import org.aposin.gem.core.impl.internal.config.HoconFilesManager;
 import org.aposin.gem.core.impl.internal.config.bean.GemPrefsBean;
 import org.aposin.gem.core.utils.ExecUtils;
 
-public class PreferencesImpl implements IPreferences {
+public class PreferencesImpl implements IPreferences, IRefreshable {
 
     // default values cached at the class level to avoid re-computing (e.g., path-finding)
     private static Path defaultGitPath;
 
-    private final Path preferencesPath;
-    private final GemPrefsBean prefsBean;
+    private final HoconFilesManager hoconFileManager;
+    private GemPrefsBean prefsBean;
 
-    public PreferencesImpl(final GemPrefsBean prefsBean) {
-        this(null, prefsBean);
-    }
-
-    public PreferencesImpl(final Path preferencesPath, final GemPrefsBean prefsBean) {
-        this.preferencesPath = preferencesPath == null ? getDefaultPath() : preferencesPath;
-        this.prefsBean = prefsBean;
-    }
-
-    private static final Path getDefaultPath() {
-        return Paths.get(System.getProperty("user.home"), "GEM", "prefs", "gem-prefs.config");
+    public PreferencesImpl(final HoconFilesManager hoconFileManager) {
+        this.hoconFileManager = hoconFileManager;
     }
 
     /**
@@ -49,7 +44,7 @@ public class PreferencesImpl implements IPreferences {
      * @return
      */
     public Path getGitBinary() {
-        if (prefsBean.binaries.git != null) {
+        if (getPrefsBean().binaries.git != null) {
             return Paths.get(prefsBean.binaries.git);
         }
         if (defaultGitPath == null) {
@@ -66,19 +61,29 @@ public class PreferencesImpl implements IPreferences {
      * @param binary
      */
     public void setGitBinary(final Path binary) {
-        prefsBean.binaries.git = binary.toAbsolutePath().toString();
+        getPrefsBean().binaries.git = binary.toAbsolutePath().toString();
     }
 
     @Override
     public Path getPreferencesPath() {
-        return null;
+        return hoconFileManager.getConfigFileProvider().getPrefFile();
     }
 
     @Override
     public void persist() throws GemException {
-        System.err.println("Should persist to " + preferencesPath);
-        // TODO - implement persist file using a renderer in either JSON/properties (depending on
-        // the extension)
+        hoconFileManager.persistPrefs();
+    }
+
+    private GemPrefsBean getPrefsBean() {
+        if (prefsBean == null) {
+            prefsBean = hoconFileManager.getPreferenceBean(ConfigConstants.GEM_PREFERENCES_ID, GemPrefsBean.class);
+        }
+        return prefsBean;
+    }
+
+    @Override
+    public void refresh() {
+        prefsBean = null;
     }
 
 }
