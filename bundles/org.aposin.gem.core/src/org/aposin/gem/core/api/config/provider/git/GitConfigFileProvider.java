@@ -23,9 +23,10 @@ import java.text.MessageFormat;
 
 import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.config.GemConfigurationException;
-import org.aposin.gem.core.api.config.IPreferences;
+import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
 import org.aposin.gem.core.impl.internal.util.GitConstants;
+import org.aposin.gem.core.utils.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeroturnaround.exec.InvalidResultException;
@@ -97,7 +98,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
     public Path getPrefFile() {
         if (!Files.exists(preferenceFile)) {
             try {
-                Files.createFile(preferenceFile);
+                ConfigUtils.createEmptyConfig(preferenceFile);
             } catch (final IOException e) {
                 LOGGER.error("Unable to create prefs file", e);
             }

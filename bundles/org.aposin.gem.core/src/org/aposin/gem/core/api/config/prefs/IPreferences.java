@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.aposin.gem.core.api.config;
+package org.aposin.gem.core.api.config.prefs;
 
 import java.nio.file.Path;
 import org.aposin.gem.core.GemException;

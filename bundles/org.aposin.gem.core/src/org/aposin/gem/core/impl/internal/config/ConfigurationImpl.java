@@ -16,7 +16,6 @@
 package org.aposin.gem.core.impl.internal.config;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,7 +34,7 @@ import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.config.ConfigConstants;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.IConfiguration;
-import org.aposin.gem.core.api.config.IPreferences;
+import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
@@ -43,21 +42,14 @@ import org.aposin.gem.core.api.model.IRepository;
 import org.aposin.gem.core.api.model.repo.GemRepoHookDescriptor;
 import org.aposin.gem.core.api.service.IServiceContainer;
 import org.aposin.gem.core.api.workflow.ICommand.IResult;
-import org.aposin.gem.core.impl.internal.PreferencesImpl;
 import org.aposin.gem.core.impl.internal.config.bean.GemCfgBean;
 import org.aposin.gem.core.impl.internal.config.bean.GemCfgBean.RepositoryBean;
-import org.aposin.gem.core.impl.internal.config.bean.GemPrefsBean;
+import org.aposin.gem.core.impl.internal.config.prefs.PreferencesImpl;
 import org.aposin.gem.core.impl.internal.model.ProjectImpl;
 import org.aposin.gem.core.impl.internal.model.repo.RepositoryImpl;
 import org.aposin.gem.core.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigBeanFactory;
-import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigParseOptions;
 
 /**
  * Internal implementation of {@link IConfiguration}.
@@ -66,13 +58,11 @@ public final class ConfigurationImpl implements IConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationImpl.class);
 
-    private final Config defaultConfig;
-    private final IConfigFileProvider configFileProvider;
+    private final HoconFilesManager hoconFileManager;
 
     // reloaded
-    private PreferencesImpl prefs;
     private IServiceContainer services;
-    private Config baseConfig;
+    private PreferencesImpl prefs;
     /*package*/ GemCfgBean config;
 
     private List<IProject> projects;
@@ -85,67 +75,36 @@ public final class ConfigurationImpl implements IConfiguration {
      * @param prefs
      */
     public ConfigurationImpl(final IConfigFileProvider configFileProvider) {
-        defaultConfig = ConfigFactory.load().resolve();
-        this.configFileProvider = configFileProvider;
         this.services = new ServiceContainer(this);
+        this.hoconFileManager = new HoconFilesManager(configFileProvider);
         refresh();
     }
 
     @Override
     public IPreferences getPreferences() {
         if (prefs == null) {
-            final Path configFile = configFileProvider.getPrefFile();
-            final GemPrefsBean bean = ConfigBeanFactory.create(loadFromFile(configFile)
-                    .getConfig(ConfigConstants.GEM_PREFERENCES_ID).resolve(), GemPrefsBean.class);
-            prefs = new PreferencesImpl(configFile, bean);
+            prefs = new PreferencesImpl(hoconFileManager);
         }
         return prefs;
     }
 
     @Override
     public void refresh() throws GemException {
-        // set to null to force reload prefs
-        prefs = null;
-        baseConfig = loadFromFile(configFileProvider.getConfigFile(getPreferences()));
-        // for the core configuration, if the config is wrong, the constructor fails!
-        config = getPluginConfiguration(ConfigConstants.GEM_CONFIGURATION_ID, GemCfgBean.class);
         projects = null;
         repositoriesById = null;
         services.refresh();
-    }
-
-    private Config loadFromFile(final Path configFile) {
-        if (configFile == null) {
-            return defaultConfig;
+        // refresh the preferences if already created
+        if (prefs != null) {
+            prefs.refresh();
         }
-        try (final Reader reader = Files.newBufferedReader(configFile)) {
-            LOGGER.info("Loading configuration file from {}", configFile);
-            final ConfigParseOptions options = ConfigParseOptions.defaults()//
-                    .prependIncluder(new PathConfigIncluder(configFile)) //
-                    .setSyntaxFromFilename(configFile.toString()) //
-                    .setOriginDescription(configFile + "(reader)");
-            // always fallback to default configuration
-            return ConfigFactory.parseReader(reader, options).withFallback(defaultConfig).resolve();
-        } catch (final IOException | ConfigException e) {
-            LOGGER.error("Error loading configuration", e);
-            throw new GemException("Error loading the configuration", e);
-        }
+        hoconFileManager.refresh();
+        // for the core configuration, if the config is wrong, the constructor fails!
+        config = getPluginConfiguration(ConfigConstants.GEM_CONFIGURATION_ID, GemCfgBean.class);
     }
 
     @Override
     public <T> T getPluginConfiguration(String id, Class<T> configBean) {
-        Config pluginConfig = null;
-        try {
-            pluginConfig = baseConfig.getConfig(id).resolve();
-            return ConfigBeanFactory.create(pluginConfig, configBean);
-        } catch (final ConfigException excp) {
-            if (pluginConfig != null && LOGGER.isErrorEnabled()) {
-                LOGGER.error("Plug-in config cannot be loaded to bean: {} {}", //
-                        id, pluginConfig.root().render());
-            }
-            throw new GemConfigurationException(
-                    "Error loading " + id + " configuration: " + excp.getMessage(), excp);
-        }
+        return hoconFileManager.getConfigurationBean(getPreferences(), id, configBean);
     }
 
     @Override
@@ -279,7 +238,7 @@ public final class ConfigurationImpl implements IConfiguration {
 
     @Override
     public Path getRelativeToConfigFile(final String relativePath) {
-        return configFileProvider.getRelativeToConfigFile(relativePath);
+        return hoconFileManager.getConfigFileProvider().getRelativeToConfigFile(relativePath);
     }
 
     @Override
