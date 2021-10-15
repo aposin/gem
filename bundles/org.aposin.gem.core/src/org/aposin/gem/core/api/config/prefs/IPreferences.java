@@ -16,19 +16,85 @@
 package org.aposin.gem.core.api.config.prefs;
 
 import java.nio.file.Path;
+import java.util.List;
+import java.util.function.Supplier;
+
 import org.aposin.gem.core.GemException;
+import org.aposin.gem.core.api.config.GemConfigurationException;
+import org.aposin.gem.core.api.config.prefs.values.IPrefValue;
 
 /**
  * Preferences for GEM, which could be persisted and loaded.
+ * </br>
+ * The concrete methods represents the values from the core.
  */
+@SuppressWarnings("rawtypes") // required because we work witrh IPrefValue without type
 public interface IPreferences {
 
     /**
-     * Gets the path where this preferences are persisted.
+     * Gets the git binary path
+     * Checks if the key is present on the preferences.
      * 
-     * @return path where the preferences are persisted.
+     * @return path to git command; {@code null} if not found.
+     * @param id the ID for the preference
+     * @return {@code true} if it is present; {@code false} otherwise
      */
-    public Path getPreferencesPath();
+    public Path getGitBinary();
+
+    public boolean has(final String id);
+
+    public IPrefValue get(final String id) throws GemConfigurationException;
+
+    public IPrefValue getOrSetDefault(final String id, final Supplier<IPrefValue> defaultSupplier);
+
+    /**
+     * Gets a view of the all the default preferences and core ones.
+     * </br>
+     * Setting the value on the {@link IPrefValue} won't be persisted
+     * until {@link #registerToPersist(IPrefValue)} are called.
+     * 
+     * @return a view of all preferences
+     */
+    // TODO: maybe join by group?
+    public List<IPrefValue> getAll();
+
+    /**
+     * Sets the default preference value.
+     * </br>
+     * Default preferences are not registered to be persisted
+     * until {@link #registerToPersist(IPrefValue)} is called for the same.
+     * 
+     * @param value default preference value
+     * 
+     * @throws GemConfigurationException if the preference cannot be set.
+     */
+    public void setDefault(final IPrefValue value) throws GemConfigurationException;
+
+    /**
+     * Sets the default preferences.
+     * </br>
+     * Default preferences are not registered to be persisted
+     * until {@link #registerToPersist(IPrefValue)} is called for the same.
+     * 
+     * @param values default values; will be updated after calling.
+     */
+    public default void setDefault(final List<IPrefValue> values) {
+        for (final IPrefValue v : values) {
+            setDefault(v);
+        }
+    }
+
+    /**
+     * Register a preference value to be persisted.
+     * </br>
+     * The actual persist is not triggered untill {@link #persist()}
+     * is called.
+     * 
+     * @param value the value to be persisted.
+     * 
+     * @throws GemConfigurationException if the preference cannot be registered.
+     */
+    public void registerToPersist(final String id) throws GemConfigurationException;
 
     /**
      * Persists the preferences.
@@ -38,19 +104,20 @@ public interface IPreferences {
     public void persist() throws GemException;
 
     /**
-     * Gets the git binary path
+     * Gets the preference as a bean.
+     * </br>
+     * Synchronization of the bean with the preferences object is not done,
+     * and modification on the returned object are not persisted on
+     * {@link #persist()}.
      * 
-     * @return path to git command; {@code null} if not found.
-     */
-    public Path getGitBinary();
-
-    /**
-     * Sets the git binary.
+     * @param id identifier for the preference bean.
+     * @param prefBean object representing the configured options
      * 
-     * @param binary path to git command.
+     * @return bean with the loaded configuration.
+     * @throws GemConfigurationException if the preference is missing or invalid.
      */
-    public void setGitBinary(final Path binary);
-
-
+    // TODO: how to get the configuration resolved with the preferences?
+    // TODO: maybe add a method on the IConfiguration instead?
+    public <T> T getPreferenceBean(final String id, final Class<T> prefBean) throws GemConfigurationException;
 
 }

@@ -16,74 +16,116 @@
 package org.aposin.gem.core.impl.internal.config.prefs;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.IRefreshable;
-import org.aposin.gem.core.api.config.ConfigConstants;
+import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.prefs.IPreferences;
+import org.aposin.gem.core.api.config.prefs.PrefConstants;
+import org.aposin.gem.core.api.config.prefs.values.IPrefValue;
 import org.aposin.gem.core.impl.internal.config.HoconFilesManager;
-import org.aposin.gem.core.impl.internal.config.bean.GemPrefsBean;
 import org.aposin.gem.core.utils.ExecUtils;
 
+/**
+ * Default implementation of the preferences based on HOCON files.
+ * </br>
+ * In this class is kept the list of added preferences and the core added ones.
+ * Managing of the preference file is done by the {@link HoconFilesManager}.
+ */
+@SuppressWarnings("rawtypes") // required because we work witrh IPrefValue without type
 public class PreferencesImpl implements IPreferences, IRefreshable {
 
-    // default values cached at the class level to avoid re-computing (e.g., path-finding)
-    private static Path defaultGitPath;
+    private final HoconFilesManager hoconPrefHandler;
 
-    private final HoconFilesManager hoconFileManager;
-    private GemPrefsBean prefsBean;
+    private final Map<String, IPrefValue> addedPrefs = new LinkedHashMap<>();
+    private GitBinaryPref gitBinaryPref;
 
-    public PreferencesImpl(final HoconFilesManager hoconFileManager) {
-        this.hoconFileManager = hoconFileManager;
-    }
-
-    /**
-     * Gets the git binary.
-     * 
-     * @return
-     */
-    public Path getGitBinary() {
-        if (getPrefsBean().binaries.git != null) {
-            return Paths.get(prefsBean.binaries.git);
-        }
-        if (defaultGitPath == null) {
-            // set default if not present
-            final Path gitPath = ExecUtils.findExecutable("git").toAbsolutePath();
-            defaultGitPath = gitPath;
-        }
-        return defaultGitPath;
-    }
-
-    /**
-     * Sets the git binary.
-     * 
-     * @param binary
-     */
-    public void setGitBinary(final Path binary) {
-        getPrefsBean().binaries.git = binary.toAbsolutePath().toString();
+    public PreferencesImpl(final HoconFilesManager hoconPrefHandler) {
+        this.hoconPrefHandler = hoconPrefHandler;
     }
 
     @Override
-    public Path getPreferencesPath() {
-        return hoconFileManager.getConfigFileProvider().getPrefFile();
+    public Path getGitBinary() {
+        return getGitBinaryPref().getValue();
+    }
+
+    private GitBinaryPref getGitBinaryPref() {
+        if (gitBinaryPref == null) {
+            gitBinaryPref = (GitBinaryPref) hoconPrefHandler.updatePrefValue(new GitBinaryPref());
+            if (gitBinaryPref.getValue() == null) {
+                gitBinaryPref.setValue(ExecUtils.findExecutable("git"));
+            }
+        }
+        // always update (might have change on the configuration by other means)
+        return (GitBinaryPref) hoconPrefHandler.updatePrefValue(gitBinaryPref);
+    }
+
+    public boolean has(final String id) {
+        return PrefConstants.GIT_ID.equals(id) || addedPrefs.containsKey(id);
+    }
+
+    @Override
+    public IPrefValue get(final String id) throws GemConfigurationException {
+        // handle first the core preferences
+        if (PrefConstants.GIT_ID.equals(id)) {
+            return getGitBinaryPref();
+        }
+        IPrefValue prefValue = addedPrefs.get(id);
+        if (prefValue != null) {
+            return hoconPrefHandler.updatePrefValue(prefValue);
+        }
+        throw new GemException("Unknown preference " + id);
+    }
+
+    @Override
+    public IPrefValue getOrSetDefault(final String id, Supplier<IPrefValue> defaultSupplier) {
+        // default is already set on the core preferences by the framework
+        if (PrefConstants.GIT_ID.equals(id)) {
+            return getGitBinaryPref();
+        }
+        return addedPrefs.computeIfAbsent(id, key -> defaultSupplier.get());
+    }
+
+    public List<IPrefValue> getAll() {
+        final List<IPrefValue> prefValues = new ArrayList<>(addedPrefs.size() + 1);
+        prefValues.add(getGitBinaryPref());
+        addedPrefs.values().stream() //
+                .forEach(prefVal -> prefValues.add(hoconPrefHandler.updatePrefValue(prefVal)));
+        return prefValues;
+    }
+
+    @Override
+    public void setDefault(IPrefValue value) throws GemConfigurationException {
+        if (addedPrefs.putIfAbsent(value.getId(), value) != null) {
+            throw new GemException("Trying to set a duplicate default preference: " + value.getId());
+        }
+    }
+
+    @Override
+    public void registerToPersist(String id) throws GemConfigurationException {
+        hoconPrefHandler.registerToPersist(get(id));
     }
 
     @Override
     public void persist() throws GemException {
-        hoconFileManager.persistPrefs();
+        hoconPrefHandler.persistPrefs();
     }
 
-    private GemPrefsBean getPrefsBean() {
-        if (prefsBean == null) {
-            prefsBean = hoconFileManager.getPreferenceBean(ConfigConstants.GEM_PREFERENCES_ID, GemPrefsBean.class);
-        }
-        return prefsBean;
+    @Override
+    public <T> T getPreferenceBean(String id, Class<T> prefBean) throws GemConfigurationException {
+        return hoconPrefHandler.getPreferenceBean(id, prefBean);
     }
 
     @Override
     public void refresh() {
-        prefsBean = null;
+        // this should only be called by the ConfigurationImpl so no need to refresh also the HoconFileManager
+        this.gitBinaryPref = null;
+        this.addedPrefs.clear();
     }
 
 }

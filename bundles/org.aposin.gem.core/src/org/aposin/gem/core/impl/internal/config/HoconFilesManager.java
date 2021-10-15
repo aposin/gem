@@ -4,11 +4,16 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.IRefreshable;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.prefs.IPreferences;
+import org.aposin.gem.core.api.config.prefs.values.BooleanPref;
+import org.aposin.gem.core.api.config.prefs.values.IPrefValue;
+import org.aposin.gem.core.api.config.prefs.values.PathPref;
+import org.aposin.gem.core.api.config.prefs.values.StringPref;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
 import org.aposin.gem.core.utils.ConfigUtils;
 import org.slf4j.Logger;
@@ -20,6 +25,7 @@ import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigParseOptions;
 import com.typesafe.config.ConfigRenderOptions;
+import com.typesafe.config.ConfigValueFactory;
 
 /**
  * Class to manage the GEM default files used for configuration and user preferences.
@@ -103,6 +109,49 @@ public class HoconFilesManager implements IRefreshable {
         }
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public IPrefValue updatePrefValue(IPrefValue prefValue) {
+        final Config prefsConfig = getPreferences();
+        if (prefsConfig.hasPath(prefValue.getId())) {
+            if (prefValue instanceof PathPref) {
+                final PathPref pathPref = (PathPref) prefValue;
+                // special handling of path
+                final Path path = getPathFromConfig(prefsConfig, pathPref.getId());
+                pathPref.setValue(path);
+            } else if (prefValue instanceof BooleanPref) {
+                final boolean v = prefsConfig.getBoolean(prefValue.getId());
+                prefValue.setValue(v);
+            } else if (prefValue instanceof StringPref) {
+                final String v = prefsConfig.getString(prefValue.getId());
+                prefValue.setValue(v);
+            } else {
+                throw new GemConfigurationException("Unrecognized preference type: " + prefValue.getClass());
+            }
+        }
+        return prefValue;
+    }
+
+    /**
+     * Register the preference value to be persisted.
+     * 
+     * @param prefValue value to be persisted.
+     * 
+     * @throws GemException if the preference cannot be persisted
+     */
+    public void registerToPersist(IPrefValue prefValue) throws GemConfigurationException {
+        final Object configValue;
+        if (prefValue instanceof PathPref) {
+            // for path we store the absolute path
+            configValue = ((PathPref) prefValue).getValue().toAbsolutePath().toString();
+        } else if (isHoconSupported(prefValue)) {
+            configValue = prefValue.getValue();
+        } else {
+            throw new GemException("Unsupported preference type" + prefValue.getClass());
+        }
+        // override
+        preferences = getPreferences().withValue(prefValue.getId(), ConfigValueFactory.fromAnyRef(configValue));
+    }
+
     /**
      * Persist the preference file.
      * 
@@ -115,6 +164,11 @@ public class HoconFilesManager implements IRefreshable {
         } catch (final IOException e) {
             throw new GemException("Error persisting preferences", e);
         }
+    }
+
+    // helper method to check if a pref value return type is supported by the hocon implementation directly
+    private boolean isHoconSupported(final IPrefValue prefValue) {
+        return prefValue instanceof BooleanPref || prefValue instanceof StringPref;
     }
 
     // cache the persist options cause they can be re-used
@@ -174,4 +228,10 @@ public class HoconFilesManager implements IRefreshable {
         return baseConfig;
     }
 
+    // helper method to get a config as a Path (not supported on the typesafe impl)
+    private static Path getPathFromConfig(final Config config, final String id) {
+        // paths are stored as strings
+        final String pathAsString = config.getString(id);
+        return Paths.get(pathAsString);
+    }
 }
