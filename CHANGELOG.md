@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning (SemVer)](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+* Plug-in interface to create several services based on configuration
+* New menu and dialog to detect and clean obsolete environments
+* Extension to provide sorting of projects/environments
+
+### Changed
+
+* Improved misconfigured launchers on UI
+* Improved 'Remove Branch' workflow: if the branch is checkout already, clean and then checkout to internal branch before branch removal
+* User preferences created by the framework is now HOCON
+
+### Fixed
+
+* Fix bug on switching to not completely cloned environments
+
 ## [0.3.0]
 
 First pre-release.
