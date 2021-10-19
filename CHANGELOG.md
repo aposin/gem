@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning (SemVer)](http://semver.org/).
 
 ### Added
 
-* Plug-in interface to create seve3ral services based on configuration
+* Plug-in interface to create several services based on configuration
 * New menu and dialog to detect and clean obsolete environments
 * Extension to provide sorting of projects/environments
 
