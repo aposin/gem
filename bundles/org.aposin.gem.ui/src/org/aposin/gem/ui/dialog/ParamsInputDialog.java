@@ -18,6 +18,7 @@ package org.aposin.gem.ui.dialog;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 import org.aposin.gem.core.api.launcher.ILauncher;
 import org.aposin.gem.core.api.launcher.IParam;
 import org.aposin.gem.core.api.launcher.IParam.BooleanParam;
@@ -77,16 +78,6 @@ public class ParamsInputDialog extends Dialog {
         if (title != null) {
             shell.setText(title);
         }
-    }
-
-    /**
-     * Default button is the cancel one.
-     */
-    @Override
-    protected void createButtonsForButtonBar(Composite parent) {
-        // create OK and Cancel buttons -> cancel default to avoid running
-        createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, false);
-        createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, true);
     }
 
     /**
