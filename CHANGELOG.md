@@ -17,10 +17,12 @@ and this project adheres to [Semantic Versioning (SemVer)](http://semver.org/).
 * Improved misconfigured launchers on UI
 * Improved 'Remove Branch' workflow: if the branch is checkout already, clean and then checkout to internal branch before branch removal
 * User preferences created by the framework is now HOCON
+* Change button focus for dialog to input parameters to OK instead of Cancel (e.g., manual branch creation dialog)
 
 ### Fixed
 
 * Fix bug on switching to not completely cloned environments
+
 
 ## [0.3.0]
 
