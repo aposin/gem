@@ -92,14 +92,15 @@ public final class ConfigurationImpl implements IConfiguration {
     public void refresh() throws GemException {
         projects = null;
         repositoriesById = null;
-        services.refresh();
+        // first the files should be read again
+        hoconFileManager.refresh();
         // refresh the preferences if already created
         if (prefs != null) {
             prefs.refresh();
         }
-        hoconFileManager.refresh();
-        // for the core configuration, if the config is wrong, the constructor fails!
         config = getPluginConfiguration(ConfigConstants.GEM_CONFIGURATION_ID, GemCfgBean.class);
+        // services should refresh at the end, once the configuration is reloaded
+        services.refresh();
     }
 
     @Override
