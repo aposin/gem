@@ -16,6 +16,7 @@
 package org.aposin.gem.ui.view;
 
 import org.aposin.gem.ui.message.MessageRegistry;
+import org.aposin.gem.ui.view.DynamicButtonGroupListView.TYPE;
 import org.aposin.gem.ui.view.dashboard.DashboardView;
 import org.aposin.gem.ui.view.fieldassist.ComboViewerAutoCompleteField;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -140,10 +141,8 @@ public final class FeatureBranchWorkflowView extends Composite {
         dashboardView.createColumn(BASE_BRANCH_COLUMN_ID);
         dashboardView.createColumn(TARGET_BRANCH_COLUMN_ID);
         
-        final Composite fbLauncherButtonsComposite = new Composite(this, SWT.NONE);
-        fbLauncherButtonsComposite.setLayout(new FillLayout());
-        fbLauncherButtonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
-        featureBranchLauncherButtons = new DynamicButtonGroupListView(fbLauncherButtonsComposite, SWT.HORIZONTAL);
+        featureBranchLauncherButtons = new DynamicButtonGroupListView(this, TYPE.HORIZONTAL);
+        featureBranchLauncherButtons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
     }
 
     /**

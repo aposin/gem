@@ -17,14 +17,15 @@ package org.aposin.gem.ui.view.dashboard;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.aposin.gem.ui.view.DynamicButtonGroupListView;
+import org.aposin.gem.ui.view.DynamicButtonGroupListView.TYPE;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -63,10 +64,8 @@ public class DashboardView extends Composite {
         dynamicButtonsLabel = new Label(this, SWT.NONE);
         dynamicButtonsLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-        final Composite dynamicButtonsComposite = new Composite(this, SWT.NONE);
-        dynamicButtonsComposite.setLayout(new FillLayout());
-        dynamicButtonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-        dynamicButtons = new DynamicButtonGroupListView(dynamicButtonsComposite, SWT.VERTICAL);
+        dynamicButtons = new DynamicButtonGroupListView(this, TYPE.VERTICAL);
+        dynamicButtons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
     }
 
     public final TableViewer getTableViewer() {

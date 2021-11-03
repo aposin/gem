@@ -17,11 +17,13 @@ package org.aposin.gem.ui.dialog;
 
 import java.text.MessageFormat;
 import java.util.List;
+
 import org.aposin.gem.core.api.launcher.ILauncher;
 import org.aposin.gem.core.api.model.IWorktreeDefinition;
 import org.aposin.gem.ui.message.Messages;
 import org.aposin.gem.ui.part.PartHelper;
 import org.aposin.gem.ui.view.DynamicButtonGroupListView;
+import org.aposin.gem.ui.view.DynamicButtonGroupListView.TYPE;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -75,7 +77,7 @@ public class MergeConflictDialog extends MessageDialog {
             return null;
         }
         // TODO: this create a group-list view, but maybe better a single group or no group?
-        final DynamicButtonGroupListView view = new DynamicButtonGroupListView(parent, SWT.HORIZONTAL);
+        final DynamicButtonGroupListView view = new DynamicButtonGroupListView(parent, TYPE.HORIZONTAL);
         PartHelper.recreateLauncherButtons(view, launchers, themeId);
         return view;
     }

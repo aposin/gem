@@ -17,8 +17,10 @@ package org.aposin.gem.ui.part;
 
 import java.util.List;
 import java.util.Objects;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.ui.lifecycle.Session;
@@ -26,6 +28,7 @@ import org.aposin.gem.ui.lifecycle.event.EnvironmentSynchronizedEvent;
 import org.aposin.gem.ui.lifecycle.event.RefreshedObjectEvent;
 import org.aposin.gem.ui.lifecycle.event.SessionEnvironmentChangeEvent;
 import org.aposin.gem.ui.view.DynamicButtonGroupListView;
+import org.aposin.gem.ui.view.DynamicButtonGroupListView.TYPE;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -73,7 +76,7 @@ public class EnvironmentLauncherPart {
 
     @PostConstruct
     public void postConstruct(final Composite parent) {
-        this.view = new DynamicButtonGroupListView(parent, SWT.HORIZONTAL);
+        this.view = new DynamicButtonGroupListView(parent, TYPE.HORIZONTAL);
         createLauncherButtons(session.getSessionEnvironment());
         PartHelper.updateLauncherButtonsEnablement(view);
         if (parent != null && sibling != null) {

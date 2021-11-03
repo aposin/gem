@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -28,9 +29,22 @@ public class DynamicButtonGroupListView extends Composite {
 
     private final Map<String, DynamicButtonGroup> launcherButtonsByGroupId = new HashMap<>();
 
-    public DynamicButtonGroupListView(final Composite parent, int type) {
+    public static enum TYPE {
+
+        HORIZONTAL(SWT.HORIZONTAL), //
+        VERTICAL(SWT.VERTICAL);
+
+        private final int rowLayout;
+
+        private TYPE(final int rowLayout) {
+            this.rowLayout = rowLayout;
+        }
+    }
+
+    // TODO: create an enum for type
+    public DynamicButtonGroupListView(final Composite parent, TYPE type) {
         super(parent, SWT.NONE);
-        RowLayoutFactory.fillDefaults().type(type).applyTo(this);
+        RowLayoutFactory.fillDefaults().type(type.rowLayout).applyTo(this);
     }
 
     public DynamicButtonGroup getOrCreateGroup(final String id) {
