@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.launcher.ILauncher;
 import org.aposin.gem.core.api.model.IEnvironment;
@@ -52,7 +53,7 @@ public class EclipseLauncherProvider implements IEnvironmentLauncherProvider {
         final int nReleases = eclipseBean.releases.size();
         final List<ILauncher> starters = new ArrayList<>(nReleases);
         for (int idx = 0; idx < nReleases; idx++) {
-            // TODO - implement a filter on the configuration for environments/projects
+            // TODO #42 - implement a filter on the configuration for environments/projects
             starters.add(new EclipseLauncher(this, environment, idx));
         }
         return starters;

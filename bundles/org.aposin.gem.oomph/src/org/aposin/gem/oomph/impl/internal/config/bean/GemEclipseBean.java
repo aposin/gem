@@ -84,8 +84,6 @@ public class GemEclipseBean {
 
         public String name;
         public String displayname;
-        // TODO - do we really need a list of paths for each Eclipse?
-        // TODO - I will suggest to use just one
         public List<String> paths;
         public List<String> args;
         public List<String> vmargs;
