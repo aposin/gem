@@ -17,6 +17,7 @@ package org.aposin.gem.ui.view;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;

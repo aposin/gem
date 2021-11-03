@@ -22,14 +22,16 @@ import java.util.Map;
 
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class DynamicButtonGroupListView extends Composite {
+public class DynamicButtonGroupListView extends ScrolledComposite {
 
     private final Map<String, DynamicButtonGroup> launcherButtonsByGroupId = new HashMap<>();
 
-    public static enum TYPE {
+    public enum TYPE {
 
         HORIZONTAL(SWT.HORIZONTAL), //
         VERTICAL(SWT.VERTICAL);
@@ -41,15 +43,24 @@ public class DynamicButtonGroupListView extends Composite {
         }
     }
 
-    // TODO: create an enum for type
+    private Composite container;
+
     public DynamicButtonGroupListView(final Composite parent, TYPE type) {
-        super(parent, SWT.NONE);
-        RowLayoutFactory.fillDefaults().type(type.rowLayout).applyTo(this);
+        // TODO: change to the required oone for the type
+        super(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+        setLayout(new FillLayout());
+        container = new Composite(parent, SWT.NONE);
+        container.setBackground(getDisplay().getSystemColor(SWT.COLOR_RED));
+        this.setContent(container);
+        RowLayoutFactory.fillDefaults().type(type.rowLayout).applyTo(container);
     }
 
     public DynamicButtonGroup getOrCreateGroup(final String id) {
         return launcherButtonsByGroupId.computeIfAbsent(id, //
-                newId -> new DynamicButtonGroup(this, SWT.NONE));
+                newId ->
+                {
+                    return new DynamicButtonGroup(container, SWT.NONE);
+                });
     }
 
     public Collection<DynamicButtonGroup> getGroups() {
