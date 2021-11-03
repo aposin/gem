@@ -54,6 +54,9 @@ public class Messages {
     public String sessionInitializer_title_openQuestionDialog;
     public String sessionInitializer_messageFormat_checkoutDifferentBranchQuestionDialog;
     public String sessionInitializer_messageFormat_pullFailsProceedQuestionDialog;
+    public String gemExceptionManager_titleFormat_gemError;
+    public String gemExceptionManager_title_unexpectedError;
+    public String gemExceptionManager_messageFormat_fatalError;
 
     ///////////////////////////////
     // model common labels
