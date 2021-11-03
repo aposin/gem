@@ -20,29 +20,26 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.aposin.gem.ui.lifecycle.Session;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-public class RefreshSessionHandler {
+/**
+ * Handler to refresh the session.
+ */
+public class RefreshSessionHandler extends GemAbstractSessionHandler {
 
-    @Execute
-    public void execute(final Session session) throws Throwable {
+    @Override
+    public void doExecute(final Session session) throws Exception {
         final ProgressMonitorDialog dialog = new ProgressMonitorDialog(null);
-        try {
-            dialog.run(true, false, new IRunnableWithProgress() {
+        // possible exceptions are handled by the super class
+        dialog.run(true, false, new IRunnableWithProgress() {
 
-                @Override
-                public void run(IProgressMonitor monitor)
-                        throws InvocationTargetException, InterruptedException {
-                    monitor.beginTask(Session.messages.refreshSessionHandler_message_progressMonitorStart,
-                            IProgressMonitor.UNKNOWN);
-                    session.refresh(monitor);
-                }
-            });
-        } catch (final InvocationTargetException | InterruptedException e) {
-            // rethrows the cause
-            throw e.getCause();
-        }
+            @Override
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                monitor.beginTask(Session.messages.refreshSessionHandler_message_progressMonitorStart,
+                        IProgressMonitor.UNKNOWN);
+                session.refresh(monitor);
+            }
+        });
     }
 }
