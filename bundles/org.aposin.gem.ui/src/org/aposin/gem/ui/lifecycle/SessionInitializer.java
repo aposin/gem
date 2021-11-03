@@ -80,7 +80,7 @@ public class SessionInitializer extends GitConfigProviderHook implements IRunnab
 
     public void setProgressMonitor(final IProgressMonitor monitor) {
         if (this.monitor != null) {
-            throw new GemException("Already running");
+            throw new GemException("Should not happen: already running session initializer", true);
         }
         this.monitor = monitor;
     }
