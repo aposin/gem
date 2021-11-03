@@ -98,7 +98,12 @@ public final class ConfigurationImpl implements IConfiguration {
         if (prefs != null) {
             prefs.refresh();
         }
-        config = getPluginConfiguration(ConfigConstants.GEM_CONFIGURATION_ID, GemCfgBean.class);
+        try {
+            config = getPluginConfiguration(ConfigConstants.GEM_CONFIGURATION_ID, GemCfgBean.class);
+        } catch (final GemConfigurationException e) {
+            // convert any configuration exception to a fatal exception on gem-config loading
+            throw new GemConfigurationException(e, true);
+        }
         // services should refresh at the end, once the configuration is reloaded
         services.refresh();
     }
@@ -232,7 +237,7 @@ public final class ConfigurationImpl implements IConfiguration {
                 // force finished all
                 hookCompleted.get();
             } catch (final InterruptedException | ExecutionException e) {
-                throw new GemConfigurationException("Error installing repo-hooks", e);
+                throw new GemConfigurationException("Error installing repo-hooks", e, true);
             }
         }
     }

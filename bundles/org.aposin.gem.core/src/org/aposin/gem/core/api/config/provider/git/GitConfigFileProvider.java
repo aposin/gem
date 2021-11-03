@@ -89,7 +89,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
     private String getNotNullConfigProperty(final String property) {
     	final String value = System.getProperty(property);
     	if (value == null) {
-    		throw new GemConfigurationException(property + " property not set: required for config-repository");
+            throw new GemConfigurationException(property + " property not set: required for config-repository", true);
     	}
     	return value;
     }
@@ -127,7 +127,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
         }
 
         if (!Files.exists(configLocation)) {
-        	throw new GemConfigurationException("Configuration file not found: " + configLocation);
+            throw new GemConfigurationException("Configuration file not found: " + configLocation, true);
         }
         
         return configLocation;
@@ -149,10 +149,11 @@ public class GitConfigFileProvider implements IConfigFileProvider {
 		    	final String configRemote = executeCommand(gitRepoLocation, // on the repo
 		    			prefs.getGitBinary().toString(), "config", "--get", "remote.origin.url");
 		         if (!gitUrl.equals(configRemote)) {
-		                throw new GemConfigurationException("Config-repository not on " + gitUrl + " remote (instead on " +  configRemote + ")");
+                     throw new GemConfigurationException(
+                             "Config-repository not on " + gitUrl + " remote (instead on " + configRemote + ")", true);
 		            }
     		} catch (final IOException e) {
-	    		throw new GemConfigurationException("Cannot check git-configuration remote!", e);
+                throw new GemConfigurationException("Cannot check git-configuration remote!", e, true);
 	    	}
     		
     		return true;
@@ -175,8 +176,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
     		    LOGGER.warn("Config-branch {} was checked out", gitBranch);
     	    }
     	} catch (final IOException e) {
-    	    // TODO: will this fail if new branch is not fetched? -> have to test and maybe add a fetch beforehand
-    		throw new GemConfigurationException("Checkout of git-configuration failed!", e);
+            throw new GemConfigurationException("Checkout of git-configuration failed!", e, true);
     	}
     }
     
@@ -188,7 +188,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
     	    if (!configHook.proceedIfPullFails(gitBranch)) {
         	    throw new GemConfigurationException(MessageFormat.format(//
                         "Pulling {0} branch for git-configuration failed", gitBranch), //
-                        e);
+                        e, true);
     	    } else {
     	        LOGGER.warn("Error pulling branch ignored: reverting pull", e);
     	        try {
@@ -208,7 +208,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
 	                gitUrl, //
 	                gitRepoLocation.toAbsolutePath().toString());
     	} catch (final IOException e) {
-    		throw new GemConfigurationException("Clone of git-configuration failed!", e);
+            throw new GemConfigurationException("Clone of git-configuration failed!", e, true);
     	}
     }
     
@@ -218,7 +218,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
 	    	return executeCommand(gitRepoLocation, //
 	    			prefs.getGitBinary().toString(), "branch", "--show-current");
     	} catch (final IOException e) {
-    		throw new GemConfigurationException("Cannot check git-configuration branch!", e);
+            throw new GemConfigurationException("Cannot check git-configuration branch!", e, true);
     	}
     }
     

@@ -142,7 +142,7 @@ public final class ProjectImpl implements IProject {
                     // the rest but show that this is wrong)
                     throw new GemException(MessageFormat.format(
                             "Repository ''{0}'' for environment ''{1}@{2}'' not defined", repoId,
-                            project.name, env.name));
+                            project.name, env.name, true));
                 }
             }
             environments.add(new EnvironmentImpl(config, this, env));

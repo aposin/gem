@@ -16,6 +16,7 @@
 package org.aposin.gem.core.api.config.provider.git;
 
 import java.text.MessageFormat;
+
 import org.aposin.gem.core.api.config.GemConfigurationException;
 
 /**
@@ -40,7 +41,7 @@ public class GitConfigProviderHook {
     public boolean checkoutWhenDifferentBranch(final String configBranch, final String currentBranch) {
         throw new GemConfigurationException(MessageFormat.format(//
                 "Current branch ({0}) for git-configuration is not the configured one ({1})", //
-                currentBranch, configBranch));
+                currentBranch, configBranch), true);
     }
     
     /**
