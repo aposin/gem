@@ -141,7 +141,7 @@ public final class ProjectImpl implements IProject {
                     // TODO - make specific exception for this or hook to allow to continue (so load
                     // the rest but show that this is wrong)
                     throw new GemException(MessageFormat.format(
-                            "Repository '{}' for environment '{} @ {}' not defined", repoId,
+                            "Repository ''{0}'' for environment ''{1}@{2}'' not defined", repoId,
                             project.name, env.name));
                 }
             }
