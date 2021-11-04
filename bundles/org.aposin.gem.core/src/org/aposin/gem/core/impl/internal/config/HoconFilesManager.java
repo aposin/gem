@@ -20,11 +20,11 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.IRefreshable;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.core.utils.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

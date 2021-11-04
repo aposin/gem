@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.model.IProject;
 import org.aposin.gem.core.api.model.IRepository;
 import org.aposin.gem.core.api.workflow.IEnvironmentWorkflow;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.core.impl.internal.workflow.ObsoleteEnvironmentWorkflow;
 
 public class ObsoleteKnownEnvironment extends AbstractEnvironment {

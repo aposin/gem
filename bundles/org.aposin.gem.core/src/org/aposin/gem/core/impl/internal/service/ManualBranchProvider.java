@@ -19,7 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import org.aposin.gem.core.GemException;
+
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.launcher.ILauncher;
@@ -32,6 +32,7 @@ import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
 import org.aposin.gem.core.api.workflow.IFeatureBranchWorkflow;
 import org.aposin.gem.core.api.workflow.WorkflowException;
+import org.aposin.gem.core.exception.GemException;
 import org.osgi.service.component.annotations.Component;
 
 /**

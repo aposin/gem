@@ -15,7 +15,7 @@
  */
 package org.aposin.gem.core.api.model;
 
-import org.aposin.gem.core.GemException;
+import org.aposin.gem.core.exception.GemException;
 
 /**
  * Exception thrown by {@link IRepository} and {@link IWorktreeDefinition}

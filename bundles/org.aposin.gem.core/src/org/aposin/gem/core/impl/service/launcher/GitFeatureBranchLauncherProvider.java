@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.IConfiguration;
@@ -32,6 +31,7 @@ import org.aposin.gem.core.api.model.IWorktreeDefinition;
 import org.aposin.gem.core.api.service.launcher.IFeatureBranchLauncherProvider;
 import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
+import org.aposin.gem.core.exception.GemException;
 import org.osgi.service.component.annotations.Component;
 
 /**

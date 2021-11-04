@@ -13,17 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.aposin.gem.ui.handler;
+package org.aposin.gem.core.exception;
 
-import org.aposin.gem.core.api.config.IConfiguration;
-import org.aposin.gem.core.api.model.IRepository;
-import org.eclipse.e4.core.di.annotations.Execute;
+/**
+ * GEM exception for a fatal error.
+ */
+public final class GemFatalException extends GemException {
 
-public class RefreshRepositoriesDataHandler {
+    /**
+     * Default constructor.
+     * 
+     * @param msg detail exception message.
+     * @param cause underlying cause of the exception (if any).
+     */
+    public GemFatalException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 
-    @Execute
-    public void execute(final IConfiguration configuration) {
-        configuration.getRepositories().forEach(IRepository::refresh);
+    /**
+     * Creates an exception without cause.
+     * 
+     * @param msg detail exception message.
+     */
+    public GemFatalException(String msg) {
+        super(msg);
     }
 
 }

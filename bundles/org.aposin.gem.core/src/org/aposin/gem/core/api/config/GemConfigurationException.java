@@ -15,18 +15,32 @@
  */
 package org.aposin.gem.core.api.config;
 
-import org.aposin.gem.core.GemException;
+import org.aposin.gem.core.exception.GemException;
 
+/**
+ * Exception for GEM configuration.
+ */
 public class GemConfigurationException extends GemException {
 	
 	private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     * 
+     * @param msg detail exception message.
+     * @param cause underlying cause of the exception (if any).
+     */
+    public GemConfigurationException(final String msg, final Throwable cause) {
+        super(msg, cause);
+    }
+
+    /**
+     * Creates an exception without cause.
+     * 
+     * @param msg detail exception message.
+     */
 	public GemConfigurationException(final String msg) {
 		super(msg);
 	}
-
-	public GemConfigurationException(final String msg, final Throwable cause) {
-		super(msg, cause);
-	}	
 	
 }

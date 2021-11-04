@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.aposin.gem.core;
+package org.aposin.gem.core.exception;
 
 /**
  * Default exception for handled errors in GEM Core. </br>
@@ -24,12 +24,23 @@ public class GemException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public GemException(final String msg) {
-		super(msg);
-	}
+    /**
+     * Default constructor.
+     * 
+     * @param msg detail exception message.
+     * @param cause underlying cause of the exception (if any).
+     */
+    public GemException(final String msg, final Throwable cause) {
+        super(msg, cause);
+    }
 
-	public GemException(final String msg, final Throwable cause) {
-		super(msg, cause);
+    /**
+     * Creates an exception without cause.
+     * 
+     * @param msg detail exception message.
+     */
+	public GemException(final String msg) {
+        this(msg, null);
 	}
 
 }

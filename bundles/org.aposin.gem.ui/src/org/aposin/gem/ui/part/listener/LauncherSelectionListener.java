@@ -20,10 +20,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.IRefreshable;
 import org.aposin.gem.core.api.launcher.ILauncher;
 import org.aposin.gem.core.api.workflow.ICommand;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.ui.dialog.ParamsInputDialog;
 import org.aposin.gem.ui.dialog.progress.CommandProgressDialog;
 import org.aposin.gem.ui.lifecycle.Session;

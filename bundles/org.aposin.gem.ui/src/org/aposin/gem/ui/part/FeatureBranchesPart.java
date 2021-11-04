@@ -24,13 +24,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.launcher.ILauncher;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IWorktreeDefinition;
 import org.aposin.gem.core.api.service.IFeatureBranchProvider;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.ui.dialog.MergeConflictDialog;
 import org.aposin.gem.ui.lifecycle.Session;
 import org.aposin.gem.ui.lifecycle.event.EnvironmentSynchronizedEvent;

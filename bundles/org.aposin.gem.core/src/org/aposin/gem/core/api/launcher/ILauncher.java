@@ -17,9 +17,10 @@ package org.aposin.gem.core.api.launcher;
 
 import java.util.List;
 import java.util.Set;
-import org.aposin.gem.core.GemException;
+
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.workflow.ICommand;
+import org.aposin.gem.core.exception.GemException;
 
 /**
  * Interface representing a launcher.

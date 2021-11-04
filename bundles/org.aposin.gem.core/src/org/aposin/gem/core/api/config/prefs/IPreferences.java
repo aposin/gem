@@ -16,7 +16,8 @@
 package org.aposin.gem.core.api.config.prefs;
 
 import java.nio.file.Path;
-import org.aposin.gem.core.GemException;
+
+import org.aposin.gem.core.exception.GemException;
 
 /**
  * Preferences for GEM, which could be persisted and loaded.

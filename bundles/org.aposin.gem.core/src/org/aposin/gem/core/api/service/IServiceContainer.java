@@ -18,12 +18,12 @@ package org.aposin.gem.core.api.service;
 import java.util.Collection;
 import java.util.Map;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.IRefreshable;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.IConfigurable;
 import org.aposin.gem.core.api.service.launcher.IEnvironmentLauncherProvider;
 import org.aposin.gem.core.api.service.launcher.IFeatureBranchLauncherProvider;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.core.impl.service.DefaultGemSorter;
 
 /**

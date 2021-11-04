@@ -15,7 +15,7 @@
  */
 package org.aposin.gem.core.api.workflow;
 
-import org.aposin.gem.core.GemException;
+import org.aposin.gem.core.exception.GemException;
 
 /**
  * Exception for errors for {@link IEnvironmentWorkflow} methods.

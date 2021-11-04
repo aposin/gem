@@ -28,9 +28,9 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.ICommand.IResult;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.ui.message.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;

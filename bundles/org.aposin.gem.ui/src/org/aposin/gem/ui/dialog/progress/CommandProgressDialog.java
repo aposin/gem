@@ -20,9 +20,9 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.ICommand.IResult;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.ui.dialog.progress.internal.CliProgressMonitorDialog;
 import org.aposin.gem.ui.dialog.progress.internal.CommandsRunnable;
 import org.aposin.gem.ui.dialog.progress.internal.CommandsRunnable.AnyCommandFailedException;

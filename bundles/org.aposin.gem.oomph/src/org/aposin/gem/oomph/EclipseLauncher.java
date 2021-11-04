@@ -43,7 +43,6 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.config.IConfigurable;
 import org.aposin.gem.core.api.config.IConfiguration;
@@ -51,6 +50,7 @@ import org.aposin.gem.core.api.launcher.AbstractNoParamsLauncher;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.IEnvironmentWorkflow;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.core.utils.ExecUtils;
 import org.aposin.gem.oomph.impl.internal.config.bean.GemEclipseBean;
 import org.aposin.gem.oomph.impl.internal.config.bean.GemEclipseBean.EclipseReleaseBean;

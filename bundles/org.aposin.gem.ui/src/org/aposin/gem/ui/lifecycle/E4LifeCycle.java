@@ -15,20 +15,16 @@
  */
 package org.aposin.gem.ui.lifecycle;
 
-import java.lang.reflect.InvocationTargetException;
 import javax.inject.Inject;
-import org.aposin.gem.core.GemException;
+
 import org.aposin.gem.logging.e4.SLF4JLogger;
 import org.aposin.gem.logging.e4.SLF4JLoggerProvider;
 import org.aposin.gem.ui.Activator;
 import org.aposin.gem.ui.BundleProperties;
 import org.aposin.gem.ui.handler.QuitHandler;
 import org.aposin.gem.ui.theme.ThemeConstants;
-import org.aposin.gem.ui.theme.icons.IGemIcon;
 import org.aposin.gem.ui.theme.icons.GemSvgIcon;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
+import org.aposin.gem.ui.theme.icons.IGemIcon;
 import org.eclipse.e4.core.contexts.Active;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -44,7 +40,6 @@ import org.eclipse.e4.ui.workbench.lifecycle.PreSave;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessRemovals;
 import org.eclipse.e4.ui.workbench.modeling.IWindowCloseHandler;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.window.Window;
 import org.osgi.service.event.Event;
@@ -64,7 +59,8 @@ public final class E4LifeCycle {
     @PostContextCreate
     void postContextCreate(final IEclipseContext workbenchContext) {
         replaceLogger(workbenchContext);
-        setJFaceWindowDefaults();
+        createExceptionHandler(workbenchContext);
+        setJFaceWindowDefaults(workbenchContext);
         initializeSession(workbenchContext);
     }
 
@@ -75,9 +71,14 @@ public final class E4LifeCycle {
         workbenchContext.set(ILoggerProvider.class, new SLF4JLoggerProvider());
     }
 
-    private static void setJFaceWindowDefaults() {
+    private static void createExceptionHandler(final IEclipseContext workbenchContext) {
+        workbenchContext.set(GemExceptionManager.class, //
+                ContextInjectionFactory.make(GemExceptionManager.class, workbenchContext));
+    }
+
+    private static void setJFaceWindowDefaults(final IEclipseContext workbenchContext) {
         // sets the default exception handler to show the error as a dialog
-        Window.setExceptionHandler(e -> handleException(e.getLocalizedMessage(), e));
+        Window.setExceptionHandler(e -> workbenchContext.get(GemExceptionManager.class).handleException(e));
         // set the default window image for all dialogs
         // TODO - should this also check/put in the registry to be able to reuse/substitute by an
         // extension?
@@ -85,30 +86,6 @@ public final class E4LifeCycle {
                 new GemSvgIcon("window_gem_icon", Activator.getResource("icons/gem/gem.svg"));
         // TODO - this does not work for any reason with the ProgressMonitorDialog
         Window.setDefaultImage(icon.getImage(ThemeConstants.DEFAULT_THEME_ID));
-    }
-
-    private static void handleException(final String msg, final Throwable e) {
-        final String errorTitle;
-        if (e instanceof GemException) {
-            errorTitle = "GEM error";
-        } else {
-            errorTitle = "Unexpected error";
-        }
-        // get the multi status with the stacktrace elements
-        final IStatus status;
-        if (e.getCause() == null) {
-            status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getLocalizedMessage());
-        } else {
-            final Throwable toDetails = e.getCause();
-            toDetails.fillInStackTrace();
-            status = new MultiStatus(Activator.PLUGIN_ID, IStatus.ERROR, toDetails.getLocalizedMessage(), e);
-            for (final StackTraceElement stackTrace: toDetails.getStackTrace()) {
-                ((MultiStatus) status).add(new Status(IStatus.ERROR, Activator.PLUGIN_ID, stackTrace.toString()));
-            }
-        }
-        
-        // open error dialog
-        ErrorDialog.openError(null, errorTitle, msg, status);
     }
 
     /**
@@ -121,16 +98,9 @@ public final class E4LifeCycle {
             final SessionInitializer initializer =
                     ContextInjectionFactory.make(SessionInitializer.class, workbenchContext);
             new ProgressMonitorDialog(null).run(true, false, initializer);
-        } catch (final InvocationTargetException | InterruptedException e) {
-            final GemException toThrow;
-            if (e.getCause() instanceof GemException) {
-                toThrow = (GemException) e.getCause();
-            } else {
-                toThrow = new GemException("Error on session initialization", e.getCause());
-            }
-            handleException(toThrow.getMessage(), toThrow.getCause() == null ? toThrow : toThrow.getCause());
-            // rethrow to stop application
-            throw toThrow;
+        } catch (final Exception e) {
+            // any exception on initialization should throw!!
+            workbenchContext.get(GemExceptionManager.class).handleException("Error on session initialization", e);
         }
     }
 

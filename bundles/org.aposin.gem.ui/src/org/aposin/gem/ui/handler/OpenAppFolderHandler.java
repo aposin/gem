@@ -17,21 +17,33 @@ package org.aposin.gem.ui.handler;
 
 import java.awt.Desktop;
 import java.io.IOException;
+
+import org.aposin.gem.core.exception.GemFatalException;
 import org.aposin.gem.ui.Activator;
+import org.aposin.gem.ui.lifecycle.Session;
 import org.eclipse.e4.core.di.annotations.CanExecute;
-import org.eclipse.e4.core.di.annotations.Execute;
 
-public class OpenAppFolderHandler {
+/**
+ * Hanlder to open the application folder.
+ * 
+ * @see Activator#APP_USER_PATH.
+ */
+public class OpenAppFolderHandler extends GemAbstractSessionHandler {
 
-    @Execute
-    public void execute() {
+    @Override
+    public void doExecute(Session session) throws Exception {
         try {
             Desktop.getDesktop().open(Activator.APP_USER_PATH.toFile());
         } catch (final IOException e) {
-            Activator.LOGGER.error(e.getMessage(), e);
+            // convert into a non-fatal GEM exception so the user gets notified instead of doing nothing
+            throw new GemFatalException(e.getMessage(), e);
         }
     }
 
+    /**
+     * Checks is desktop is supported.
+     * @return
+     */
     @CanExecute
     public boolean canExecute() {
         return Desktop.isDesktopSupported();
