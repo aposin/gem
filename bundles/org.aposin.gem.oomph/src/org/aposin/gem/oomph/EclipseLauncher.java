@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -62,16 +63,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * This starter uses Oomph to setup Eclipse and it's workspace.
- * 
- * TODO: The XML files are manually created and saved for Oomph, so the workspace startup works as
- * expected. Instead, the Oomph library should be used if possible. Research has to be done how this
- * can be implemented.
- * 
- * TODO: The Eclipse installation is fixed and not configured via Oomph. Each setup should provides
- * it's own Eclipse installation and workspace. This is useful if bundle pooling is used. Research
- * has to be done how this can be implemented.
+ * Launcher to start and setup an Eclipse workspace with an already installed product and oomph configuration.
  */
+// TODO #41 - refactor to use the oomph libraries
 public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfigurable {
 
     public static final String LAUNCHER_NAME = "eclipse";
@@ -172,7 +166,6 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
         }
 
         final Path projectEnvironment = getConfiguration().getResourcesDirectory() //
-                // TODO: configurable or to static (I think that it is fine to be non-configurable)
                 .resolve("eclipseworkspaces") //
                 .resolve(getLaunchScope().getId());
 
@@ -182,7 +175,11 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
 
         try {
             LOGGER.trace("About to run eclipse command");
-            ExecUtils.exec(createCmd(eclipseFolder, projectEnvironment));
+            final List<String> cmd = createCmd(eclipseFolder, projectEnvironment);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Eclipse command: '{}'", cmd.stream().collect(Collectors.joining(" ")));
+            }
+            ExecUtils.exec(cmd);
         } catch (final IOException e) {
             LOGGER.error("Could not start Eclipse.", e);
             throw new GemException("Could not start eclipse.", e);
@@ -208,7 +205,7 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
         list.add("-Dosgi.configuration.area=file:/"
                 + pathToString(projectEnvironment.resolve("eclipse").resolve("configuration")));
         // should be quoted as it contains the special characters that might not work
-        list.add(quoteArg(              
+        list.add(quoteArg(
                 "-Doomph.redirection.index.redirection=index:/->" + "file:/"
                 + pathToString(getConfiguration().getRelativeToConfigFile(getEclipseBean().oomphpath))
                 + '/'));
@@ -367,7 +364,6 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
                 .resolve("configuration") //
                 .resolve("org.eclipse.oomph.setup") //
                 .resolve("installation.setup");
-        // TODO - extend this if to also creation
         if (Files.notExists(eclipseSetup)) {
             LOGGER.trace("Creating Eclipse Oomph Setup '{}'", eclipseSetup);
             final Path eclipseWorkspace = eclipseSetup.getParent();
@@ -385,7 +381,6 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
             final Transformer transformer = factory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.toString());
-            // TODO - only write if it doesn't exists?
             transformer.transform(new DOMSource(document), new StreamResult(eclipseSetup.toFile()));
             LOGGER.trace("Eclipse Oomph Setup file '{}' created", eclipseSetup);
         } catch (ParserConfigurationException | TransformerException e) {
@@ -432,7 +427,6 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
                 .resolve(".plugins") //
                 .resolve("org.eclipse.oomph.setup") //
                 .resolve("workspace.setup");
-        // TODO - extend this if to also creation
         if (Files.notExists(workspaceSetup)) {
             LOGGER.trace("Creating Workspace Oomph Setup '{}'", workspaceSetup);
             final Path eclipseWorkspace = workspaceSetup.getParent();
@@ -450,7 +444,6 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
             final Transformer transformer = factory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.toString());
-            // TODO - only write if it doesn't exists?
             transformer.transform(new DOMSource(document),
                     new StreamResult(workspaceSetup.toFile()));
             LOGGER.trace("Workspace Oomph Setup file '{}' created", workspaceSetup);
@@ -553,10 +546,7 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
 
                     });
             if (foundProjects.isEmpty()) {
-                // TODO - if not present, the launcher should not appear instead of fail
-                // TODO - that will be much better in terms of checking if something
-                // TODO - is properly configured
-                // TODO - that should be done at the EclipseLauncherProvider level
+                // TODO: #43 - diable/misconfigure instead of failing on launch
                 throw new GemException("Oomph project for setup not found.");
             } else {
                 foundProjects.sort((p1, p2) -> Integer.compare(p2.length(), p1.length()));
