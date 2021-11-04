@@ -73,7 +73,8 @@ public class GitConfigFileProvider implements IConfigFileProvider {
      * @param gitRepoLocation the folder where the git repository folder should be located.
      * @param configHook custom config hook.
      */
-    public GitConfigFileProvider(final Path preferenceFile, final Path gitRepoLocation, final GitConfigProviderHook configHook) {
+    public GitConfigFileProvider(final Path preferenceFile, final Path gitRepoLocation,
+            final GitConfigProviderHook configHook) {
         this.preferenceFile = preferenceFile;
         this.gitRepoLocation = gitRepoLocation;
         this.configHook = configHook;
@@ -86,15 +87,15 @@ public class GitConfigFileProvider implements IConfigFileProvider {
     public GitConfigFileProvider(final Path preferenceFile, final Path gitRepoLocation) {
         this(preferenceFile, gitRepoLocation, new GitConfigProviderHook());
     }
-    
+
     private String getNotNullConfigProperty(final String property) {
-    	final String value = System.getProperty(property);
-    	if (value == null) {
+        final String value = System.getProperty(property);
+        if (value == null) {
             throw new GemConfigurationException(property + " property not set: required for config-repository");
-    	}
-    	return value;
+        }
+        return value;
     }
-    
+
     @Override
     public Path getPrefFile() {
         if (!Files.exists(preferenceFile)) {
@@ -121,16 +122,16 @@ public class GitConfigFileProvider implements IConfigFileProvider {
     public Path getConfigFile(final IPreferences prefs) {
         // if it is based on the same path as the git-repository configured
         if (isConfigCloned(prefs)) {
-        	checkoutConfigBranchIfRequired(prefs);
-        	pullConfigRepo(prefs);
+            checkoutConfigBranchIfRequired(prefs);
+            pullConfigRepo(prefs);
         } else {
-        	cloneConfigRepo(prefs);
+            cloneConfigRepo(prefs);
         }
 
         if (!Files.exists(configLocation)) {
             throw new GemFatalException("Configuration file not found: " + configLocation);
         }
-        
+
         return configLocation;
     }
 
@@ -139,90 +140,90 @@ public class GitConfigFileProvider implements IConfigFileProvider {
         if (!Files.exists(configLocation)) {
             throw new GemException("Configuration not initialized or existing: " + configLocation);
         }
-        
+
         return configLocation.getParent().resolve(relativePath);
     }
 
     private boolean isConfigCloned(final IPreferences prefs) {
-    	if (Files.exists(gitRepoLocation.resolve(GitConstants.GITDIR_FOLDER))) {
-    		try {
-    			// check first the remote
-		    	final String configRemote = executeCommand(gitRepoLocation, // on the repo
-		    			prefs.getGitBinary().toString(), "config", "--get", "remote.origin.url");
-		         if (!gitUrl.equals(configRemote)) {
-                     throw new GemFatalException(
-                             "Config-repository not on " + gitUrl + " remote (instead on " + configRemote + ")");
-		            }
-    		} catch (final IOException e) {
+        if (Files.exists(gitRepoLocation.resolve(GitConstants.GITDIR_FOLDER))) {
+            try {
+                // check first the remote
+                final String configRemote = executeCommand(gitRepoLocation, // on the repo
+                        prefs.getGitBinary().toString(), "config", "--get", "remote.origin.url");
+                if (!gitUrl.equals(configRemote)) {
+                    throw new GemFatalException(
+                            "Config-repository not on " + gitUrl + " remote (instead on " + configRemote + ")");
+                }
+            } catch (final IOException e) {
                 throw new GemFatalException("Cannot check git-configuration remote!", e);
-	    	}
-    		
-    		return true;
-    	}
-    	return false;
+            }
+
+            return true;
+        }
+        return false;
     }
-    
+
     private void checkoutConfigBranchIfRequired(final IPreferences prefs) {
-    	try {
-    	    final String currentBranch = getCurrentConfigBranch(prefs);
-    	    if (!gitBranch.equals(currentBranch)) {
-    	        LOGGER.warn("Config-branch ({}) is not checked out", gitBranch);
-        		if (!configHook.checkoutWhenDifferentBranch(gitBranch, currentBranch)) {
-        			LOGGER.warn("CONFIGURATION NOT UP-TO-DATE: using {} branch instead of {}",
-        			        currentBranch, gitBranch);
-        			return;
-        		}
-    		    executeCommand(gitRepoLocation, // on the repo
-    		    		prefs.getGitBinary().toString(), "checkout", gitBranch);
-    		    LOGGER.warn("Config-branch {} was checked out", gitBranch);
-    	    }
-    	} catch (final IOException e) {
+        try {
+            final String currentBranch = getCurrentConfigBranch(prefs);
+            if (!gitBranch.equals(currentBranch)) {
+                LOGGER.warn("Config-branch ({}) is not checked out", gitBranch);
+                if (!configHook.checkoutWhenDifferentBranch(gitBranch, currentBranch)) {
+                    LOGGER.warn("CONFIGURATION NOT UP-TO-DATE: using {} branch instead of {}", currentBranch,
+                            gitBranch);
+                    return;
+                }
+                executeCommand(gitRepoLocation, // on the repo
+                        prefs.getGitBinary().toString(), "checkout", gitBranch);
+                LOGGER.warn("Config-branch {} was checked out", gitBranch);
+            }
+        } catch (final IOException e) {
             throw new GemFatalException("Checkout of git-configuration failed!", e);
-    	}
+        }
     }
-    
+
     private void pullConfigRepo(final IPreferences prefs) {
-    	try {
-	    	executeCommand(gitRepoLocation, // on the repo
-	    			prefs.getGitBinary().toString(), "pull", "origin", gitBranch);
-    	} catch (final IOException e) {
-    	    if (!configHook.proceedIfPullFails(gitBranch)) {
+        try {
+            executeCommand(gitRepoLocation, // on the repo
+                    prefs.getGitBinary().toString(), "pull", "origin", gitBranch);
+        } catch (final IOException e) {
+            if (!configHook.proceedIfPullFails(gitBranch)) {
                 throw new GemFatalException(MessageFormat.format(//
                         "Pulling {0} branch for git-configuration failed", gitBranch), //
                         e);
-    	    } else {
-    	        LOGGER.warn("Error pulling branch ignored: reverting pull", e);
-    	        try {
-    	            executeCommand(gitRepoLocation, prefs.getGitBinary().toString(), "merge", "--abort");
-    	        } catch (final IOException e2) {
-    	            LOGGER.warn("Error reverting pull", e2);
-    	        }
-    	        
-    	    }
-    	}
+            } else {
+                LOGGER.warn("Error pulling branch ignored: reverting pull", e);
+                try {
+                    executeCommand(gitRepoLocation, prefs.getGitBinary().toString(), "merge", "--abort");
+                } catch (final IOException e2) {
+                    LOGGER.warn("Error reverting pull", e2);
+                }
+
+            }
+        }
     }
-    
+
     private void cloneConfigRepo(final IPreferences prefs) {
-    	try {
-	        executeCommand(null, // doesn't matter the folder
-	        		prefs.getGitBinary().toString(), "clone","-b", gitBranch, //
-	                gitUrl, //
-	                gitRepoLocation.toAbsolutePath().toString());
-    	} catch (final IOException e) {
+        try {
+            executeCommand(null, // doesn't matter the folder
+                    prefs.getGitBinary().toString(), "clone", "-b", gitBranch, //
+                    gitUrl, //
+                    gitRepoLocation.toAbsolutePath().toString());
+        } catch (final IOException e) {
             throw new GemFatalException("Clone of git-configuration failed!", e);
-    	}
+        }
     }
-    
+
     private String getCurrentConfigBranch(final IPreferences prefs) {
-    	try {
-	    	// then check if the current branch is the same
-	    	return executeCommand(gitRepoLocation, //
-	    			prefs.getGitBinary().toString(), "branch", "--show-current");
-    	} catch (final IOException e) {
+        try {
+            // then check if the current branch is the same
+            return executeCommand(gitRepoLocation, //
+                    prefs.getGitBinary().toString(), "branch", "--show-current");
+        } catch (final IOException e) {
             throw new GemFatalException("Cannot check git-configuration branch!", e);
-    	}
+        }
     }
-    
+
     private String executeCommand(final Path dir, final String... args) throws IOException {
         final ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
         try {
@@ -236,17 +237,17 @@ public class GitConfigFileProvider implements IConfigFileProvider {
                     .command(args);
             final ProcessResult result = executor.execute();
             return result.getOutput().getString().trim();
-    	} catch (final IOException e) {
-    	    throw e;
-    	} catch (final InvalidResultException e) {
-    	    throw new IOException(new GemException(errorStream.toString(), e));
-    	} catch (final Exception e) {
-    	    if (e.getCause() instanceof IOException) {
-    	        throw (IOException) e.getCause();
-    	    } else {
-    	        throw new IOException(e);
-    	    }
-    	}
+        } catch (final IOException e) {
+            throw e;
+        } catch (final InvalidResultException e) {
+            throw new IOException(new GemException(errorStream.toString(), e));
+        } catch (final Exception e) {
+            if (e.getCause() instanceof IOException) {
+                throw (IOException) e.getCause();
+            } else {
+                throw new IOException(e);
+            }
+        }
     }
 
 }
