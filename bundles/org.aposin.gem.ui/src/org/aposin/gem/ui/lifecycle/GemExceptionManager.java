@@ -33,13 +33,12 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.nls.Translation;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.window.Window.IExceptionHandler;
 
 /**
  * Exception manager for GEM.
  */
 @Creatable
-public final class GemExceptionManager implements IExceptionHandler {
+public final class GemExceptionManager {
 
     @Inject
     @Translation
@@ -55,7 +54,6 @@ public final class GemExceptionManager implements IExceptionHandler {
     /**
      * Handle the exception
      */
-    @Override
     public void handleException(final Throwable t) {
         final Throwable e = unwrapException(t);
         handleExceptionInternal(e.getLocalizedMessage(), e);

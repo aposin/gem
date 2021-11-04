@@ -78,7 +78,7 @@ public final class E4LifeCycle {
 
     private static void setJFaceWindowDefaults(final IEclipseContext workbenchContext) {
         // sets the default exception handler to show the error as a dialog
-        Window.setExceptionHandler(e -> workbenchContext.get(GemExceptionManager.class));
+        Window.setExceptionHandler(e -> workbenchContext.get(GemExceptionManager.class).handleException(e));
         // set the default window image for all dialogs
         // TODO - should this also check/put in the registry to be able to reuse/substitute by an
         // extension?
