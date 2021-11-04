@@ -103,7 +103,7 @@ public final class ConfigurationImpl implements IConfiguration {
             config = getPluginConfiguration(ConfigConstants.GEM_CONFIGURATION_ID, GemCfgBean.class);
         } catch (final GemConfigurationException e) {
             // convert any configuration exception to a fatal exception on gem-config loading
-            throw GemFatalException.from(e);
+            throw new GemFatalException(e.getLocalizedMessage(), e);
         }
         // services should refresh at the end, once the configuration is reloaded
         services.refresh();

@@ -39,8 +39,4 @@ public final class GemFatalException extends GemException {
         super(msg);
     }
 
-    public static GemFatalException from(final GemException e) {
-        return new GemFatalException(e.getLocalizedMessage(), e.getCause());
-    }
-
 }
