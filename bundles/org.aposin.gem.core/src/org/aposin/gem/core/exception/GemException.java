@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.aposin.gem.core;
+package org.aposin.gem.core.exception;
 
 /**
  * Default exception for handled errors in GEM Core. </br>
@@ -24,66 +24,23 @@ public class GemException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-    private final boolean fatal;
-
     /**
      * Default constructor.
      * 
      * @param msg detail exception message.
      * @param cause underlying cause of the exception (if any).
-     * @param fatal {@code true} for a fatal exception; {@code false} otherwise.
      */
-    public GemException(final String msg, final Throwable cause, final boolean fatal) {
+    public GemException(final String msg, final Throwable cause) {
         super(msg, cause);
-        this.fatal = fatal;
-    }
-
-    /**
-     * Copy constructor to change the fatal status of exception.
-     * 
-     * @param e exception to copy.
-     * @param fatal {@code true} for a fatal exception; {@code false} otherwise.
-     */
-    public GemException(final GemException e, final boolean fatal) {
-        this(e.getMessage(), e.getCause(), fatal);
     }
 
     /**
      * Creates an exception without cause.
      * 
      * @param msg detail exception message.
-     * @param fatal {@code true} for a fatal exception; {@code false} otherwise.
-     */
-    public GemException(final String msg, final boolean fatal) {
-        this(msg, null, fatal);
-    }
-
-    /**
-     * Creates a non-fatal exception.
-     * 
-     * @param msg detail exception message.
-     * @param cause underlying cause of the exception (if any).
-     */
-    public GemException(final String msg, final Throwable cause) {
-        this(msg, cause, false);
-    }
-
-    /**
-     * Creates a non-fatal exception without cause.
-     * 
-     * @param msg detail exception message.
      */
 	public GemException(final String msg) {
-        this(msg, null, false);
+        this(msg, null);
 	}
-
-    /**
-     * Checks if the exception is fatal.
-     * 
-     * @return {@code true} if the exception is fatal; {@code false} otherwise.
-     */
-    public final boolean isFatal() {
-        return fatal;
-    }
 
 }

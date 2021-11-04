@@ -25,13 +25,13 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.launcher.AbstractNoParamsLauncher;
 import org.aposin.gem.core.api.model.IRepository;
 import org.aposin.gem.core.api.model.IWorktreeDefinition;
 import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.github.service.GithubLauncherProvider;
 
 /**

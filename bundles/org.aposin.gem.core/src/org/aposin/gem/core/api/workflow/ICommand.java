@@ -17,8 +17,9 @@ package org.aposin.gem.core.api.workflow;
 
 import java.io.OutputStream;
 import java.util.concurrent.CompletableFuture;
-import org.aposin.gem.core.GemException;
+
 import org.aposin.gem.core.api.INamedObject;
+import org.aposin.gem.core.exception.GemException;
 
 /**
  * Defines an independent command that should be run on a concrete part of

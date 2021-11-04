@@ -15,7 +15,7 @@
  */
 package org.aposin.gem.core.api.config;
 
-import org.aposin.gem.core.GemException;
+import org.aposin.gem.core.exception.GemException;
 
 /**
  * Exception for GEM configuration.
@@ -29,44 +29,13 @@ public class GemConfigurationException extends GemException {
      * 
      * @param msg detail exception message.
      * @param cause underlying cause of the exception (if any).
-     * @param fatal {@code true} for a fatal exception; {@code false} otherwise.
-     */
-    public GemConfigurationException(final String msg, final Throwable cause, final boolean fatal) {
-        super(msg, cause, fatal);
-    }
-
-    /**
-     * Copy constructor to change the fatal status of exception.
-     * 
-     * @param e exception to copy.
-     * @param fatal {@code true} for a fatal exception; {@code false} otherwise.
-     */
-    public GemConfigurationException(final GemConfigurationException e, final boolean fatal) {
-        super(e, fatal);
-    }
-
-    /**
-     * Creates an exception without cause.
-     * 
-     * @param msg detail exception message.
-     * @param fatal {@code true} for a fatal exception; {@code false} otherwise.
-     */
-    public GemConfigurationException(final String msg, final boolean fatal) {
-        super(msg, fatal);
-    }
-
-    /**
-     * Creates a non-fatal exception.
-     * 
-     * @param msg detail exception message.
-     * @param cause underlying cause of the exception (if any).
      */
     public GemConfigurationException(final String msg, final Throwable cause) {
         super(msg, cause);
     }
 
     /**
-     * Creates a non-fatal exception without cause.
+     * Creates an exception without cause.
      * 
      * @param msg detail exception message.
      */

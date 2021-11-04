@@ -30,7 +30,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.config.ConfigConstants;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.IConfiguration;
@@ -42,6 +41,8 @@ import org.aposin.gem.core.api.model.IRepository;
 import org.aposin.gem.core.api.model.repo.GemRepoHookDescriptor;
 import org.aposin.gem.core.api.service.IServiceContainer;
 import org.aposin.gem.core.api.workflow.ICommand.IResult;
+import org.aposin.gem.core.exception.GemException;
+import org.aposin.gem.core.exception.GemFatalException;
 import org.aposin.gem.core.impl.internal.config.bean.GemCfgBean;
 import org.aposin.gem.core.impl.internal.config.bean.GemCfgBean.RepositoryBean;
 import org.aposin.gem.core.impl.internal.config.prefs.PreferencesImpl;
@@ -102,7 +103,7 @@ public final class ConfigurationImpl implements IConfiguration {
             config = getPluginConfiguration(ConfigConstants.GEM_CONFIGURATION_ID, GemCfgBean.class);
         } catch (final GemConfigurationException e) {
             // convert any configuration exception to a fatal exception on gem-config loading
-            throw new GemConfigurationException(e, true);
+            throw GemFatalException.from(e);
         }
         // services should refresh at the end, once the configuration is reloaded
         services.refresh();
@@ -237,7 +238,7 @@ public final class ConfigurationImpl implements IConfiguration {
                 // force finished all
                 hookCompleted.get();
             } catch (final InterruptedException | ExecutionException e) {
-                throw new GemConfigurationException("Error installing repo-hooks", e, true);
+                throw new GemFatalException("Error installing repo-hooks", e);
             }
         }
     }

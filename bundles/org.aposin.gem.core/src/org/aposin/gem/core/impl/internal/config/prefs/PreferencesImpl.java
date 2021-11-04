@@ -18,10 +18,10 @@ package org.aposin.gem.core.impl.internal.config.prefs;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.IRefreshable;
 import org.aposin.gem.core.api.config.ConfigConstants;
 import org.aposin.gem.core.api.config.prefs.IPreferences;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.core.impl.internal.config.HoconFilesManager;
 import org.aposin.gem.core.impl.internal.config.bean.GemPrefsBean;
 import org.aposin.gem.core.utils.ExecUtils;

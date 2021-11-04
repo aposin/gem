@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.launcher.ILauncher;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
 import org.aposin.gem.core.api.workflow.ICommand;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.ui.BundleProperties;
 import org.aposin.gem.ui.dialog.progress.CommandProgressDialog;
 import org.aposin.gem.ui.dialog.progress.internal.ObsoleteEnvironmentDialog;

@@ -20,7 +20,8 @@ import java.text.MessageFormat;
 
 import javax.inject.Inject;
 
-import org.aposin.gem.core.GemException;
+import org.aposin.gem.core.exception.GemException;
+import org.aposin.gem.core.exception.GemFatalException;
 import org.aposin.gem.ui.Activator;
 import org.aposin.gem.ui.BundleProperties;
 import org.aposin.gem.ui.message.Messages;
@@ -90,8 +91,8 @@ public final class GemExceptionManager implements IExceptionHandler {
     }
 
     private boolean isFatal(final Throwable e) {
-        if (e instanceof GemException) {
-            return ((GemException) e).isFatal();
+        if (e instanceof GemException && !(e instanceof GemFatalException)) {
+            return false;
         }
         return true;
     }

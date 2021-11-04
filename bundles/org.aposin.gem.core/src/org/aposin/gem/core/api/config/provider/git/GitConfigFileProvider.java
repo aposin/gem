@@ -21,10 +21,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
+import org.aposin.gem.core.exception.GemException;
+import org.aposin.gem.core.exception.GemFatalException;
 import org.aposin.gem.core.impl.internal.util.GitConstants;
 import org.aposin.gem.core.utils.ConfigUtils;
 import org.slf4j.Logger;
@@ -89,7 +90,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
     private String getNotNullConfigProperty(final String property) {
     	final String value = System.getProperty(property);
     	if (value == null) {
-            throw new GemConfigurationException(property + " property not set: required for config-repository", true);
+            throw new GemConfigurationException(property + " property not set: required for config-repository");
     	}
     	return value;
     }
@@ -127,7 +128,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
         }
 
         if (!Files.exists(configLocation)) {
-            throw new GemConfigurationException("Configuration file not found: " + configLocation, true);
+            throw new GemFatalException("Configuration file not found: " + configLocation);
         }
         
         return configLocation;
@@ -149,11 +150,11 @@ public class GitConfigFileProvider implements IConfigFileProvider {
 		    	final String configRemote = executeCommand(gitRepoLocation, // on the repo
 		    			prefs.getGitBinary().toString(), "config", "--get", "remote.origin.url");
 		         if (!gitUrl.equals(configRemote)) {
-                     throw new GemConfigurationException(
-                             "Config-repository not on " + gitUrl + " remote (instead on " + configRemote + ")", true);
+                     throw new GemFatalException(
+                             "Config-repository not on " + gitUrl + " remote (instead on " + configRemote + ")");
 		            }
     		} catch (final IOException e) {
-                throw new GemConfigurationException("Cannot check git-configuration remote!", e, true);
+                throw new GemFatalException("Cannot check git-configuration remote!", e);
 	    	}
     		
     		return true;
@@ -176,7 +177,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
     		    LOGGER.warn("Config-branch {} was checked out", gitBranch);
     	    }
     	} catch (final IOException e) {
-            throw new GemConfigurationException("Checkout of git-configuration failed!", e, true);
+            throw new GemFatalException("Checkout of git-configuration failed!", e);
     	}
     }
     
@@ -186,9 +187,9 @@ public class GitConfigFileProvider implements IConfigFileProvider {
 	    			prefs.getGitBinary().toString(), "pull", "origin", gitBranch);
     	} catch (final IOException e) {
     	    if (!configHook.proceedIfPullFails(gitBranch)) {
-        	    throw new GemConfigurationException(MessageFormat.format(//
+                throw new GemFatalException(MessageFormat.format(//
                         "Pulling {0} branch for git-configuration failed", gitBranch), //
-                        e, true);
+                        e);
     	    } else {
     	        LOGGER.warn("Error pulling branch ignored: reverting pull", e);
     	        try {
@@ -208,7 +209,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
 	                gitUrl, //
 	                gitRepoLocation.toAbsolutePath().toString());
     	} catch (final IOException e) {
-            throw new GemConfigurationException("Clone of git-configuration failed!", e, true);
+            throw new GemFatalException("Clone of git-configuration failed!", e);
     	}
     }
     
@@ -218,7 +219,7 @@ public class GitConfigFileProvider implements IConfigFileProvider {
 	    	return executeCommand(gitRepoLocation, //
 	    			prefs.getGitBinary().toString(), "branch", "--show-current");
     	} catch (final IOException e) {
-            throw new GemConfigurationException("Cannot check git-configuration branch!", e, true);
+            throw new GemFatalException("Cannot check git-configuration branch!", e);
     	}
     }
     

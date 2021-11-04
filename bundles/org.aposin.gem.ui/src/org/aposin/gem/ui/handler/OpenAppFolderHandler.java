@@ -18,7 +18,7 @@ package org.aposin.gem.ui.handler;
 import java.awt.Desktop;
 import java.io.IOException;
 
-import org.aposin.gem.core.GemException;
+import org.aposin.gem.core.exception.GemFatalException;
 import org.aposin.gem.ui.Activator;
 import org.aposin.gem.ui.lifecycle.Session;
 import org.eclipse.e4.core.di.annotations.CanExecute;
@@ -36,7 +36,7 @@ public class OpenAppFolderHandler extends GemAbstractSessionHandler {
             Desktop.getDesktop().open(Activator.APP_USER_PATH.toFile());
         } catch (final IOException e) {
             // convert into a non-fatal GEM exception so the user gets notified instead of doing nothing
-            throw new GemException(e.getMessage(), e, false);
+            throw new GemFatalException(e.getMessage(), e);
         }
     }
 

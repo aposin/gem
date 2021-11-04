@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.launcher.AbstractNoParamsLauncher;
 import org.aposin.gem.core.api.launcher.ILauncher;
 import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.WorkflowException;
+import org.aposin.gem.core.exception.GemException;
 
 public class WorkflowLauncherBuilder {
 

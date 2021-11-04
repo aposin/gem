@@ -18,12 +18,13 @@ package org.aposin.gem.core.api.config;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
-import org.aposin.gem.core.GemException;
+
 import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
 import org.aposin.gem.core.api.model.IRepository;
 import org.aposin.gem.core.api.service.IServiceContainer;
+import org.aposin.gem.core.exception.GemException;
 
 /**
  * Interface to configure the core of GEM.

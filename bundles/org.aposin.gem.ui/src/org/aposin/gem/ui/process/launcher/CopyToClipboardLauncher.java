@@ -18,10 +18,11 @@ package org.aposin.gem.ui.process.launcher;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
-import org.aposin.gem.core.GemException;
+
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.launcher.AbstractNoParamsLauncher;
 import org.aposin.gem.core.api.workflow.ICommand;
+import org.aposin.gem.core.exception.GemException;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;

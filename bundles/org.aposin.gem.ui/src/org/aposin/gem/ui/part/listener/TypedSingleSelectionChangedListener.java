@@ -15,7 +15,7 @@
  */
 package org.aposin.gem.ui.part.listener;
 
-import org.aposin.gem.core.GemException;
+import org.aposin.gem.core.exception.GemException;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;

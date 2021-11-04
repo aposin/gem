@@ -23,9 +23,9 @@ import java.util.concurrent.CompletionException;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.workflow.ICommand;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.core.impl.internal.workflow.command.ResultBuilder;
 import org.aposin.gem.core.impl.internal.workflow.command.base.AbstractComposeCommand.AndCommand;
 import org.aposin.gem.core.impl.internal.workflow.command.base.AbstractComposeCommand.OrCommand;

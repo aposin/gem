@@ -25,11 +25,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
 import org.aposin.gem.core.api.model.IRepository;
+import org.aposin.gem.core.exception.GemFatalException;
 import org.aposin.gem.core.impl.internal.config.bean.GemCfgBean.EnvironmentBean;
 import org.aposin.gem.core.impl.internal.config.bean.GemCfgBean.ProjectBean;
 import org.aposin.gem.core.impl.internal.model.env.EnvironmentImpl;
@@ -140,9 +140,9 @@ public final class ProjectImpl implements IProject {
                 if (config.getRepository(repoId) == null) {
                     // TODO - make specific exception for this or hook to allow to continue (so load
                     // the rest but show that this is wrong)
-                    throw new GemException(MessageFormat.format(
+                    throw new GemFatalException(MessageFormat.format(
                             "Repository ''{0}'' for environment ''{1}@{2}'' not defined", repoId,
-                            project.name, env.name, true));
+                            project.name, env.name));
                 }
             }
             environments.add(new EnvironmentImpl(config, this, env));

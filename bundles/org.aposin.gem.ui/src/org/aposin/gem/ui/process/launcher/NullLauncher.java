@@ -16,10 +16,11 @@
 package org.aposin.gem.ui.process.launcher;
 
 import java.util.List;
-import org.aposin.gem.core.GemException;
+
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.launcher.AbstractNoParamsLauncher;
 import org.aposin.gem.core.api.workflow.ICommand;
+import org.aposin.gem.core.exception.GemException;
 
 /**
  * Launcher for mis-configured stuff.

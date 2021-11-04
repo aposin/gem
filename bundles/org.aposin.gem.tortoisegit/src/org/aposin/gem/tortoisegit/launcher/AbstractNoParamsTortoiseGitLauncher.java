@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.aposin.gem.core.Activator;
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.launcher.IParam;
 import org.aposin.gem.core.api.model.IWorktreeDefinition;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.tortoisegit.TortoiseLauncherProvider;
 
 abstract class AbstractNoParamsTortoiseGitLauncher extends AbstractTortoiseGitLauncher {

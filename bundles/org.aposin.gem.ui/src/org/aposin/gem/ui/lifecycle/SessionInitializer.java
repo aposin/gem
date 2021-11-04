@@ -22,13 +22,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.config.ConfigurationLoader;
 import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
 import org.aposin.gem.core.api.config.provider.git.GitConfigFileProvider;
 import org.aposin.gem.core.api.config.provider.git.GitConfigProviderHook;
+import org.aposin.gem.core.exception.GemException;
+import org.aposin.gem.core.exception.GemFatalException;
 import org.aposin.gem.ui.Activator;
 import org.aposin.gem.ui.message.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -80,7 +81,7 @@ public class SessionInitializer extends GitConfigProviderHook implements IRunnab
 
     public void setProgressMonitor(final IProgressMonitor monitor) {
         if (this.monitor != null) {
-            throw new GemException("Should not happen: already running session initializer", true);
+            throw new GemFatalException("Should not happen: already running session initializer");
         }
         this.monitor = monitor;
     }
