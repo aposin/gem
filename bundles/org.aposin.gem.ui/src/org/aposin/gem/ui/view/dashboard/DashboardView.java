@@ -26,6 +26,8 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -66,6 +68,38 @@ public class DashboardView extends Composite {
 
         dynamicButtons = new DynamicButtonGroupListView(this, TYPE.VERTICAL);
         dynamicButtons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+
+        addControlListener(ControlListener.controlResizedAdapter(c -> {
+            Object layoutData = getLayoutData();
+            if (layoutData instanceof GridData) {
+                ((GridData) layoutData).minimumHeight = computeMinimumHeight();
+            }
+        }));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Point computeSize(int wHint, int hHint, boolean changed) {
+        return super.computeSize(wHint, computeMinimumHeight(), changed);
+    }
+
+    /**
+     * <p>Returns the minimum required height.</p>
+     * 
+     * <p>We don't want to recognize the table for the minimum height because a full table
+     * means to calculate space for the whole content. Instead, only the label and the group
+     * should be recognized.</p>
+     * 
+     * @return the minimum required height
+     */
+    private int computeMinimumHeight() {
+        // @formatter:off
+        return dynamicButtonsLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT).y
+                + dynamicButtons.computeSize(SWT.DEFAULT, SWT.DEFAULT).y 
+                + 10; //TODO Try to find a better solution for calculation without magic numbers for borders, margins and indent.
+        // @formatter:on
     }
 
     public final TableViewer getTableViewer() {

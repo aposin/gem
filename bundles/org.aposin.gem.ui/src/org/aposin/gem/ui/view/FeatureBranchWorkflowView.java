@@ -21,9 +21,12 @@ import org.aposin.gem.ui.view.dashboard.DashboardView;
 import org.aposin.gem.ui.view.fieldassist.ComboViewerAutoCompleteField;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -73,22 +76,35 @@ public final class FeatureBranchWorkflowView extends Composite {
 
     public FeatureBranchWorkflowView(final Composite parent, final int style) {
         super(parent, style);
-        setLayout(new GridLayout(3, true));
+        setLayout(new FillLayout());
 
-        final GridDataFactory factory =
-                GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false);
+        ScrolledComposite sc = new ScrolledComposite(this, SWT.V_SCROLL);
+        Composite composite = new Composite(sc, SWT.NONE);
+        sc.setContent(composite);
+        sc.setExpandHorizontal(true);
+        sc.setExpandVertical(true);
+        addControlListener(ControlListener.controlResizedAdapter(
+                c -> sc.setMinHeight(composite.computeSize(composite.getBounds().width, SWT.DEFAULT).y)));
+        composite.setLayout(new GridLayout(3, true));
 
-        projectLabel = new Label(this, SWT.NONE);
-        environmentLabel = new Label(this, SWT.NONE);
-        environmentLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+        final GridDataFactory factory = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false);
 
-        projectSelectionComboViewer = ViewHelper.createProjectCombo(this);
+        Composite composite2 = new Composite(composite, SWT.NONE);
+        GridLayoutFactory.swtDefaults().numColumns(3).equalWidth(true).margins(0, 0).applyTo(composite2);
+        GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).span(3, 0).applyTo(composite2);
+
+        projectLabel = new Label(composite2, SWT.NONE);
+        projectLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        environmentLabel = new Label(composite2, SWT.NONE);
+        environmentLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+
+        projectSelectionComboViewer = ViewHelper.createProjectCombo(composite2);
         final Combo projectSelectionCombo = projectSelectionComboViewer.getCombo();
         factory.applyTo(projectSelectionCombo);
-        environmentSelectionComboViewer = ViewHelper.createEnvironmentCombo(this);
+        environmentSelectionComboViewer = ViewHelper.createEnvironmentCombo(composite2);
         final Combo environmentSelectionCombo = environmentSelectionComboViewer.getCombo();
         factory.applyTo(environmentSelectionCombo);
-        final Composite environmentButtonComposite = new Composite(this, SWT.NONE);
+        final Composite environmentButtonComposite = new Composite(composite2, SWT.NONE);
         factory.applyTo(environmentButtonComposite);
         environmentButtonComposite.setLayout(new FillLayout());
 
@@ -96,52 +112,49 @@ public final class FeatureBranchWorkflowView extends Composite {
         synchronizeAllEnvBranchesButton = new Button(environmentButtonComposite, SWT.NONE);
         mergeBaseIntoFeatureBranchButton = new Button(environmentButtonComposite, SWT.NONE);
 
-        featureBranchProviderLabel = new Label(this, SWT.NONE);
-        featureBranchLabel = new Label(this, SWT.NONE);
+        featureBranchProviderLabel = new Label(composite2, SWT.NONE);
+        featureBranchLabel = new Label(composite2, SWT.NONE);
         featureBranchLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-        featureBranchSelectorInactiveDecoration =
-                new ControlDecoration(featureBranchLabel, SWT.TOP | SWT.RIGHT);
+        featureBranchSelectorInactiveDecoration = new ControlDecoration(featureBranchLabel, SWT.TOP | SWT.RIGHT);
         featureBranchSelectorInactiveDecoration.setShowOnlyOnFocus(false);
 
-
-        selectFeatureBranchProviderComboViewer = new ComboViewer(this, SWT.READ_ONLY);
-        final Combo selectFeatureBranchProviderCombo =
-                selectFeatureBranchProviderComboViewer.getCombo();
+        selectFeatureBranchProviderComboViewer = new ComboViewer(composite, SWT.READ_ONLY);
+        final Combo selectFeatureBranchProviderCombo = selectFeatureBranchProviderComboViewer.getCombo();
         factory.applyTo(selectFeatureBranchProviderCombo);
-        
+
         // not using SWT.READ_ONLY to allow auto-complete field editable to search
-        final ComboViewer selectFeatureBranchComboViewer = new ComboViewer(this, SWT.NONE);
+        final ComboViewer selectFeatureBranchComboViewer = new ComboViewer(composite, SWT.NONE);
         factory.applyTo(selectFeatureBranchComboViewer.getCombo());
         selectFeatureBranchAutoCompleteField = new ComboViewerAutoCompleteField(selectFeatureBranchComboViewer);
         
-        final Composite firstFbButtonsComposite = new Composite(this, SWT.NONE);
+        final Composite firstFbButtonsComposite = new Composite(composite, SWT.NONE);
         factory.applyTo(firstFbButtonsComposite);
         firstFbButtonsComposite.setLayout(new FillLayout());
 
         checkoutFeatureBranchButton = new Button(firstFbButtonsComposite, SWT.NONE);
         pullFeatureBranchButton = new Button(firstFbButtonsComposite, SWT.NONE);
 
-        final Label emptyLabel = new Label(this, SWT.NONE);
+        final Label emptyLabel = new Label(composite, SWT.NONE);
         emptyLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-        final Composite secondFbButtonsComposite = new Composite(this, SWT.NONE);
+        final Composite secondFbButtonsComposite = new Composite(composite, SWT.NONE);
         factory.applyTo(secondFbButtonsComposite);
         secondFbButtonsComposite.setLayout(new FillLayout());
 
         cleanWorktreeButton = new Button(secondFbButtonsComposite, SWT.NONE);
         removeFeatureBranchButton = new Button(secondFbButtonsComposite, SWT.NONE);
 
-        repositoryInfoLabel = new Label(this, SWT.NONE);
+        repositoryInfoLabel = new Label(composite, SWT.NONE);
         repositoryInfoLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 5, 1));
 
-        dashboardView = new DashboardView(this, SWT.NONE);
+        dashboardView = new DashboardView(composite, SWT.NONE);
         dashboardView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 5, 1));
         
         dashboardView.createColumn(WT_DEFINITION_COLUMN_ID);
         dashboardView.createColumn(STATUS_COLUMN_ID);
         dashboardView.createColumn(BASE_BRANCH_COLUMN_ID);
         dashboardView.createColumn(TARGET_BRANCH_COLUMN_ID);
-        
-        featureBranchLauncherButtons = new DynamicButtonGroupListView(this, TYPE.HORIZONTAL);
+
+        featureBranchLauncherButtons = new DynamicButtonGroupListView(composite, TYPE.HORIZONTAL);
         featureBranchLauncherButtons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
     }
 

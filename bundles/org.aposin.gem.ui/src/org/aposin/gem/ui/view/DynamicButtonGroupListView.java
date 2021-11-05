@@ -22,12 +22,11 @@ import java.util.Map;
 
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class DynamicButtonGroupListView extends ScrolledComposite {
+public class DynamicButtonGroupListView extends Composite {
 
     private final Map<String, DynamicButtonGroup> launcherButtonsByGroupId = new HashMap<>();
 
@@ -43,23 +42,18 @@ public class DynamicButtonGroupListView extends ScrolledComposite {
         }
     }
 
-    private Composite container;
-
     public DynamicButtonGroupListView(final Composite parent, TYPE type) {
         // TODO: change to the required oone for the type
-        super(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+        super(parent, SWT.NONE);
         setLayout(new FillLayout());
-        container = new Composite(parent, SWT.NONE);
-        container.setBackground(getDisplay().getSystemColor(SWT.COLOR_RED));
-        this.setContent(container);
-        RowLayoutFactory.fillDefaults().type(type.rowLayout).applyTo(container);
+        RowLayoutFactory.fillDefaults().type(type.rowLayout).applyTo(this);
     }
 
     public DynamicButtonGroup getOrCreateGroup(final String id) {
         return launcherButtonsByGroupId.computeIfAbsent(id, //
                 newId ->
                 {
-                    return new DynamicButtonGroup(container, SWT.NONE);
+                    return new DynamicButtonGroup(this, SWT.NONE);
                 });
     }
 

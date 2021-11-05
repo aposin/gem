@@ -21,6 +21,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -56,32 +58,42 @@ public final class EnvironmentWorkflowView extends Composite {
 
     public EnvironmentWorkflowView(final Composite parent, final int style) {
         super(parent, style);
-        setLayout(new GridLayout(3, true));
+        setLayout(new FillLayout());
 
-        projectLabel = new Label(this, SWT.NONE);
-        environmentLabel = new Label(this, SWT.NONE);
+        ScrolledComposite sc = new ScrolledComposite(this, SWT.V_SCROLL);
+        Composite composite = new Composite(sc, SWT.NONE);
+        sc.setContent(composite);
+        sc.setExpandHorizontal(true);
+        sc.setExpandVertical(true);
+        addControlListener(ControlListener
+                .controlResizedAdapter(c -> sc.setMinHeight(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y)));
+
+        composite.setLayout(new GridLayout(3, true));
+
+        projectLabel = new Label(composite, SWT.NONE);
+        environmentLabel = new Label(composite, SWT.NONE);
         environmentLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 
         final GridDataFactory factory =
                 GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false);
 
-        projectSelectionComboViewer = ViewHelper.createProjectCombo(this);
+        projectSelectionComboViewer = ViewHelper.createProjectCombo(composite);
         factory.applyTo(projectSelectionComboViewer.getControl());
 
-        environmentSelectionComboViewer = ViewHelper.createEnvironmentCombo(this);
+        environmentSelectionComboViewer = ViewHelper.createEnvironmentCombo(composite);
         factory.applyTo(environmentSelectionComboViewer.getControl());
 
-        final Composite firstButtonsComposite = new Composite(this, SWT.NONE);
+        final Composite firstButtonsComposite = new Composite(composite, SWT.NONE);
         factory.applyTo(firstButtonsComposite);
         firstButtonsComposite.setLayout(new FillLayout());
 
         cloneRepositoriesButton = new Button(firstButtonsComposite, SWT.NONE);
         setupWorktreeButton = new Button(firstButtonsComposite, SWT.NONE);
 
-        final Label emptyLabel = new Label(this, SWT.NONE);
+        final Label emptyLabel = new Label(composite, SWT.NONE);
         emptyLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
-        final Composite secondButtonsComposite = new Composite(this, SWT.NONE);
+        final Composite secondButtonsComposite = new Composite(composite, SWT.NONE);
         factory.applyTo(secondButtonsComposite);
         secondButtonsComposite.setLayout(new FillLayout());
 
@@ -89,10 +101,10 @@ public final class EnvironmentWorkflowView extends Composite {
         removeWorktreeButton = new Button(secondButtonsComposite, SWT.NONE);
 
         // table with repository information
-        repositoryInfoLabel = new Label(this, SWT.NONE);
+        repositoryInfoLabel = new Label(composite, SWT.NONE);
         repositoryInfoLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 
-        dashboardView = new DashboardView(this, SWT.NONE);
+        dashboardView = new DashboardView(composite, SWT.NONE);
         dashboardView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
         dashboardView.createColumn(NAME_COLUMN_ID);
         dashboardView.createColumn(BASE_BRANCH_COLUMN_ID);
