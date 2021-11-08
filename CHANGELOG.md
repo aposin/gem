@@ -23,7 +23,8 @@ and this project adheres to [Semantic Versioning (SemVer)](http://semver.org/).
 ### Fixed
 
 * Fix bug on switching to not completely cloned environments
-
+* Refresh crashes the application when configuration is broken (same as on startup)
+* Fix message for wrong repository configuration
 
 ## [0.3.0]
 
