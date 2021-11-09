@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GEM Core
 Bundle-SymbolicName: org.aposin.gem.core;singleton:=true
-Bundle-Version: 0.3.1.qualifier
+Bundle-Version: 0.4.0.qualifier
 Automatic-Module-Name: org.aposin.gem.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Foerderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)

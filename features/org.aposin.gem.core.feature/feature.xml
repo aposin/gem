@@ -2,7 +2,7 @@
 <feature
       id="org.aposin.gem.core.feature"
       label="GEM Core Feature"
-      version="0.3.1.qualifier"
+      version="0.4.0.qualifier"
       provider-name="Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Foerderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)">
 
    <description url="http://www.example.com/description">
