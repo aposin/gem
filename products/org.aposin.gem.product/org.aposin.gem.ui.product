@@ -10,7 +10,7 @@
       <vmArgs>-Xmx75M
 -Dswt.autoScale=true
 -Dorg.aposin.gem.gitconfig.url=git@github.com:aposin/gem-config.git
--Dorg.aposin.gem.gitconfig.branch=v0.4.0
+-Dorg.aposin.gem.gitconfig.branch=main
 -Dorg.aposin.gem.gitconfig.file=root.conf
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
