@@ -2,7 +2,7 @@
 <feature
       id="org.aposin.gem.thirdparty.feature"
       label="GEM Thirdparty Components"
-      version="0.4.0.qualifier"
+      version="0.4.1.qualifier"
       provider-name="Association for the promotion of open-source insurance software and for the establishment of open interface standards in the insurance industry (Verein zur Foerderung quelloffener Versicherungssoftware und Etablierung offener Schnittstellenstandards in der Versicherungsbranche)">
 
    <description>
