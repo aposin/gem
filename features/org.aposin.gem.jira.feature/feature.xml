@@ -2,7 +2,7 @@
 <feature
       id="org.aposin.gem.jira.feature"
       label="GEM JIRA Feature"
-      version="0.3.1.qualifier">
+      version="0.4.1.qualifier">
 
    <description>
       Feature with the GEM JIRA plug-in and thirdparty libraries.

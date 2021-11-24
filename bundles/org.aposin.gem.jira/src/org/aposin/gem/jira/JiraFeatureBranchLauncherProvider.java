@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.aposin.gem.core.GemException;
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.IConfiguration;
@@ -37,6 +36,7 @@ import org.aposin.gem.core.api.model.IRepository;
 import org.aposin.gem.core.api.service.launcher.IFeatureBranchLauncherProvider;
 import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
+import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.jira.internal.config.JiraConfigBean;
 import org.aposin.gem.jira.internal.config.JiraProviderConfigBean;
 import org.aposin.gem.jira.internal.config.Utils;
