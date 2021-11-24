@@ -3,7 +3,7 @@ JAVA,com.typesafe.config.jar,1.4.1,,,,Apache-2.0
 JAVA,org.zeroturnaround.zt-exec.jar,F513AF3998FD4024F993E8B259EFD36B34A0CF1C793E93B4A25ADC3498D011FD,,,,Apache-2.0
 JAVA,com.ibm.icu_64.2.0.v20190507-1337.jar,64.2.0.v20190507-1337,,EclipseFoundation,,EPL-1.0
 JAVA,javax.annotation_1.2.0.v201602091430.jar,1.2.0.v201602091430,,EclipseFoundation,,EPL-1.0
-JAVA,com.sun.jersey.jersey-client.jar,1.19.0,,Orable,,GPL_CDDL_CPE
+JAVA,com.sun.jersey.jersey-client.jar,1.19.0,,Oracle,,GPL_CDDL_CPE
 JAVA,com.sun.jersey.jersey-core.jar,1.19.0,,Oracle,,GPL_CDDL_CPE
 JAVA,com.sun.jersey.jersey-json.jar,1.19.0,,Oracle,,GPL_CDDL_CPE
 JAVA,com.sun.xml.bind.jaxb-impl.jar,2.2.3,,Oracle,,GPL_CDDL_CPE
