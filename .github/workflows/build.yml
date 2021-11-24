@@ -35,3 +35,9 @@ jobs:
           name: GEM-bin
           path: products/org.aposin.gem.product/target/products/*.zip
           if-no-files-found: error
+      - name: Upload LicenseScout Result
+        uses: actions/upload-artifact@v2
+        with:
+          name: LicenseScout-Result
+          path: products/org.aposin.gem.product/target/licensescout/*
+          if-no-files-found: error
