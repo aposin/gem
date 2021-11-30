@@ -18,6 +18,7 @@ package org.aposin.gem.core.impl.internal.service;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.service.IFeatureBranchProvider;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
@@ -26,15 +27,15 @@ import org.osgi.service.component.annotations.Component;
 @Component(service = IFeatureBranchProvider.class)
 public class GemGitBranchProvider extends AbstractGitBranchProvider {
 
+    private static final String NAME = "gem_branches";
+
     /**
     * ID for this provider, which is also the default Core provider.
     */
-    public static final String ID = GemGitBranchProvider.class.getName();
+    public static final String ID = CORE_ID_PREFIX + NAME;
 
     /**
     * {@inheritDoc}
-    *
-    * @return {@link #ID}
     */
     @Override
     public String getId() {
@@ -43,7 +44,7 @@ public class GemGitBranchProvider extends AbstractGitBranchProvider {
 
     @Override
     public String getName() {
-        return "gem_branches";
+        return NAME;
     }
 
     @Override

@@ -43,6 +43,11 @@ public abstract class AbstractGitBranchProvider implements IFeatureBranchProvide
     private Map<IRepository, Set<String>> blackListedBranches;
 
     @Override
+    public String getId() {
+        return CORE_ID_PREFIX + getName();
+    }
+
+    @Override
     public final void setConfig(final IConfiguration config) {
         this.config = config;
         // configure the blacklist of branches
