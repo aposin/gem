@@ -67,7 +67,7 @@ public final class JiraFeatureBranchProvider implements IFeatureBranchProvider {
 
     @Override
     public String getId() {
-        return this.getClass().getName() + "." + getName();
+        return CORE_ID_PREFIX + "jira." + getName();
     }
 
     @Override

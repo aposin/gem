@@ -17,6 +17,7 @@ package org.aposin.gem.core.api.service;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.aposin.gem.core.api.IRefreshable;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
@@ -25,6 +26,14 @@ import org.aposin.gem.core.api.workflow.IFeatureBranch;
  * Service to provide feature-branches for environments.
  */
 public interface IFeatureBranchProvider extends IGemService, IRefreshable {
+
+    /**
+     * ID prefix to identify feature-branch providers provided by GEM Core.
+     * </br>
+     * IMPORTANT NOTE: should only be used on {@link #getId()} from plug-ins provided
+     * by the GEM Core (including extra plug-ins).
+     */
+    public static final String CORE_ID_PREFIX = "org.aposin.gem.fbp.";
 
     /**
      * Get the feature-branches for the environment.

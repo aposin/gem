@@ -57,4 +57,6 @@ public interface IGemSorter extends IGemService {
      */
     public Comparator<IEnvironment> getEnvironmentComparator();
 
+    public Comparator<IFeatureBranchProvider> getFeatureBranchProviderComparator();
+
 }

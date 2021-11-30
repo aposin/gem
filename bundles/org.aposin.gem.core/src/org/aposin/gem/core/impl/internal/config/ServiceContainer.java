@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.aposin.gem.core.Activator;
 import org.aposin.gem.core.api.IRefreshable;
@@ -59,6 +60,7 @@ public class ServiceContainer implements IServiceContainer, IConfigurable {
     private final Map<Class<? extends IGemService>, Map<? extends IGemService, GemConfigurationException>> misconfiguredServices =
             new HashMap<>();
 
+    private List<IFeatureBranchProvider> featureBranchProviders;
 
     /* package */ ServiceContainer(final ConfigurationImpl configuration) {
         this.configuration = configuration;
@@ -104,6 +106,16 @@ public class ServiceContainer implements IServiceContainer, IConfigurable {
             provider = getService(IFeatureBranchProvider.class, GemGitBranchProvider.ID);
         }
         return provider;
+    }
+
+    @Override
+    public Collection<IFeatureBranchProvider> getFeatureBranchProviders() {
+        if (featureBranchProviders == null) {
+            featureBranchProviders = getGemServices(IFeatureBranchProvider.class).stream() //
+                    .sorted(getGemSorter().getFeatureBranchProviderComparator()) //
+                    .collect(Collectors.toUnmodifiableList());
+        }
+        return featureBranchProviders;
     }
 
     @Override
@@ -206,5 +218,6 @@ public class ServiceContainer implements IServiceContainer, IConfigurable {
         loadedServices.clear();
         misconfiguredServices.clear();
         misconfiguredServiceCreators.clear();
+        featureBranchProviders = null;
     }
 }

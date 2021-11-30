@@ -44,7 +44,9 @@ public interface IServiceContainer extends IRefreshable, IConfigurable {
         final Collection<IGemSorter> sorters = getGemServices(IGemSorter.class);
         switch (sorters.size()) {
             case 0:
-                return new DefaultGemSorter();
+                final DefaultGemSorter sorter = new DefaultGemSorter();
+                sorter.setConfig(getConfiguration());
+                return sorter;
             case 1:
                 return sorters.iterator().next();
             default:
@@ -61,12 +63,14 @@ public interface IServiceContainer extends IRefreshable, IConfigurable {
 
     /**
      * Retrieve the {@link IFeatureBranchProvider} core service.
+     * </br>
+     * Implementations should sort the result with
+     * {@link IGemSorter#getFeatureBranchProviderComparator()}
+     * after calling {@link #getGemServices(Class)}.
      * 
      * @return {@link #getService(Class)} for {@link IFeatureBranchProvider}.
      */
-    public default Collection<IFeatureBranchProvider> getFeatureBranchProviders() {
-        return getGemServices(IFeatureBranchProvider.class);
-    }
+    public Collection<IFeatureBranchProvider> getFeatureBranchProviders();
 
     /**
      * Retrieve the {@link IEnvironmentLauncherProvider} core service.
