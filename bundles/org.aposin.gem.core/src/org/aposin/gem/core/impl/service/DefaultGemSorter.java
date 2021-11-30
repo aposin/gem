@@ -18,24 +18,46 @@ package org.aposin.gem.core.impl.service;
 import java.util.Comparator;
 
 import org.aposin.gem.core.api.config.GemConfigurationException;
+import org.aposin.gem.core.api.config.IConfigurable;
 import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
+import org.aposin.gem.core.api.service.IFeatureBranchProvider;
 import org.aposin.gem.core.api.service.IGemSorter;
 
 /**
  * Default {@link IGemSorter}.
  * </br>
  * This sorter can be extended by plug-ins and be registered as a service (only one is allowed).
+ * </br>
+ * On the constructor, sub-classes should register the core serice comparators.
+ * If other services that are plug-in specific are provided, it can either be registered by the
+ * plug-in itself {@link #registerServiceComparator(Class, Comparator)} or by the sorter if it is
+ * application-specific.
  */
-public class DefaultGemSorter implements IGemSorter {
+public class DefaultGemSorter implements IGemSorter, IConfigurable {
+
+    private IConfiguration config;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setConfig(final IConfiguration config) throws GemConfigurationException {
+    public final void setConfig(final IConfiguration config) throws GemConfigurationException {
+        this.config = config;
+        loadConfig();
+    }
+
+    /**
+     * Hook-method for sub-classes, to load the configuration on {@link #setConfig(IConfiguration));
+     */
+    protected void loadConfig() {
         // NO-OP
+    }
+
+    @Override
+    public final IConfiguration getConfiguration() {
+        return config;
     }
 
     /**
@@ -53,4 +75,28 @@ public class DefaultGemSorter implements IGemSorter {
     public Comparator<IProject> getProjectComparator() {
         return Comparator.naturalOrder();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Comparator<IFeatureBranchProvider> getFeatureBranchProviderComparator() {
+        return new Comparator<IFeatureBranchProvider>() {
+
+            @Override
+            public int compare(IFeatureBranchProvider o1, IFeatureBranchProvider o2) {
+                final IFeatureBranchProvider defaultFBP = config.getServiceContainer()
+                        .getDefaultFeatureBranchProvider();
+                if (o1 == defaultFBP) {
+                    return -1;
+                } else if (o2 == defaultFBP) {
+                    return 1;
+                } else {
+                    return o1.compareTo(o2);
+                }
+            }
+
+        };
+    }
+
 }
