@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.aposin.gem</groupId>
+		<artifactId>org.aposin.gem.bundles</artifactId>
+		<version>0.4.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>org.aposin.gem.jira.thirdparty.libs</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	
+	<properties>
+		<lib-output-folder>lib</lib-output-folder>
+		<jira.version>5.2.2</jira.version>
+		<fugue.version>4.7.2</fugue.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>atlassian-public</id>
+			<url>https://packages.atlassian.com/maven/repository/public</url>
+		</repository>
+	</repositories> 
+
+	<dependencies>
+		<!-- TODO: add provided dependencies! -->
+		<dependency>
+			<groupId>com.atlassian.jira</groupId>
+			<artifactId>jira-rest-java-client-core</artifactId>
+			<version>${jira.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.atlassian.fugue</groupId>
+			<artifactId>fugue</artifactId>
+			<version>${fugue.version}</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<!-- common configuration for both sources and resources executions -->
+				<configuration>
+					<outputDirectory>${lib-output-folder}</outputDirectory>
+					<stripVersion>true</stripVersion>
+					<prependGroupId>true</prependGroupId>
+					<overWriteReleases>true</overWriteReleases>
+					<overWriteSnapshots>true</overWriteSnapshots>
+					<includeScope>runtime</includeScope>
+					<!-- exclude artifacts provided as Eclipse plug-ins -->
+					<excludeArtifactIds>slf4j-api</excludeArtifactIds>
+				</configuration>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>						
+					</execution>
+					<execution>
+						<id>copy-dependencies-src</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<classifier>sources</classifier>
+							<stripClassifier>false</stripClassifier>
+							<!-- TODO: always skip: this is only for Eclipse -->
+							<skip>false</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- clean task for the copied dependencies -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>${maven-clean-plugin.version}</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${lib-output-folder}</directory>
+							<excludes>.gitignore</excludes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>

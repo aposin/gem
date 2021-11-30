@@ -15,6 +15,7 @@
 		<module>org.aposin.gem.core.feature</module>
 		<module>org.aposin.gem.extras.feature</module>
 		<module>org.aposin.gem.thirdparty.feature</module>
+		<module>org.aposin.gem.jira.feature</module>
 	</modules>
 	
 </project>

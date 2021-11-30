@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.atlassian.event.atlassian-event.jar" sourcepath="lib/com.atlassian.event.atlassian-event-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.atlassian.httpclient.atlassian-httpclient-api.jar" sourcepath="lib/com.atlassian.httpclient.atlassian-httpclient-api-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.atlassian.httpclient.atlassian-httpclient-library.jar" sourcepath="lib/com.atlassian.httpclient.atlassian-httpclient-library-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.atlassian.jira.jira-rest-java-client-api.jar" sourcepath="lib/com.atlassian.jira.jira-rest-java-client-api-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.atlassian.jira.jira-rest-java-client-core.jar" sourcepath="lib/com.atlassian.jira.jira-rest-java-client-core-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.atlassian.sal.sal-api.jar" sourcepath="lib/com.atlassian.sal.sal-api-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.google.code.findbugs.jsr305.jar" sourcepath="lib/com.google.code.findbugs.jsr305-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.google.errorprone.error_prone_annotations.jar" sourcepath="lib/com.google.errorprone.error_prone_annotations-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.google.guava.guava.jar" sourcepath="lib/com.google.guava.guava-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.google.j2objc.j2objc-annotations.jar" sourcepath="lib/com.google.j2objc.j2objc-annotations-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.sun.jersey.jersey-client.jar" sourcepath="lib/com.sun.jersey.jersey-client-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.sun.jersey.jersey-core.jar" sourcepath="lib/com.sun.jersey.jersey-core-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.sun.jersey.jersey-json.jar" sourcepath="lib/com.sun.jersey.jersey-json-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/com.sun.xml.bind.jaxb-impl.jar" sourcepath="lib/com.sun.xml.bind.jaxb-impl-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-codec.commons-codec.jar" sourcepath="lib/commons-codec.commons-codec-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-logging.commons-logging.jar" sourcepath="lib/commons-logging.commons-logging-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/io.atlassian.fugue.fugue.jar" sourcepath="lib/io.atlassian.fugue.fugue-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/io.atlassian.util.concurrent.atlassian-util-concurrent.jar" sourcepath="lib/io.atlassian.util.concurrent.atlassian-util-concurrent-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javax.activation.activation.jar" sourcepath="lib/javax.activation.activation-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javax.ws.rs.jsr311-api.jar" sourcepath="lib/javax.ws.rs.jsr311-api-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javax.xml.bind.jaxb-api.jar" sourcepath="lib/javax.xml.bind.jaxb-api-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javax.xml.stream.stax-api.jar" sourcepath="lib/javax.xml.stream.stax-api-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/joda-time.joda-time.jar" sourcepath="lib/joda-time.joda-time-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.commons.commons-lang3.jar" sourcepath="lib/org.apache.commons.commons-lang3-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.httpcomponents.httpasyncclient.jar" sourcepath="lib/org.apache.httpcomponents.httpasyncclient-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.httpcomponents.httpasyncclient-cache.jar" sourcepath="lib/org.apache.httpcomponents.httpasyncclient-cache-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.httpcomponents.httpclient.jar" sourcepath="lib/org.apache.httpcomponents.httpclient-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.httpcomponents.httpclient-cache.jar" sourcepath="lib/org.apache.httpcomponents.httpclient-cache-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.httpcomponents.httpcore.jar" sourcepath="lib/org.apache.httpcomponents.httpcore-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.httpcomponents.httpcore-nio.jar" sourcepath="lib/org.apache.httpcomponents.httpcore-nio-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.httpcomponents.httpmime.jar" sourcepath="lib/org.apache.httpcomponents.httpmime-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.checkerframework.checker-qual.jar" sourcepath="lib/org.checkerframework.checker-qual-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.codehaus.jackson.jackson-core-asl.jar" sourcepath="lib/org.codehaus.jackson.jackson-core-asl-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.codehaus.jackson.jackson-jaxrs.jar" sourcepath="lib/org.codehaus.jackson.jackson-jaxrs-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.codehaus.jackson.jackson-mapper-asl.jar" sourcepath="lib/org.codehaus.jackson.jackson-mapper-asl-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.codehaus.jackson.jackson-xc.jar" sourcepath="lib/org.codehaus.jackson.jackson-xc-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.codehaus.jettison.jettison.jar" sourcepath="lib/org.codehaus.jettison.jettison-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.codehaus.mojo.animal-sniffer-annotations.jar" sourcepath="lib/org.codehaus.mojo.animal-sniffer-annotations-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.spring-beans.jar" sourcepath="lib/org.springframework.spring-beans-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.spring-core.jar" sourcepath="lib/org.springframework.spring-core-sources.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
