@@ -23,6 +23,8 @@ import java.util.Arrays;
 
 import org.aposin.gem.core.api.config.GemConfigurationException;
 
+import com.typesafe.config.ConfigUtil;
+
 /**
  * Utilities for configuration files.
  */
@@ -67,5 +69,15 @@ public class ConfigUtils {
      */
     public static boolean isHocon(final Path file) {
         return file.getFileName().toString().endsWith(".conf");
+    }
+
+    /**
+     * Join IDs to retrieve at a concrete path.
+     * 
+     * @param ids
+     * @return
+     */
+    public static String joinIds(final String... ids) {
+        return ConfigUtil.joinPath(ids);
     }
 }

@@ -139,12 +139,11 @@ public interface IConfiguration extends IConfigurable {
      * Gets the configuration for any Plug-in extending the core functionality.
      * 
      * @param id identifier for the Plug-in configuration
-     * @param configBean object representing the configured options
      * 
-     * @return bean with the loaded configuration.
+     * @return plugin configuration to retrieve values.
+     * 
      * @throws GemConfigurationException if the configuration is missing or invalid.
      */
-    public <T> T getPluginConfiguration(final String id, final Class<T> configBean)
-            throws GemConfigurationException;
+    public IPluginConfiguration getPluginConfiguration(final String id) throws GemConfigurationException;
 
 }

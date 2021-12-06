@@ -15,6 +15,7 @@
  */
 package org.aposin.gem.jira;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,15 +24,14 @@ import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.service.IFeatureBranchProvider;
 import org.aposin.gem.core.api.service.IGemServiceCreator;
-import org.aposin.gem.jira.internal.config.JiraConfigBean;
-import org.aposin.gem.jira.internal.config.Utils;
+import org.aposin.gem.jira.internal.config.JiraProviderConfig;
 import org.aposin.gem.jira.internal.service.JiraFeatureBranchProvider;
 import org.osgi.service.component.annotations.Component;
 
 @Component(service = IGemServiceCreator.class)
 public class JiraFeatureBranchProviderCreator implements IGemServiceCreator<IFeatureBranchProvider>, IRefreshable {
 
-    private JiraConfigBean configBean;
+    private List<String> providerNames = new ArrayList<>();
     private List<IFeatureBranchProvider> providers;
 
     @Override
@@ -51,19 +51,19 @@ public class JiraFeatureBranchProviderCreator implements IGemServiceCreator<IFea
 
     @Override
     public void setConfig(IConfiguration config) throws GemConfigurationException {
-        this.configBean = Utils.getJiraConfig(config);
+        this.providerNames = JiraProviderConfig.getProviderNames(config);
     }
 
     @Override
     public void refresh() {
-        this.configBean = null;
+        this.providerNames.clear();
         this.providers = null;
     }
 
     @Override
     public List<IFeatureBranchProvider> createServices() {
         if (providers == null) {
-            providers = configBean.getProviderNames().stream() //
+            providers = providerNames.stream() //
                     .map(JiraFeatureBranchProvider::new) //
                     .collect(Collectors.toList());
         }

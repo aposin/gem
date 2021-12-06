@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 import org.aposin.gem.core.api.config.ConfigConstants;
 import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.IConfiguration;
+import org.aposin.gem.core.api.config.IPluginConfiguration;
 import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
 import org.aposin.gem.core.api.model.IEnvironment;
@@ -45,7 +46,6 @@ import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.core.exception.GemFatalException;
 import org.aposin.gem.core.impl.internal.config.bean.GemCfgBean;
 import org.aposin.gem.core.impl.internal.config.bean.GemCfgBean.RepositoryBean;
-import org.aposin.gem.core.impl.internal.config.prefs.PreferencesImpl;
 import org.aposin.gem.core.impl.internal.model.ProjectImpl;
 import org.aposin.gem.core.impl.internal.model.repo.RepositoryImpl;
 import org.aposin.gem.core.utils.IOUtils;
@@ -59,11 +59,10 @@ public final class ConfigurationImpl implements IConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationImpl.class);
 
-    private final HoconFilesManager hoconFileManager;
+    /*package*/ final HoconFilesManager hoconFileManager;
 
     // reloaded
     private IServiceContainer services;
-    private PreferencesImpl prefs;
     /*package*/ GemCfgBean config;
 
     private List<IProject> projects;
@@ -83,10 +82,7 @@ public final class ConfigurationImpl implements IConfiguration {
 
     @Override
     public IPreferences getPreferences() {
-        if (prefs == null) {
-            prefs = new PreferencesImpl(hoconFileManager);
-        }
-        return prefs;
+        return hoconFileManager.getPreferencesWrapper();
     }
 
     @Override
@@ -95,12 +91,8 @@ public final class ConfigurationImpl implements IConfiguration {
         repositoriesById = null;
         // first the files should be read again
         hoconFileManager.refresh();
-        // refresh the preferences if already created
-        if (prefs != null) {
-            prefs.refresh();
-        }
         try {
-            config = getPluginConfiguration(ConfigConstants.GEM_CONFIGURATION_ID, GemCfgBean.class);
+            config = hoconFileManager.getConfigurationAsClass(ConfigConstants.GEM_CONFIGURATION_ID, GemCfgBean.class);
         } catch (final GemConfigurationException e) {
             // convert any configuration exception to a fatal exception on gem-config loading
             throw new GemFatalException(e.getLocalizedMessage(), e);
@@ -110,8 +102,8 @@ public final class ConfigurationImpl implements IConfiguration {
     }
 
     @Override
-    public <T> T getPluginConfiguration(String id, Class<T> configBean) {
-        return hoconFileManager.getConfigurationBean(getPreferences(), id, configBean);
+    public IPluginConfiguration getPluginConfiguration(String id) {
+        return new PluginConfigImpl(id, hoconFileManager);
     }
 
     @Override

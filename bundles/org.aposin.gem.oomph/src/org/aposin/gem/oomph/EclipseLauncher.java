@@ -24,7 +24,6 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -52,8 +51,7 @@ import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.IEnvironmentWorkflow;
 import org.aposin.gem.core.exception.GemException;
 import org.aposin.gem.core.utils.ExecUtils;
-import org.aposin.gem.oomph.impl.internal.config.bean.GemEclipseBean;
-import org.aposin.gem.oomph.impl.internal.config.bean.GemEclipseBean.EclipseReleaseBean;
+import org.aposin.gem.oomph.EclipseLauncherProvider.EclipseRelease;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -98,12 +96,8 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
         return getLaunchScope().getConfiguration();
     }
 
-    private GemEclipseBean getEclipseBean() {
-        return provider.eclipseBean;
-    }
-
-    private EclipseReleaseBean getEclipseReleaseBean() {
-        return getEclipseBean().releases.get(index);
+    private EclipseRelease getEclipseReleaseBean() {
+        return provider.releases.get(index);
     }
 
     /**
@@ -206,9 +200,7 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
                 + pathToString(projectEnvironment.resolve("eclipse").resolve("configuration")));
         // should be quoted as it contains the special characters that might not work
         list.add(quoteArg(
-                "-Doomph.redirection.index.redirection=index:/->" + "file:/"
-                + pathToString(getConfiguration().getRelativeToConfigFile(getEclipseBean().oomphpath))
-                + '/'));
+                "-Doomph.redirection.index.redirection=index:/->" + "file:/" + pathToString(provider.oomphPath) + '/'));
         list.addAll(getEclipseReleaseBean().getVmargs());
         
         return list;
@@ -248,24 +240,10 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
      * Sets the bundle pool to the desired configured location.
      */
     private void setBundlePool() {
-        final String bundlePoolString = getEclipseBean().getBundlePool();
-        if (bundlePoolString != null) {
+        if (provider.bundlePool.isPresent()) {
             try {
-                final Path bundlePool = Paths.get(bundlePoolString);
-                final String bundlePoolConfigString = getEclipseBean().getBundlePoolConfig();
-                final Path bundlePoolConfigPath;
-                if (bundlePoolConfigString == null) {
-                    // Default location
-                    bundlePoolConfigPath = Paths.get(System.getProperty("user.home"), ".eclipse",
-                            "org.eclipse.oomph.p2");
-                } else {
-                    // Split slash and backslash
-                    final String[] bundlePoolConfigSplit = bundlePoolConfigString.split("[/\\\\]");
-                    bundlePoolConfigPath = Paths.get("", //
-                            Arrays.stream(bundlePoolConfigSplit) //
-                                    .map(EclipseLauncher::mapSystemProperty)
-                                    .toArray(String[]::new));
-                }
+                final Path bundlePool = provider.bundlePool.get();
+                final Path bundlePoolConfigPath = provider.bundlePoolConfig;
                 if (Files.notExists(bundlePoolConfigPath)) {
                     Files.createDirectories(bundlePoolConfigPath);
                 }
@@ -275,24 +253,6 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
                 LOGGER.error("Could not set bundle pool.", e);
             }
         }
-    }
-
-    /**
-     * Checks and replaces the given {@link String} variable, e.g. <code>${user.home}</code>,
-     * against the given system properties. If the input does not exist as system property it
-     * returns the input unchanged.
-     * 
-     * @param s the variable to replace against available system properties
-     * @return the value from system properties or the input if replacement is not possible.
-     */
-    private static String mapSystemProperty(final String s) {
-        if (s != null && s.startsWith("${") && s.endsWith("}")) {
-            final String prop = System.getProperty(s.substring(2, s.length() - 1));
-            if (prop != null) {
-                return prop;
-            }
-        }
-        return s;
     }
 
     /**
@@ -410,7 +370,7 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
         setup.appendChild(productVersion);
         productVersion.setAttribute("href", String.format(
                 "index:/org.eclipse.setup#//@productCatalogs[name='%s']/@products[name='epp.package.java']/@versions[name='empty']",
-                getEclipseBean().productCatalog));
+                provider.productCatalog));
         return document;
     }
 
@@ -489,7 +449,7 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
             setup.appendChild(stream);
             final String hrefValue = String.format(
                     "index:/org.eclipse.setup#//@projectCatalogs[name='%s']/@projects[name='%s']/@streams[name='master']",
-                    getEclipseBean().projectCatalog, getOomphProjectName());
+                    provider.projectCatalog, getOomphProjectName());
             stream.setAttribute("href", hrefValue);
             return document;
         } catch (ParserConfigurationException e) {
@@ -504,15 +464,12 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
      * @return the project name of the project catalog to use
      */
     private String getOomphProjectName() {
-        final Path oomphPath =
-                getConfiguration().getRelativeToConfigFile(getEclipseBean().oomphpath);
         try {
             final SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             final SAXParser parser = factory.newSAXParser();
             final List<String> foundProjects = new ArrayList<>(2); // Most time not more than 2
-            parser.parse(oomphPath
-                    .resolve(String.format("%s.setup", getEclipseBean().projectCatalog)).toFile(),
+            parser.parse(provider.oomphPath.resolve(String.format("%s.setup", provider.projectCatalog)).toFile(),
                     new DefaultHandler() {
 
                         /**
@@ -554,7 +511,7 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
             throw new GemException(
-                    String.format("Error occurred parsing Oomph files '%s'", oomphPath), e);
+                    String.format("Error occurred parsing Oomph files '%s'", provider.oomphPath), e);
         }
     }
 }

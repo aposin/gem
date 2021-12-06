@@ -14,5 +14,4 @@ Import-Package: org.osgi.framework,
  org.slf4j
 Service-Component: OSGI-INF/org.aposin.gem.oomph.EclipseLauncherProvider.xml
 Bundle-Activator: org.aposin.gem.oomph.Activator
-Export-Package: org.aposin.gem.oomph,
- org.aposin.gem.oomph.impl.internal.config.bean;x-internal:=true
+Export-Package: org.aposin.gem.oomph

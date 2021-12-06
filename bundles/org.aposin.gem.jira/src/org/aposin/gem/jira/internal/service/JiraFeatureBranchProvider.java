@@ -29,8 +29,7 @@ import org.aposin.gem.core.api.config.IConfiguration;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.service.IFeatureBranchProvider;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
-import org.aposin.gem.jira.internal.config.JiraProviderConfigBean;
-import org.aposin.gem.jira.internal.config.Utils;
+import org.aposin.gem.jira.internal.config.JiraProviderConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,14 +54,14 @@ public final class JiraFeatureBranchProvider implements IFeatureBranchProvider {
     private final Map<IEnvironment, List<IFeatureBranch>> fetchedTasks = new HashMap<>();
     private Iterable<Issue> fetchedIssues;
 
-    private JiraProviderConfigBean configBean;
+    private JiraProviderConfig jiraConfig;
 
     public JiraFeatureBranchProvider(String providerName) {
         this.providerName = providerName;
     }
 
-    public JiraProviderConfigBean getConfigBean() {
-        return configBean;
+    public JiraProviderConfig getConfig() {
+        return jiraConfig;
     }
 
     @Override
@@ -77,7 +76,7 @@ public final class JiraFeatureBranchProvider implements IFeatureBranchProvider {
 
     @Override
     public String getDisplayName() {
-        return configBean.getDisplayName();
+        return jiraConfig.displayName;
     }
 
     /**
@@ -86,7 +85,7 @@ public final class JiraFeatureBranchProvider implements IFeatureBranchProvider {
      */
     @Override
     public void setConfig(IConfiguration config) throws GemConfigurationException {
-        configBean = Utils.getProviderConfig(config, providerName);
+        jiraConfig = JiraProviderConfig.getProviderConfig(config, providerName);
         // if configuration is set again, it should refresh
         try (JiraRestClient restClient = createJiraClient()) {
             restClient.getSessionClient().getCurrentSession().get().getLoginInfo();
@@ -127,16 +126,16 @@ public final class JiraFeatureBranchProvider implements IFeatureBranchProvider {
     }
 
     private final JiraRestClient createJiraClient() {
-        return new AsynchronousJiraRestClientFactory().create(URI.create(configBean.url),
+        return new AsynchronousJiraRestClientFactory().create(URI.create(jiraConfig.url),
                 // use basic-auth but not with decrypt user/password for security
-                builder -> builder.setHeader("Authorization", "Basic " + configBean.authToken));
+                builder -> builder.setHeader("Authorization", "Basic " + jiraConfig.authToken));
     }
 
     private List<IFeatureBranch> doGetFeatureBranches(final IEnvironment environment) {
         if (fetchedIssues == null) {
             // try with resources, to close the client after fetching
             try (JiraRestClient restClient = createJiraClient()) {
-                final Promise<SearchResult> result = restClient.getSearchClient().searchJql(configBean.jql);
+                final Promise<SearchResult> result = restClient.getSearchClient().searchJql(jiraConfig.jql);
                 fetchedIssues = result.claim().getIssues();
             } catch (final Exception e) {
                 // TODO: the user should be informed that the provider failed to fetch the branches

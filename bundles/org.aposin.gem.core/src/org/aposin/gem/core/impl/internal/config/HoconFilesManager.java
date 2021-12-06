@@ -25,6 +25,7 @@ import org.aposin.gem.core.api.config.GemConfigurationException;
 import org.aposin.gem.core.api.config.prefs.IPreferences;
 import org.aposin.gem.core.api.config.provider.IConfigFileProvider;
 import org.aposin.gem.core.exception.GemException;
+import org.aposin.gem.core.impl.internal.config.prefs.PreferencesImpl;
 import org.aposin.gem.core.utils.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,15 +47,19 @@ public class HoconFilesManager implements IRefreshable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HoconFilesManager.class);
 
+    // TODO: default config should also be re-loaded or otherwise changes in system-prefs are not reloaded??
     private final Config defaultConfig;
     private final IConfigFileProvider configFileProvider;
     // this config is not final to allow re-load
     private Config baseConfig;
     // this config is not final cause it is overriden and kept only in memory until persistence
     // this allows to modify the configuration without any effect on the actual file (e.g., default values)
-    private Config preferences;
+    private Config prefsConfig;
     // persist options for the preference file
     private ConfigRenderOptions prefPersistOptions;
+
+    // loaded preferences
+    private PreferencesImpl prefs;
 
     public HoconFilesManager(final IConfigFileProvider configFileProvider) {
         defaultConfig = ConfigFactory.load().resolve();
@@ -67,8 +72,12 @@ public class HoconFilesManager implements IRefreshable {
     @Override
     public void refresh() {
         // mark preferences to reload
-        preferences = null;
+        prefsConfig = null;
         baseConfig = null;
+        // refresh the preferences if already created
+        if (prefs != null) {
+            prefs.refresh();
+        }
     }
 
     /**
@@ -78,6 +87,13 @@ public class HoconFilesManager implements IRefreshable {
      */
     public IConfigFileProvider getConfigFileProvider() {
         return configFileProvider;
+    }
+
+    public IPreferences getPreferencesWrapper() {
+        if (prefs == null) {
+            prefs = new PreferencesImpl(this);
+        }
+        return prefs;
     }
 
     /**
@@ -90,7 +106,7 @@ public class HoconFilesManager implements IRefreshable {
      * @return loaded preference class.
      */
     public <T> T getPreferenceBean(final String id, final Class<T> prefBean) {
-        return ConfigBeanFactory.create(getPreferences().getConfig(id), prefBean);
+        return ConfigBeanFactory.create(getBasePrefsConfig().getConfig(id), prefBean);
     }
     
     /**
@@ -103,10 +119,10 @@ public class HoconFilesManager implements IRefreshable {
      * 
      * @return loaded preference class.
      */
-    public <T> T getConfigurationBean(final IPreferences prefs, final String id, final Class<T> configBean) {
+    public <T> T getConfigurationAsClass(final String id, final Class<T> configBean) {
         Config config = null;
         try {
-            config = getBaseConfig(prefs).getConfig(id).resolve();
+            config = getBaseConfig().getConfig(id).resolve();
             return ConfigBeanFactory.create(config, configBean);
         } catch (final ConfigException excp) {
             if (config != null && LOGGER.isErrorEnabled()) {
@@ -125,7 +141,7 @@ public class HoconFilesManager implements IRefreshable {
      */
     public void persistPrefs() throws GemException {
         try {
-            final String rendered = getPreferences().root().render(getPreferencesPersistOptions());
+            final String rendered = getBasePrefsConfig().root().render(getPreferencesPersistOptions());
             Files.writeString(getConfigFileProvider().getPrefFile(), rendered);
         } catch (final IOException e) {
             throw new GemException("Error persisting preferences", e);
@@ -173,18 +189,17 @@ public class HoconFilesManager implements IRefreshable {
         }
     }
 
-    // helper method to be reloaded after refresh
-    private Config getPreferences() {
-        if (preferences == null) {
-            preferences = loadFromFile(getConfigFileProvider().getPrefFile());
+    public Config getBasePrefsConfig() {
+        if (prefsConfig == null) {
+            prefsConfig = loadFromFile(getConfigFileProvider().getPrefFile());
         }
-        return preferences;
+        return prefsConfig;
     }
 
     // helper method to be reloaded after refresh
-    private Config getBaseConfig(final IPreferences prefs) {
+    public Config getBaseConfig() {
         if (baseConfig == null) {
-            baseConfig = loadFromFile(configFileProvider.getConfigFile(prefs));
+            baseConfig = loadFromFile(configFileProvider.getConfigFile(getPreferencesWrapper()));
         }
         return baseConfig;
     }

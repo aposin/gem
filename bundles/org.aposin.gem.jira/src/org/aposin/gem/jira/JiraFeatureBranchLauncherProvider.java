@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +38,7 @@ import org.aposin.gem.core.api.service.launcher.IFeatureBranchLauncherProvider;
 import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
 import org.aposin.gem.core.exception.GemException;
-import org.aposin.gem.jira.internal.config.JiraConfigBean;
-import org.aposin.gem.jira.internal.config.JiraProviderConfigBean;
-import org.aposin.gem.jira.internal.config.Utils;
+import org.aposin.gem.jira.internal.config.JiraProviderConfig;
 import org.aposin.gem.jira.internal.service.JiraFeatureBranchProvider.JiraFeatureBranch;
 
 /**
@@ -50,7 +49,7 @@ public class JiraFeatureBranchLauncherProvider implements IFeatureBranchLauncher
 
     public static final String JIRA_LAUNCHER_NAME = "open_jira_ticket";
     private IConfiguration config;
-    private JiraConfigBean jiraConfigBean;
+    private List<String> providerNames = new ArrayList<>();
 
     @Override
     public Map<IRepository, List<ILauncher>> getRepositoryLaunchers(IFeatureBranch featureBranch) {
@@ -83,10 +82,10 @@ public class JiraFeatureBranchLauncherProvider implements IFeatureBranchLauncher
     private OpenJiraTicketUrl getOpenJiraTicketUrlLauncher(final IFeatureBranch featureBranch) {
         if (featureBranch instanceof JiraFeatureBranch) {
             return new OpenJiraTicketUrl(featureBranch.getId(),
-                    ((JiraFeatureBranch) featureBranch).getProvider().getConfigBean());
+                    ((JiraFeatureBranch) featureBranch).getProvider().getConfig());
         } else {
             // otherwise, try to find an issue that is prefixed with any id
-            final Optional<String> foundProviderName = jiraConfigBean.getProviderNames().stream()//
+            final Optional<String> foundProviderName = providerNames.stream()//
                     .filter(name -> featureBranch.getName()
                             .startsWith(name + IEnvironment.BRANCH_NAME_SEPARATOR)) //
                     .findFirst();
@@ -94,7 +93,7 @@ public class JiraFeatureBranchLauncherProvider implements IFeatureBranchLauncher
                 final String providerName = foundProviderName.get();
                 return new OpenJiraTicketUrl( //
                         featureBranch.getName().replace(providerName + IEnvironment.BRANCH_NAME_SEPARATOR, ""), //
-                        Utils.getProviderConfig(config, providerName));
+                        JiraProviderConfig.getProviderConfig(config, providerName));
             }
         }
 
@@ -104,7 +103,7 @@ public class JiraFeatureBranchLauncherProvider implements IFeatureBranchLauncher
     @Override
     public void setConfig(final IConfiguration config) throws GemConfigurationException {
         this.config = config;
-        this.jiraConfigBean = config.getPluginConfiguration("gem-jira", JiraConfigBean.class);
+        this.providerNames = JiraProviderConfig.getProviderNames(config);
     }
 
     private static boolean isBrowseSupported() {
@@ -114,11 +113,11 @@ public class JiraFeatureBranchLauncherProvider implements IFeatureBranchLauncher
     private final class OpenJiraTicketUrl extends AbstractNoParamsLauncher {
 
         private final String issueKey;
-        private final JiraProviderConfigBean configBean;
+        private final JiraProviderConfig jiraConfig;
 
-        public OpenJiraTicketUrl(final String issueKey, final JiraProviderConfigBean configBean) {
+        public OpenJiraTicketUrl(final String issueKey, final JiraProviderConfig jiraConfig) {
             this.issueKey = issueKey;
-            this.configBean = configBean;
+            this.jiraConfig = jiraConfig;
         }
 
         @Override
@@ -138,7 +137,7 @@ public class JiraFeatureBranchLauncherProvider implements IFeatureBranchLauncher
 
         @Override
         public List<ICommand> launch() throws GemException {
-            final String url = configBean.url + "/browse/" + URLEncoder.encode(issueKey, StandardCharsets.UTF_8);
+            final String url = jiraConfig.url + "/browse/" + URLEncoder.encode(issueKey, StandardCharsets.UTF_8);
             try {
                 Desktop.getDesktop().browse(URI.create(url));
             } catch (final IOException e) {
