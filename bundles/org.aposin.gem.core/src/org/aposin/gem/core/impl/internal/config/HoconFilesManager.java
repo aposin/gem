@@ -46,6 +46,8 @@ public class HoconFilesManager implements IRefreshable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HoconFilesManager.class);
 
+    // default configuration is final as it relies on env variables and system properties
+    // which should not change on runtime
     private final Config defaultConfig;
     private final IConfigFileProvider configFileProvider;
     // this config is not final to allow re-load
@@ -169,7 +171,7 @@ public class HoconFilesManager implements IRefreshable {
             return ConfigFactory.parseReader(reader, options).withFallback(defaultConfig).resolve();
         } catch (final IOException | ConfigException e) {
             LOGGER.error("Error loading configuration/preference file", e);
-            throw new GemException("Error loading the configuration/preference file", e);
+            throw new GemConfigurationException("Error loading the configuration/preference file: " + configFile, e);
         }
     }
 
