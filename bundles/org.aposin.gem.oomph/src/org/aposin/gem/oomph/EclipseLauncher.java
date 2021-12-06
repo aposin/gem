@@ -24,7 +24,6 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -260,11 +259,7 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
                             "org.eclipse.oomph.p2");
                 } else {
                     // Split slash and backslash
-                    final String[] bundlePoolConfigSplit = bundlePoolConfigString.split("[/\\\\]");
-                    bundlePoolConfigPath = Paths.get("", //
-                            Arrays.stream(bundlePoolConfigSplit) //
-                                    .map(EclipseLauncher::mapSystemProperty)
-                                    .toArray(String[]::new));
+                    bundlePoolConfigPath = Paths.get(bundlePoolConfigString);
                 }
                 if (Files.notExists(bundlePoolConfigPath)) {
                     Files.createDirectories(bundlePoolConfigPath);
@@ -275,24 +270,6 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
                 LOGGER.error("Could not set bundle pool.", e);
             }
         }
-    }
-
-    /**
-     * Checks and replaces the given {@link String} variable, e.g. <code>${user.home}</code>,
-     * against the given system properties. If the input does not exist as system property it
-     * returns the input unchanged.
-     * 
-     * @param s the variable to replace against available system properties
-     * @return the value from system properties or the input if replacement is not possible.
-     */
-    private static String mapSystemProperty(final String s) {
-        if (s != null && s.startsWith("${") && s.endsWith("}")) {
-            final String prop = System.getProperty(s.substring(2, s.length() - 1));
-            if (prop != null) {
-                return prop;
-            }
-        }
-        return s;
     }
 
     /**
