@@ -82,7 +82,7 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         final Composite tableComposite = (Composite) super.createDialogArea(parent);
         tableComposite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL
                 | GridData.GRAB_VERTICAL | GridData.GRAB_HORIZONTAL));
-
+        // create the view and set layout and text/providers
         view = new ObsoleteEnvironmentsView(tableComposite, GridData.FILL);
         view.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH));
         Messages messages = Session.messages;
@@ -90,48 +90,15 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         view.getColumnEnvironment().getColumn().setText(messages.environment_label_common);
         view.getColumnWorktree().getColumn().setText(messages.worktree_label_common);
         view.getCheckboxTreeViewer().setContentProvider(new TreeContentProvider());
-        CheckboxTreeViewer checkboxTreeViewer = view.getCheckboxTreeViewer();
-        checkboxTreeViewer.addCheckStateListener(event -> {
-            checkboxTreeViewer.setSubtreeChecked(event.getElement(), event.getChecked());
-            Object currentNode = event.getElement();
-            // if child node check changed, update parent node accordingly.
-            if (currentNode instanceof IEnvironment) {
-                ITreeContentProvider provider = (ITreeContentProvider) checkboxTreeViewer.getContentProvider();
-                final Object parentChangedNode = provider.getParent(currentNode);
-                // if unchecked
-                if (!event.getChecked()) {
-                    if (checkboxTreeViewer.getChecked(parentChangedNode)) {
-                        final boolean noneChecked = Arrays.stream( //
-                                provider.getChildren(parentChangedNode)) //
-                                .noneMatch(checkboxTreeViewer::getChecked);
-                        if (noneChecked) {
-                            checkboxTreeViewer.setChecked(parentChangedNode, false);
-                        }
-                    }
-                }
-                //if checked
-                else {
-                    if (!checkboxTreeViewer.getChecked(parentChangedNode)) {
-                        final boolean allChecked = Arrays.stream( //
-                                provider.getChildren(parentChangedNode)) //
-                                .allMatch(checkboxTreeViewer::getChecked);
-                        if (allChecked) {
-                            checkboxTreeViewer.setChecked(parentChangedNode, true);
-                        }
-                    }
-
-                }
-            }
-
-            selectedItems = checkboxTreeViewer.getCheckedElements();
-            getButton(IDialogConstants.OK_ID).setEnabled(selectedItems.length > 0 ? true : false);
-        });
-
         setColumnLabelProviders();
-
         GridLayoutFactory.fillDefaults().generateLayout(parent);
-        checkboxTreeViewer.setInput(this.obsoleteEnvironments);
         applyDialogFont(tableComposite);
+        // add listener(s)
+        CheckboxTreeViewer checkboxTreeViewer = view.getCheckboxTreeViewer();
+        checkboxTreeViewer.addCheckStateListener(event -> setCheckedState(event.getElement(), event.getChecked()));
+        // set the input 
+        checkboxTreeViewer.setInput(this.obsoleteEnvironments);
+        // trigger layout with all check-boxes expanded and columns packed 
         checkboxTreeViewer.expandAll();
         TreeColumn[] columns = checkboxTreeViewer.getTree().getColumns();
         for (TreeColumn column : columns) {
@@ -141,6 +108,32 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         return tableComposite;
     }
 
+    private void setCheckedState(Object element, boolean checked) {
+        final CheckboxTreeViewer checkboxTreeViewer = view.getCheckboxTreeViewer();
+        checkboxTreeViewer.setSubtreeChecked(element, checked);
+        // if child node check changed, update parent node accordingly.
+        if (element instanceof IEnvironment) {
+            ITreeContentProvider provider = (ITreeContentProvider) checkboxTreeViewer.getContentProvider();
+            final Object parentElement = provider.getParent(element);
+            final boolean parentChecked = checkboxTreeViewer.getChecked(parentElement);
+            // if unchecked
+            if (!checked && parentChecked) {
+                final boolean noneChecked = Arrays.stream(provider.getChildren(parentElement)) //
+                        .noneMatch(checkboxTreeViewer::getChecked);
+                if (noneChecked) {
+                    checkboxTreeViewer.setChecked(parentElement, false);
+                }
+            } else if (!parentChecked) { // if checked
+                final boolean allChecked = Arrays.stream(provider.getChildren(parentElement)) //
+                        .allMatch(checkboxTreeViewer::getChecked);
+                if (allChecked) {
+                    checkboxTreeViewer.setChecked(parentElement, true);
+                }
+            }
+        }
+        selectedItems = checkboxTreeViewer.getCheckedElements();
+        getButton(IDialogConstants.OK_ID).setEnabled(selectedItems.length > 0);
+    }
 
     private void setColumnLabelProviders() {
         TypedColumnLabelProviderFactory.create(INamedObject.class) //
