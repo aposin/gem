@@ -21,17 +21,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
 import org.aposin.gem.ui.lifecycle.Session;
 import org.aposin.gem.ui.message.Messages;
 import org.aposin.gem.ui.view.ObsoleteEnvironmentsView;
+import org.aposin.gem.ui.view.labelprovider.TypedColumnLabelProvider.TypedColumnLabelProviderFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.layout.GridData;
@@ -65,6 +66,7 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         newShell.setText(Session.bundleProperties.menuCleanObsoleteenvironments_label);
     }
 
+    @Override
     protected boolean isResizable() {
         return true;
     }
@@ -125,44 +127,7 @@ public class ObsoleteEnvironmentDialog extends Dialog {
             getButton(IDialogConstants.OK_ID).setEnabled(selectedItems.length > 0 ? true : false);
         });
 
-        view.getColumnProject().setLabelProvider(new ColumnLabelProvider() {
-
-            @Override
-            public String getText(Object element) {
-                if (element instanceof IEnvironment) {
-                    return ((IEnvironment) element).getProject().getDisplayName();
-                } else if (element instanceof IProject) {
-                    return ((IProject) element).getDisplayName();
-                }
-                return super.getText(element);
-            }
-        });
-
-        view.getColumnEnvironment().setLabelProvider(new ColumnLabelProvider() {
-
-            @Override
-            public String getText(Object element) {
-                if (element instanceof IEnvironment) {
-                    return ((IEnvironment) element).getDisplayName();
-                } else if (element instanceof IProject) {
-                    return null;
-                }
-                return super.getText(element);
-            }
-        });
-
-        view.getColumnWorktree().setLabelProvider(new ColumnLabelProvider() {
-
-            @Override
-            public String getText(Object element) {
-                if (element instanceof IEnvironment) {
-                    return ((IEnvironment) element).getWorktreesBaseLocation().toString();
-                } else if (element instanceof IProject) {
-                    return null;
-                }
-                return super.getText(element);
-            }
-        });
+        setColumnLabelProviders();
 
         GridLayoutFactory.fillDefaults().generateLayout(parent);
         checkboxTreeViewer.setInput(this.obsoleteEnvironments);
@@ -174,6 +139,31 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         }
         checkboxTreeViewer.refresh();
         return tableComposite;
+    }
+
+
+    private void setColumnLabelProviders() {
+        TypedColumnLabelProviderFactory.create(INamedObject.class) //
+                .ignoreUntyped(true) //
+                .text(element ->
+                {
+                    if (element instanceof IEnvironment) {
+                        return ((IEnvironment) element).getProject().getDisplayName();
+                    }
+                    // assume that all the rest are the IProject
+                    return element.getDisplayName();
+                }) //
+                .set(view.getColumnProject());
+
+        TypedColumnLabelProviderFactory.create(IEnvironment.class) //
+                .ignoreUntyped(true) //
+                .text(IEnvironment::getDisplayName) //
+                .set(view.getColumnEnvironment());
+
+        TypedColumnLabelProviderFactory.create(IEnvironment.class) //
+                .ignoreUntyped(true) //
+                .text(element -> element.getWorktreesBaseLocation().toString()) //
+                .set(view.getColumnWorktree());
     }
 
     private class TreeContentProvider implements ITreeContentProvider {
