@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 
@@ -35,6 +36,8 @@ class ObsoleteEnvironmentsView extends Composite {
     private final TreeViewerColumn columnEnvironment;
     private final TreeViewerColumn columnWorktree;
     
+    private final Button selectAllButton;
+
     /**
      * Constructor for Obsolete Environments View
      * @param parent
@@ -60,6 +63,9 @@ class ObsoleteEnvironmentsView extends Composite {
         columnProject = createNewColumn(1);
         columnEnvironment = createNewColumn(1);
         columnWorktree = createNewColumn(2);
+
+        selectAllButton = new Button(this, SWT.CHECK);
+        selectAllButton.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, false, false));
     }
 
     private TreeViewerColumn createNewColumn(final int weightData) {
@@ -95,6 +101,13 @@ class ObsoleteEnvironmentsView extends Composite {
      */
     public TreeViewerColumn getColumnWorktree() {
         return columnWorktree;
+    }
+
+    /**
+     * @return select all button
+     */
+    public Button getSelectAllButton() {
+        return selectAllButton;
     }
 
 }

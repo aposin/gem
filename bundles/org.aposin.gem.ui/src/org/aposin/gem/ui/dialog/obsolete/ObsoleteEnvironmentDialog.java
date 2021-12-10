@@ -33,7 +33,10 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -45,6 +48,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 public class ObsoleteEnvironmentDialog extends Dialog {
 
     private final List<IProject> obsoleteEnvironments;
+    private final int itemSize;
     private final String title;
     private final Messages messages;
     
@@ -63,6 +67,8 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         this.title = title;
         this.messages = messages;
         this.obsoleteEnvironments = obsoleteEnvironments;
+        this.itemSize = obsoleteEnvironments.size()
+                + obsoleteEnvironments.stream().flatMap(p -> p.getObsoleteEnvironments().stream()).toArray().length;
     }
 
     @Override
@@ -90,9 +96,7 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         // create the view and set layout and text/providers
         view = new ObsoleteEnvironmentsView(tableComposite, GridData.FILL);
         view.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH));
-        view.getColumnProject().getColumn().setText(messages.project_label_common);
-        view.getColumnEnvironment().getColumn().setText(messages.environment_label_common);
-        view.getColumnWorktree().getColumn().setText(messages.worktree_label_common);
+        applyMessages();
         view.getCheckboxTreeViewer().setContentProvider(new TreeContentProvider());
         setColumnLabelProviders();
         GridLayoutFactory.fillDefaults().generateLayout(parent);
@@ -100,6 +104,14 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         // add listener(s)
         CheckboxTreeViewer checkboxTreeViewer = view.getCheckboxTreeViewer();
         checkboxTreeViewer.addCheckStateListener(event -> setCheckedState(event.getElement(), event.getChecked()));
+        view.getSelectAllButton().addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                boolean checkState = ((Button) e.getSource()).getSelection();
+                obsoleteEnvironments.stream().forEach(project -> setCheckedState(project, checkState));
+            }
+        });
         // set the input 
         checkboxTreeViewer.setInput(this.obsoleteEnvironments);
         // trigger layout with all check-boxes expanded and columns packed 
@@ -137,6 +149,14 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         }
         selectedItems = checkboxTreeViewer.getCheckedElements();
         getButton(IDialogConstants.OK_ID).setEnabled(selectedItems.length > 0);
+        view.getSelectAllButton().setSelection(selectedItems.length == itemSize);
+    }
+
+    private void applyMessages() {
+        view.getColumnProject().getColumn().setText(messages.project_label_common);
+        view.getColumnEnvironment().getColumn().setText(messages.environment_label_common);
+        view.getColumnWorktree().getColumn().setText(messages.worktree_label_common);
+        view.getSelectAllButton().setText(messages.obsoleteEnvironmentDialog_label_selectAllButton);
     }
 
     private void setColumnLabelProviders() {
@@ -190,11 +210,6 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         public boolean hasChildren(Object element) {
             return element instanceof IProject;
         }
-    }
-
-    @Override
-    protected void cancelPressed() {
-        super.cancelPressed();
     }
 
     /**
