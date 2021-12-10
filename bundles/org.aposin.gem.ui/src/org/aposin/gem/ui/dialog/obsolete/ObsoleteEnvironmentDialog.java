@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.aposin.gem.ui.dialog.progress.internal;
+package org.aposin.gem.ui.dialog.obsolete;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,7 +26,6 @@ import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
 import org.aposin.gem.ui.lifecycle.Session;
 import org.aposin.gem.ui.message.Messages;
-import org.aposin.gem.ui.view.ObsoleteEnvironmentsView;
 import org.aposin.gem.ui.view.labelprovider.TypedColumnLabelProvider.TypedColumnLabelProviderFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -48,6 +47,7 @@ public class ObsoleteEnvironmentDialog extends Dialog {
 
     private final List<IProject> obsoleteEnvironments;
     private Object[] selectedItems;
+    
     private ObsoleteEnvironmentsView view;
 
     /**

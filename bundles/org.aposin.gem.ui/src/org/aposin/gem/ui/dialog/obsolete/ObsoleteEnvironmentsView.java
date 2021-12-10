@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.aposin.gem.ui.view;
+package org.aposin.gem.ui.dialog.obsolete;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.TreeColumnLayout;
@@ -28,13 +28,13 @@ import org.eclipse.swt.widgets.Tree;
 /**
  * View for obsolete environments
  */
-public class ObsoleteEnvironmentsView extends Composite {
+class ObsoleteEnvironmentsView extends Composite {
 
     private final CheckboxTreeViewer treeViewer;
     private final TreeViewerColumn columnProject;
     private final TreeViewerColumn columnEnvironment;
     private final TreeViewerColumn columnWorktree;
-
+    
     /**
      * Constructor for Obsolete Environments View
      * @param parent
@@ -70,6 +70,13 @@ public class ObsoleteEnvironmentsView extends Composite {
     }
 
     /**
+     * @return tree viewer for obsolete worktree
+     */
+    public CheckboxTreeViewer getCheckboxTreeViewer() {
+        return treeViewer;
+    }
+
+    /**
      * @return project column
      */
     public TreeViewerColumn getColumnProject() {
@@ -90,10 +97,4 @@ public class ObsoleteEnvironmentsView extends Composite {
         return columnWorktree;
     }
 
-    /**
-     * @return tree viewer for obsolete worktree
-     */
-    public CheckboxTreeViewer getCheckboxTreeViewer() {
-        return treeViewer;
-    }
 }
