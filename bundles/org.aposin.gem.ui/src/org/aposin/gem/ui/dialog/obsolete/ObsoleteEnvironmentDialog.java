@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
-import org.aposin.gem.ui.lifecycle.Session;
 import org.aposin.gem.ui.message.Messages;
 import org.aposin.gem.ui.view.labelprovider.TypedColumnLabelProvider.TypedColumnLabelProviderFactory;
 import org.eclipse.jface.dialogs.Dialog;
@@ -46,24 +45,30 @@ import org.eclipse.swt.widgets.TreeColumn;
 public class ObsoleteEnvironmentDialog extends Dialog {
 
     private final List<IProject> obsoleteEnvironments;
-    private Object[] selectedItems;
+    private final String title;
+    private final Messages messages;
     
     private ObsoleteEnvironmentsView view;
+
+    private Object[] selectedItems;
 
     /**
      * Constructor
      * @param parent
      * @param obsoleteEnvironments
      */
-    private ObsoleteEnvironmentDialog(final Shell parent, final List<IProject> obsoleteEnvironments) {
+    private ObsoleteEnvironmentDialog(final Shell parent, String title, final Messages messages,
+            final List<IProject> obsoleteEnvironments) {
         super(parent);
+        this.title = title;
+        this.messages = messages;
         this.obsoleteEnvironments = obsoleteEnvironments;
     }
 
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(Session.bundleProperties.menuCleanObsoleteenvironments_label);
+        newShell.setText(title);
     }
 
     @Override
@@ -85,7 +90,6 @@ public class ObsoleteEnvironmentDialog extends Dialog {
         // create the view and set layout and text/providers
         view = new ObsoleteEnvironmentsView(tableComposite, GridData.FILL);
         view.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH));
-        Messages messages = Session.messages;
         view.getColumnProject().getColumn().setText(messages.project_label_common);
         view.getColumnEnvironment().getColumn().setText(messages.environment_label_common);
         view.getColumnWorktree().getColumn().setText(messages.worktree_label_common);
@@ -200,8 +204,10 @@ public class ObsoleteEnvironmentDialog extends Dialog {
      * @return the {@code List<IEnvironment>} containing selected obsolete environments. 
      * Returns empty list if no items are selected
      */
-    public static List<IEnvironment> open(final Shell parentShell, final List<IProject> obsoleteEnvironments) {
-        final ObsoleteEnvironmentDialog dialog = new ObsoleteEnvironmentDialog(parentShell, obsoleteEnvironments);
+    public static List<IEnvironment> open(final Shell parentShell, final String title, final Messages messages,
+                                          final List<IProject> obsoleteEnvironments) {
+        final ObsoleteEnvironmentDialog dialog = new ObsoleteEnvironmentDialog(parentShell, title, messages,
+                obsoleteEnvironments);
         if (dialog.open() != Window.CANCEL && dialog.selectedItems != null) {
             return Stream.of(dialog.selectedItems) //
                     .filter(IEnvironment.class::isInstance) //

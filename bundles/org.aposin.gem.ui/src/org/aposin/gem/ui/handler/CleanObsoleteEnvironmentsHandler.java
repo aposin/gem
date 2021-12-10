@@ -20,13 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.aposin.gem.core.api.model.IEnvironment;
 import org.aposin.gem.core.api.model.IProject;
 import org.aposin.gem.core.api.workflow.ICommand;
+import org.aposin.gem.ui.BundleProperties;
 import org.aposin.gem.ui.dialog.obsolete.ObsoleteEnvironmentDialog;
 import org.aposin.gem.ui.dialog.progress.CommandProgressDialog;
 import org.aposin.gem.ui.lifecycle.Session;
+import org.aposin.gem.ui.message.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.services.nls.Translation;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.slf4j.Logger;
@@ -39,14 +44,25 @@ public class CleanObsoleteEnvironmentsHandler extends GemAbstractSessionHandler 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CleanObsoleteEnvironmentsHandler.class);
 
+    @Inject
+    @Translation
+    private static Messages MESSAGES;
+
+    @Inject
+    @Translation
+    private static BundleProperties BUNDLE_PROPERTIES;
+
     @Override
     public void doExecute(final Session session) throws Exception {
         final List<IProject> obsoleteEnvironments = loadObsoleteWorkspacesWithProgressDialog(session);
         if (obsoleteEnvironments.isEmpty()) {
-            MessageDialog.openInformation(null, session.bundleProperties.menuCleanObsoleteenvironments_label,
-                    session.messages.cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog);
+            MessageDialog.openInformation(null, BUNDLE_PROPERTIES.menuCleanObsoleteenvironments_label,
+                    MESSAGES.cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog);
         } else {
-            List<IEnvironment> selectedItems = ObsoleteEnvironmentDialog.open(null, obsoleteEnvironments);
+            List<IEnvironment> selectedItems = ObsoleteEnvironmentDialog.open(null, //
+                    BUNDLE_PROPERTIES.menuCleanObsoleteenvironments_label, //
+                    MESSAGES, //
+                    obsoleteEnvironments);
             if (confirmDeletion(session, selectedItems)) {
                 // all the commands should be able to launch (otherwise the obsolete algorithm is wrong)
                 // so canLaunch should be true for all
@@ -54,8 +70,8 @@ public class CleanObsoleteEnvironmentsHandler extends GemAbstractSessionHandler 
                         .flatMap(env -> env.getWorkflow().getRemoveWorktreeLauncher().launch().stream()) //
                         .collect(Collectors.toList());
                 CommandProgressDialog.open(null, //
-                        session.bundleProperties.menuCleanObsoleteenvironments_label, //
-                        session.messages, //
+                        BUNDLE_PROPERTIES.menuCleanObsoleteenvironments_label, //
+                        MESSAGES, //
                         cmds);
             }
         }
@@ -65,7 +81,7 @@ public class CleanObsoleteEnvironmentsHandler extends GemAbstractSessionHandler 
         final List<IProject> obsoleteEnvironments = new ArrayList<>();
         ProgressMonitorDialog dialog = new ProgressMonitorDialog(null);
         dialog.run(true, false, monitor -> {
-            monitor.beginTask(session.messages.cleanObsoleteEnvironmentsHandler_message_fetchWorktreesProgressMonitor,
+            monitor.beginTask(MESSAGES.cleanObsoleteEnvironmentsHandler_message_fetchWorktreesProgressMonitor,
                     IProgressMonitor.UNKNOWN);
             for (final IProject project : session.getConfiguration().getProjects()) {
                 LOGGER.debug("Searching for obsolete environments in project: {}", project.getName());
@@ -84,9 +100,9 @@ public class CleanObsoleteEnvironmentsHandler extends GemAbstractSessionHandler 
                     .map(this::formatEnvironmentList) //
                     .collect(Collectors.joining("\n"));
             return MessageDialog.openConfirm(null, //
-                    session.bundleProperties.menuCleanObsoleteenvironments_label,
+                    BUNDLE_PROPERTIES.menuCleanObsoleteenvironments_label,
                     MessageFormat.format(
-                            session.messages.cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog,
+                            MESSAGES.cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog,
                             selectionStringMessageFormat));
         }
         return false;
