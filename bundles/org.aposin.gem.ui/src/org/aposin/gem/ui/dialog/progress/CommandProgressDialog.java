@@ -62,7 +62,14 @@ public class CommandProgressDialog {
         final CliProgressMonitorDialog dialog = new CliProgressMonitorDialog(parent, messages, commands);
         try {
             // result consumer to update the field decorator
-            final Consumer<IResult> resultConsumer = r -> LOGGER.debug("Command finished");
+            final Consumer<IResult> resultConsumer = r -> {
+                if (r.isFailed()) {
+                    dialog.setCommandFailedImage(r.getCommand());
+                } else {
+                    dialog.setCommandCompletedImage(r.getCommand());
+                }
+                LOGGER.debug("Command finished");
+            };
             // never allows cancel!
             dialog.run(true, false, new CommandsRunnable(name, messages, commands, resultConsumer));
         } catch (final InvocationTargetException | InterruptedException e) {
@@ -87,6 +94,7 @@ public class CommandProgressDialog {
         // TODO - should return instead the status of the run?
         return true;
     }
+
 
     public static final void enableShowErrors(final CliProgressMonitorDialog dialog,
             final String name, final IStatus error) {

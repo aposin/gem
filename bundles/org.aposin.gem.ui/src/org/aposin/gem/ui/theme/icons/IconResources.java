@@ -23,6 +23,11 @@ public class IconResources {
     private static final String FONTAWESOME_FOLDER = "icons/fontawesome/";
 
     /**
+     * Bundled SVG FontAwsome ban icon.
+     */
+    public static final String FONTAWESOME_BAN_SVG = FONTAWESOME_FOLDER + "ban.svg";
+
+    /**
      * Bundled SVG FontAwsome cloud icon.
      */
     public static final String FONTAWESOME_CLOUD_SVG = FONTAWESOME_FOLDER + "cloud.svg";
@@ -46,6 +51,16 @@ public class IconResources {
      * Bundled SVG FontAwsome exclamation icon.
      */
     public static final String FONTAWESOME_EXCLAMATION_SVG = FONTAWESOME_FOLDER + "exclamation.svg";
+
+    /**
+     * Bundled SVG FontAwsome play-circle icon.
+     */
+    public static final String FONTAWESOME_PLAY_CIRCLE_SVG = FONTAWESOME_FOLDER + "play-circle.svg";
+
+    /**
+     * Bundled SVG FontAwsome stop-circle icon.
+     */
+    public static final String FONTAWESOME_STOP_CIRCLE_SVG = FONTAWESOME_FOLDER + "stop-circle.svg";
 
     private IconResources() {
         //
