@@ -168,7 +168,6 @@ public class CliProgressMonitorDialog extends ProgressMonitorDialog {
     }
 
     private Composite createCommandTabFolder(final Composite parent) {
-        // TODO: if only one command, do we really need the tab-folder?
         final CTabFolder tabFolder = new CTabFolder(parent, SWT.TOP);
         tabFolder.setUnselectedImageVisible(true);
         GridDataFactory.fillDefaults().grab(true, true).hint(0, 100).span(2, 1).exclude(true).applyTo(tabFolder);
@@ -176,7 +175,7 @@ public class CliProgressMonitorDialog extends ProgressMonitorDialog {
             CTabItem item = new CTabItem(tabFolder, SWT.BORDER);
             item.setText(cmd.getCommandScope().getDisplayName());
             IGemIcon icon = ThemeIconRegistry.getInstance().getIconById(RUNNING_ICON_ID);
-            // TODO: consider other themes
+            // use default theme cause the tabbed dropdown cannot be styled
             item.setImage(icon.getImage(ThemeConstants.DEFAULT_THEME_ID, ICON_SIZE, ICON_SIZE));
             StyledText cmdStyledText = createCommandLineStyledText(tabFolder, cmd);
             item.setControl(cmdStyledText);
@@ -199,7 +198,7 @@ public class CliProgressMonitorDialog extends ProgressMonitorDialog {
         final CTabItem item = commandsMap.get(command); //
         item.getDisplay().syncExec(() -> {
             IGemIcon icon = ThemeIconRegistry.getInstance().getIconById(iconId);
-            // TODO: consider other themes
+            // use default theme cause the tabbed dropdown cannot be styled
             item.setImage(icon.getImage(ThemeConstants.DEFAULT_THEME_ID, ICON_SIZE, ICON_SIZE));
             item.getParent().redraw();
         });
