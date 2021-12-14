@@ -111,7 +111,8 @@ public class Messages {
     public String featureBranchWorkflowView_label_dashboardViewWorktreeDefinitionColumn;
     public String featureBranchWorkflowView_tooltip_dashboardViewWorktreeDefinitionColumn;
 
-    // cleanObsoleteEnvironments 
+    // ObsoleteEnvironmentDialog / CleanObsoleteEnvironments 
+    public String obsoleteEnvironmentDialog_label_selectAllButton;
     public String cleanObsoleteEnvironmentsHandler_message_fetchWorktreesProgressMonitor;
     public String cleanObsoleteEnvironmentsHandler_message_noWorktreesAvailableDialog;
     public String cleanObsoleteEnvironmentsHandler_message_confirmDeleteDialog;

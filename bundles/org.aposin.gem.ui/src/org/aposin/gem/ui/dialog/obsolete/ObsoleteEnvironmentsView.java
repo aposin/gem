@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.aposin.gem.ui.view;
+package org.aposin.gem.ui.dialog.obsolete;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.TreeColumnLayout;
@@ -22,18 +22,21 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 
 /**
  * View for obsolete environments
  */
-public class ObsoleteEnvironmentsView extends Composite {
+class ObsoleteEnvironmentsView extends Composite {
 
     private final CheckboxTreeViewer treeViewer;
     private final TreeViewerColumn columnProject;
     private final TreeViewerColumn columnEnvironment;
     private final TreeViewerColumn columnWorktree;
+    
+    private final Button selectAllButton;
 
     /**
      * Constructor for Obsolete Environments View
@@ -60,6 +63,9 @@ public class ObsoleteEnvironmentsView extends Composite {
         columnProject = createNewColumn(1);
         columnEnvironment = createNewColumn(1);
         columnWorktree = createNewColumn(2);
+
+        selectAllButton = new Button(this, SWT.CHECK);
+        selectAllButton.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, false, false));
     }
 
     private TreeViewerColumn createNewColumn(final int weightData) {
@@ -67,6 +73,13 @@ public class ObsoleteEnvironmentsView extends Composite {
         ((TreeColumnLayout) getCheckboxTreeViewer().getTree().getParent().getLayout()).setColumnData(column.getColumn(),
                 new ColumnWeightData(weightData));
         return column;
+    }
+
+    /**
+     * @return tree viewer for obsolete worktree
+     */
+    public CheckboxTreeViewer getCheckboxTreeViewer() {
+        return treeViewer;
     }
 
     /**
@@ -91,9 +104,10 @@ public class ObsoleteEnvironmentsView extends Composite {
     }
 
     /**
-     * @return tree viewer for obsolete worktree
+     * @return select all button
      */
-    public CheckboxTreeViewer getCheckboxTreeViewer() {
-        return treeViewer;
+    public Button getSelectAllButton() {
+        return selectAllButton;
     }
+
 }

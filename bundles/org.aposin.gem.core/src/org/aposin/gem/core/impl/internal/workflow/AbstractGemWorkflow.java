@@ -201,6 +201,7 @@ abstract class AbstractGemWorkflow implements IEnvironmentWorkflow {
                                     } else {
                                         getStdOut().println("Nothing to delete");
                                     }
+                                    postDeleteWorktree();
                                     // construct non-failing result
                                     return new ResultBuilder(getCommand()).build();
                                 }
@@ -208,6 +209,10 @@ abstract class AbstractGemWorkflow implements IEnvironmentWorkflow {
 
                     return Collections.singletonList(command);
                 });
+    }
+
+    protected void postDeleteWorktree() {
+        // NO-OP - hook method for OsoleteEnvironmentWorkflow
     }
 
     /////////////////////////////////////

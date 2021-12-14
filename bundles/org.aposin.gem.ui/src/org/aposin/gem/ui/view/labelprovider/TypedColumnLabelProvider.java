@@ -34,13 +34,19 @@ import org.eclipse.swt.graphics.Image;
 @SuppressWarnings("unchecked")
 public class TypedColumnLabelProvider<T> extends ColumnLabelProvider {
 
+    private final boolean ignoreUntyped;
     private final Class<T> type;
 
     /**
      * @param type the type of element to deal with
      */
     public TypedColumnLabelProvider(Class<T> type) {
+        this(type, false);
+    }
+
+    public TypedColumnLabelProvider(Class<T> type, boolean ignoreUntyped) {
         this.type = type;
+        this.ignoreUntyped = ignoreUntyped;
     }
 
     /**
@@ -51,7 +57,7 @@ public class TypedColumnLabelProvider<T> extends ColumnLabelProvider {
         if (type.isInstance(element)) {
             return getTypedText((T) element);
         }
-        return super.getText(element);
+        return ignoreUntyped ? null : super.getText(element);
     }
 
     /**
@@ -62,7 +68,7 @@ public class TypedColumnLabelProvider<T> extends ColumnLabelProvider {
         if (type.isInstance(element)) {
             return getTypedImage((T) element);
         }
-        return super.getImage(element);
+        return ignoreUntyped ? null : super.getImage(element);
     }
 
     /**
@@ -98,11 +104,12 @@ public class TypedColumnLabelProvider<T> extends ColumnLabelProvider {
         private final Class<T> type;
         private Function<T, String> text;
         private Function<T, Image> image;
+        private boolean ignoreUntyped = false;
 
         /**
          * @param type the type of element to deal with
          */
-        public TypedColumnLabelProviderFactory(Class<T> type) {
+        private TypedColumnLabelProviderFactory(Class<T> type) {
             this.type = type;
         }
 
@@ -115,6 +122,18 @@ public class TypedColumnLabelProvider<T> extends ColumnLabelProvider {
          */
         public static <T> TypedColumnLabelProviderFactory<T> create(Class<T> type) {
             return new TypedColumnLabelProviderFactory<>(type);
+        }
+
+        /**
+         * Ignores the untyped objects set on the column.
+         * 
+         * @param ignoreUntyped {@code true} to ignore; {@code false} otherwise.
+         * 
+         * @return the factory.
+         */
+        public TypedColumnLabelProviderFactory<T> ignoreUntyped(final boolean ignoreUntyped) {
+            this.ignoreUntyped = ignoreUntyped;
+            return this;
         }
 
         /**
@@ -148,7 +167,7 @@ public class TypedColumnLabelProvider<T> extends ColumnLabelProvider {
          * @param column the column where to set the label provider
          */
         public void set(ViewerColumn column) {
-            column.setLabelProvider(new TypedColumnLabelProvider<>(type) {
+            column.setLabelProvider(new TypedColumnLabelProvider<>(type, ignoreUntyped) {
 
                 @Override
                 protected String getTypedText(T object) {

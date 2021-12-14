@@ -45,6 +45,12 @@ public final class ObsoleteEnvironmentWorkflow extends AbstractGemWorkflow {
     }
 
     @Override
+    protected void postDeleteWorktree() {
+        super.postDeleteWorktree();
+        getEnvironment().getProject().refresh();
+    }
+
+    @Override
     public IFeatureBranchWorkflow getFeatureBranchWorkflow(IFeatureBranch featureBranch) throws WorkflowException {
         throw new WorkflowException("Obsolete environemnt cannot manage feature branches!");
     }
