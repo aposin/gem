@@ -22,6 +22,8 @@ public class IconResources {
 
     private static final String FONTAWESOME_FOLDER = "icons/fontawesome/";
 
+    private static final String SVG_CSS_FOLDER = "css/svg/";
+
     /**
      * Bundled SVG FontAwsome ban icon.
      */
@@ -61,6 +63,16 @@ public class IconResources {
      * Bundled SVG FontAwsome stop-circle icon.
      */
     public static final String FONTAWESOME_STOP_CIRCLE_SVG = FONTAWESOME_FOLDER + "stop-circle.svg";
+
+    /**
+     * Bundled CSS with fill white to use with SVG icons.
+     */
+    public static final String FILL_WHITE_SVG_CSS = SVG_CSS_FOLDER + "fill.white.css";
+
+    /**
+     * Bundled CSS with fill red to use with SVG icons.
+     */
+    public static final String FILL_RED_SVG_CSS = SVG_CSS_FOLDER + "fill.red.css";
 
     private IconResources() {
         //

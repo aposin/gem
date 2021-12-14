@@ -80,7 +80,7 @@ public final class ThemeIconRegistry {
         registerIconById(CliProgressMonitorDialog.COMPLETED_ICON_ID,
                 getOrCreateCoreIcon(IconResources.FONTAWESOME_STOP_CIRCLE_SVG));
         registerIconById(CliProgressMonitorDialog.FAILED_ICON_ID,
-                getOrCreateCoreIcon(IconResources.FONTAWESOME_BAN_SVG));
+                getOrCreateStyledCoreIcon(IconResources.FONTAWESOME_BAN_SVG, IconResources.FILL_RED_SVG_CSS));
     }
 
     /**
@@ -94,6 +94,14 @@ public final class ThemeIconRegistry {
                     Activator.getResource(location), //
                     null, // default to bare icon
                     ThemeConstants.STYLESHEET_MAP));
+    }
+
+    private IGemIcon getOrCreateStyledCoreIcon(final String resourceLocation, final String styleResourceLocation) {
+        final String id = styleResourceLocation + "." + resourceLocation;
+        return sharedCoreIcons.computeIfAbsent(id, //
+                currentId -> new GemSvgIcon(currentId, //
+                        Activator.getResource(resourceLocation), //
+                        Activator.getResource(styleResourceLocation)));
     }
 
     /**
