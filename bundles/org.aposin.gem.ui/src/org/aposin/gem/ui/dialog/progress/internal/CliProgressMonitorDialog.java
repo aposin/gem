@@ -16,16 +16,23 @@
 package org.aposin.gem.ui.dialog.progress.internal;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.aposin.gem.core.api.workflow.ICommand;
 import org.aposin.gem.ui.message.Messages;
+import org.aposin.gem.ui.theme.ThemeConstants;
+import org.aposin.gem.ui.theme.ThemeIconRegistry;
+import org.aposin.gem.ui.theme.icons.IGemIcon;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -33,15 +40,19 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 public class CliProgressMonitorDialog extends ProgressMonitorDialog {
+
+    public static final String RUNNING_ICON_ID = CliProgressMonitorDialog.class.getSimpleName() + "_running";
+    public static final String COMPLETED_ICON_ID = CliProgressMonitorDialog.class.getSimpleName() + "_completed";
+    public static final String FAILED_ICON_ID = CliProgressMonitorDialog.class.getSimpleName() + "_failed";
+
+    private static final int ICON_SIZE = 10;
 
     // init the console font
     private static final String CONSOLE_FONT_KEY = "CliProgressMonitorDialog_font";
@@ -62,7 +73,9 @@ public class CliProgressMonitorDialog extends ProgressMonitorDialog {
     private final Messages messages;
     // required to clean cursors
     private Button commandDetailsButton;
-    private Cursor commandDetailsButtonCursor;
+    // required to clean cursors (commandDetailsButton and cliComponent)
+    private final Map<Control, Cursor> controlsWithCursors = new HashMap<>(2);
+    private Map<ICommand, CTabItem> commandsMap = new HashMap<>();
 
     public CliProgressMonitorDialog(final Shell parent, final Messages messages, final List<ICommand> commands) {
         super(parent);
@@ -111,13 +124,17 @@ public class CliProgressMonitorDialog extends ProgressMonitorDialog {
 
     @Override
     protected void clearCursors() {
-        if (commandDetailsButton != null) {
-            commandDetailsButton.setCursor(null);
-        }
-        if (commandDetailsButtonCursor != null) {
-            commandDetailsButtonCursor.dispose();
-        }
+        controlsWithCursors.forEach(this::clearCursor);
         super.clearCursors();
+    }
+
+    private void clearCursor(final Control control, final Cursor cursor) {
+        if (control != null) {
+            control.setCursor(null);
+        }
+        if (cursor != null) {
+            cursor.dispose();
+        }
     }
 
     /**
@@ -127,15 +144,8 @@ public class CliProgressMonitorDialog extends ProgressMonitorDialog {
     protected Control createDialogArea(final Composite parent) {
         final Composite createDialogArea = (Composite) super.createDialogArea(parent);
         createCommandDetailsButton(parent);
-        final Composite cmdTextCompositeParent = new Composite(parent, SWT.NONE);
-        cmdTextCompositeParent.setLayout(new GridLayout(2, false));
-        GridDataFactory.fillDefaults().grab(true, true).span(2, 1).exclude(true).applyTo(cmdTextCompositeParent);
-        addToggleListener(cmdTextCompositeParent);
-        for (final ICommand cmd : commands) {
-            new Text(cmdTextCompositeParent, SWT.BORDER).setText(cmd.getCommandScope().getDisplayName());
-            createCommandLineStyledText(cmdTextCompositeParent, cmd);
-        }
-
+        final Composite cliComponent = createCommandTabFolder(parent);
+        addToggleListener(cliComponent);
         return createDialogArea;
     }
 
@@ -147,8 +157,51 @@ public class CliProgressMonitorDialog extends ProgressMonitorDialog {
         commandDetailsButton = new Button(composite, SWT.TOGGLE);
         commandDetailsButton.setText(IDialogConstants.SHOW_DETAILS_LABEL);
         // create cursor
-        final Cursor buttonCursor = new Cursor(commandDetailsButton.getDisplay(), SWT.CURSOR_ARROW);
-        commandDetailsButton.setCursor(buttonCursor);
+        setArrowCursor(commandDetailsButton);
+
+    }
+
+    private void setArrowCursor(final Control control) {
+        final Cursor buttonCursor = new Cursor(control.getDisplay(), SWT.CURSOR_ARROW);
+        control.setCursor(buttonCursor);
+        controlsWithCursors.put(control, buttonCursor);
+    }
+
+    private Composite createCommandTabFolder(final Composite parent) {
+        final CTabFolder tabFolder = new CTabFolder(parent, SWT.TOP);
+        tabFolder.setUnselectedImageVisible(true);
+        GridDataFactory.fillDefaults().grab(true, true).hint(0, 100).span(2, 1).exclude(true).applyTo(tabFolder);
+        for (final ICommand cmd : commands) {
+            CTabItem item = new CTabItem(tabFolder, SWT.BORDER);
+            item.setText(cmd.getCommandScope().getDisplayName());
+            IGemIcon icon = ThemeIconRegistry.getInstance().getIconById(RUNNING_ICON_ID);
+            // use default theme cause the tabbed dropdown cannot be styled
+            item.setImage(icon.getImage(ThemeConstants.DEFAULT_THEME_ID, ICON_SIZE, ICON_SIZE));
+            StyledText cmdStyledText = createCommandLineStyledText(tabFolder, cmd);
+            item.setControl(cmdStyledText);
+            commandsMap.put(cmd, item);
+        }
+        tabFolder.setSelection(0);
+        setArrowCursor(tabFolder);
+        return tabFolder;
+    }
+
+    public void setCommandCompletedImage(final ICommand command) {
+        setTabItemIcon(command, COMPLETED_ICON_ID);
+    }
+
+    public void setCommandFailedImage(final ICommand command) {
+        setTabItemIcon(command, FAILED_ICON_ID);
+    }
+
+    private void setTabItemIcon(final ICommand command, final String iconId) {
+        final CTabItem item = commandsMap.get(command); //
+        item.getDisplay().syncExec(() -> {
+            IGemIcon icon = ThemeIconRegistry.getInstance().getIconById(iconId);
+            // use default theme cause the tabbed dropdown cannot be styled
+            item.setImage(icon.getImage(ThemeConstants.DEFAULT_THEME_ID, ICON_SIZE, ICON_SIZE));
+            item.getParent().redraw();
+        });
     }
 
     private void addToggleListener(final Composite toggledComposite) {
@@ -181,7 +234,6 @@ public class CliProgressMonitorDialog extends ProgressMonitorDialog {
             final ICommand command) {
         final StyledText styledText = new StyledText(parent,
                 SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.READ_ONLY);
-        GridDataFactory.fillDefaults().grab(true, true).hint(0, 100).span(2, 1).applyTo(styledText);
         styledText.setBackground(styledText.getDisplay().getSystemColor(SWT.COLOR_BLACK));
         styledText.setForeground(styledText.getDisplay().getSystemColor(SWT.COLOR_GRAY));
         styledText.setFont(JFaceResources.getFont(CONSOLE_FONT_KEY));

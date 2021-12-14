@@ -59,6 +59,16 @@ public final class GemSvgIcon extends AbstractGemIcon {
     }
 
     /**
+     * Constructor for an icon with a style without theme support/requirements.
+     * 
+     * @param iconId
+     * @param iconPath
+     */
+    public GemSvgIcon(final String iconId, final URI iconPath, final URI defaultStyle) {
+        this(iconId, iconPath, defaultStyle, Collections.emptyMap());
+    }
+
+    /**
      * Constructor for an icon with icon css-styles per-theme.
      * 
      * @param iconId

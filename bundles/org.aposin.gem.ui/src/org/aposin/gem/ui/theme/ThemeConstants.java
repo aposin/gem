@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.aposin.gem.ui.Activator;
+import org.aposin.gem.ui.theme.icons.IconResources;
 
 /**
  * Constants for the dark theme.
@@ -44,7 +45,7 @@ public class ThemeConstants {
      * Bundled stylesheet for SVGs.
      */
     public static final URI SVG_DARKTHEME_STYLESHEET =
-            Activator.getResource("css/svg/fill.white.css");
+            Activator.getResource(IconResources.FILL_WHITE_SVG_CSS);
 
     /**
      * Stylesheet map for core themes.

@@ -22,6 +22,7 @@ import org.aposin.gem.core.api.INamedObject;
 import org.aposin.gem.core.impl.service.launcher.GitFeatureBranchLauncherProvider;
 import org.aposin.gem.core.impl.service.launcher.OpenEnvironmentLauncherProvider;
 import org.aposin.gem.ui.Activator;
+import org.aposin.gem.ui.dialog.progress.internal.CliProgressMonitorDialog;
 import org.aposin.gem.ui.process.launcher.CopyToClipboardLauncher;
 import org.aposin.gem.ui.process.launcher.NullLauncher;
 import org.aposin.gem.ui.process.service.MisconfiguredLauncherProvider;
@@ -73,6 +74,13 @@ public final class ThemeIconRegistry {
                 getOrCreateCoreIcon(IconResources.FONTAWESOME_EXCLAMATION_SVG));
         registerIconByName(NullLauncher.NAME, //
                 getOrCreateCoreIcon(IconResources.FONTAWESOME_EXCLAMATION_SVG));
+        // CliProgressmonitorDialog icons
+        registerIconById(CliProgressMonitorDialog.RUNNING_ICON_ID,
+                getOrCreateCoreIcon(IconResources.FONTAWESOME_PLAY_CIRCLE_SVG));
+        registerIconById(CliProgressMonitorDialog.COMPLETED_ICON_ID,
+                getOrCreateCoreIcon(IconResources.FONTAWESOME_STOP_CIRCLE_SVG));
+        registerIconById(CliProgressMonitorDialog.FAILED_ICON_ID,
+                getOrCreateStyledCoreIcon(IconResources.FONTAWESOME_BAN_SVG, IconResources.FILL_RED_SVG_CSS));
     }
 
     /**
@@ -86,6 +94,14 @@ public final class ThemeIconRegistry {
                     Activator.getResource(location), //
                     null, // default to bare icon
                     ThemeConstants.STYLESHEET_MAP));
+    }
+
+    private IGemIcon getOrCreateStyledCoreIcon(final String resourceLocation, final String styleResourceLocation) {
+        final String id = styleResourceLocation + "." + resourceLocation;
+        return sharedCoreIcons.computeIfAbsent(id, //
+                currentId -> new GemSvgIcon(currentId, //
+                        Activator.getResource(resourceLocation), //
+                        Activator.getResource(styleResourceLocation)));
     }
 
     /**
