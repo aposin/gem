@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning (SemVer)](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+* Feature Branch Provider for different JIRA instances
+* Support for customize sorting og Feature Branch Providers
+* Obsolete Environment cleanup dialog have a checkbox to select/unselect all of them
+
+### Changed
+
+* Unquoted system properties in OOMPH/Eclipse configuration is not supported anymore (only HOCON-based substitution is allowed)
+* Command-line details on progress dialogs is shown now with tabs for each command instead of of pileup consoles
+
+### Fixed
+
+* GEM configuration failing on startup/refresh crash the application as expected
+* Obsolete Environment cleanup dialog is updated after deletion
+
 ## [0.4.0]
 
 ### Added
