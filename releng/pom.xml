@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.aposin.gem</groupId>
 		<artifactId>org.aposin.gem.root</artifactId>
-		<version>0.4.1-SNAPSHOT</version>
+		<version>0.4.2-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>org.aposin.gem.releng</artifactId>
