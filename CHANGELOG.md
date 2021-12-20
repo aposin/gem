@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning (SemVer)](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.1]
+
 ### Added
 
 * Feature Branch Provider for different JIRA instances
@@ -50,5 +52,6 @@ First pre-release.
 
 
 [Unreleased]: https://github.com/aposin/gem/tree/main
+[0.4.1]: https://github.com/aposin/gem/releases/tag/v0.4.1
 [0.4.0]: https://github.com/aposin/gem/releases/tag/v0.4.0
 [0.3.0]: https://github.com/aposin/gem/releases/tag/v0.3.0
