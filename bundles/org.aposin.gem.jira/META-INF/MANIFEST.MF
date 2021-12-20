@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GEM JIRA Integration
 Bundle-SymbolicName: org.aposin.gem.jira;singleton:=true
-Bundle-Version: 0.4.1.qualifier
+Bundle-Version: 0.4.2.qualifier
 Automatic-Module-Name: org.aposin.gem.jira
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.aposin.gem.core,

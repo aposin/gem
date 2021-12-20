@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.aposin.gem</groupId>
 		<artifactId>org.aposin.gem.products</artifactId>
-		<version>0.4.1-SNAPSHOT</version>
+		<version>0.4.2-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>org.aposin.gem.product</artifactId>
