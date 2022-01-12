@@ -53,11 +53,13 @@ public final class ExecUtils {
      * Similar to {@link Runtime#exec(String[])}, but discarding stdout/stderr.
      * 
      * @param cmdArgs command and arguments tokenized and quoted if required.
+     * @param directory the process working directory.
      * @return running process.
      * @throws IOException if the command fails to launch
      */
-    public static Process exec(final List<String> cmdArgs) throws IOException {
+    public static Process exec(final List<String> cmdArgs, Path directory) throws IOException {
         return new ProcessBuilder(cmdArgs) //
+            .directory(directory == null ? null : directory.toFile())
             .redirectOutput(Redirect.DISCARD) //
             .redirectError(Redirect.DISCARD) //
             .start();
