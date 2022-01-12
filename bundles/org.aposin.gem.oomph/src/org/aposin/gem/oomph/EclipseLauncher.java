@@ -178,7 +178,7 @@ public class EclipseLauncher extends AbstractNoParamsLauncher implements IConfig
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Eclipse command: '{}'", cmd.stream().collect(Collectors.joining(" ")));
             }
-            ExecUtils.exec(cmd);
+            ExecUtils.exec(cmd, eclipseFolder);
         } catch (final IOException e) {
             LOGGER.error("Could not start Eclipse.", e);
             throw new GemException("Could not start eclipse.", e);
