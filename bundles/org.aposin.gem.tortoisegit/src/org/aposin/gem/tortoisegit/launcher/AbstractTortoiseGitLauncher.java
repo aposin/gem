@@ -111,7 +111,7 @@ abstract class AbstractTortoiseGitLauncher implements ILauncher {
         try {
             final List<String> arguments = getCommonArguments();
             arguments.addAll(extraArguments);
-            ExecUtils.exec(arguments, null);
+            ExecUtils.exec(arguments);
         } catch (final IOException e) {
             throw new GemException("Error running TortoiseGit", e);
         }

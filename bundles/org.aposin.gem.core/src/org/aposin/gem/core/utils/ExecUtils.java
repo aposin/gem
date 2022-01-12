@@ -53,6 +53,19 @@ public final class ExecUtils {
      * Similar to {@link Runtime#exec(String[])}, but discarding stdout/stderr.
      * 
      * @param cmdArgs command and arguments tokenized and quoted if required.
+     * @return running process.
+     * @throws IOException if the command fails to launch
+     */
+    public static Process exec(final List<String> cmdArgs) throws IOException {
+        return exec(cmdArgs, null);
+    }
+
+    /**
+     * Executes the specified command and arguments in a separate process.
+     * </br>
+     * Similar to {@link Runtime#exec(String[])}, but discarding stdout/stderr.
+     * 
+     * @param cmdArgs command and arguments tokenized and quoted if required.
      * @param directory the process working directory.
      * @return running process.
      * @throws IOException if the command fails to launch
