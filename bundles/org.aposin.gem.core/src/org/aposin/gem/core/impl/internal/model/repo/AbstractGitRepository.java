@@ -228,7 +228,7 @@ public abstract class AbstractGitRepository
     @Override
     public final ICommand buildCloneCommand() {
         final ProcessExecutor executor = newDefaultProcessExecutor()//
-                .command(// e.g., "git clone git@github.com:aposin/gem.git C:/dev/gem/repos"
+                .command(// e.g., "git clone git@github.com:allianz/gem.git C:/dev/gem/repos"
                         gitBinaryString(), "clone", //
                         getRepository().getUrl(), // <remote>
                         getRepository().getDestinationLocation().toString()); // <location>

@@ -16,6 +16,7 @@
 package org.aposin.gem.ui.lifecycle.event;
 
 import java.util.Objects;
+
 import org.aposin.gem.core.api.workflow.IFeatureBranch;
 import org.aposin.gem.ui.lifecycle.Session;
 

@@ -138,11 +138,11 @@ This extension provides integration with TortoiseGit to perform different action
 The product delivered on this repository contains:
 
 * All the extensions described in this document.
-* Configuration based on the link:https://github.com/aposin/gem-config[gem-config example repository].
+* Configuration based on the link:https://github.com/allianz/gem-config[gem-config example repository].
 
 To configure your own product, there are different options:
 
-* Modify the GEM.ini file to point to your own configuration files (see the link:https://github.com/aposin/gem-config[gem-config example repository] as a starting point).
+* Modify the GEM.ini file to point to your own configuration files (see the link:https://github.com/allianz/gem-config[gem-config example repository] as a starting point).
   This will include the basic GEM plus the extras provided in this repository.
 * Create your own product with the desired plug-ins/features.
   This will allow to use extensions that are not included in the default product (e.g., customized plug-ins) and have a different hardcoded configuration on the ini file.

@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning (SemVer)](http://semver.org/).
 First pre-release.
 
 
-[Unreleased]: https://github.com/aposin/gem/tree/main
-[0.4.1]: https://github.com/aposin/gem/releases/tag/v0.4.1
-[0.4.0]: https://github.com/aposin/gem/releases/tag/v0.4.0
-[0.3.0]: https://github.com/aposin/gem/releases/tag/v0.3.0
+[Unreleased]: https://github.com/allianz/gem/tree/main
+[0.4.1]: https://github.com/allianz/gem/releases/tag/v0.4.1
+[0.4.0]: https://github.com/allianz/gem/releases/tag/v0.4.0
+[0.3.0]: https://github.com/allianz/gem/releases/tag/v0.3.0
