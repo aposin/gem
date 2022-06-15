@@ -1,9 +1,9 @@
 # Git Environment Manager (GEM)
-[![Build](https://github.com/aposin/gem/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/aposin/gem/actions/workflows/build.yml?query=branch%3Amain+event%3Apush)
-[![CodeQL](https://github.com/aposin/gem/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/aposin/gem/actions/workflows/codeql-analysis.yml?query=branch%3Amain+event%3Apush)
+[![Build](https://github.com/allianz/gem/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/allianz/gem/actions/workflows/build.yml?query=branch%3Amain+event%3Apush)
+[![CodeQL](https://github.com/allianz/gem/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/allianz/gem/actions/workflows/codeql-analysis.yml?query=branch%3Amain+event%3Apush)
 ![GitHub top language](https://img.shields.io/github/languages/top/aposin/gem.svg)
 [![CLA assistant](https://cla-assistant.io/readme/badge/aposin/gem)](https://cla-assistant.io/aposin/gem)
-[![GitHub](https://img.shields.io/github/license/aposin/gem.svg)](https://github.com/aposin/gem/blob/main/LICENSE)
+[![GitHub](https://img.shields.io/github/license/aposin/gem.svg)](https://github.com/allianz/gem/blob/main/LICENSE)
 
 GEM (Git Environment Manager) is a git branch manager which:
 
@@ -63,4 +63,4 @@ In addition to update the version numbers, the product file should point again t
 
 
 
-[gem-config]: https://github.com/aposin/gem-config
+[gem-config]: https://github.com/allianz/gem-config

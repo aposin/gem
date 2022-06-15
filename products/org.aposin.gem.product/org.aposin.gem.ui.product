@@ -9,7 +9,7 @@
    <launcherArgs>
       <vmArgs>-Xmx75M
 -Dswt.autoScale=true
--Dorg.aposin.gem.gitconfig.url=git@github.com:aposin/gem-config.git
+-Dorg.aposin.gem.gitconfig.url=git@github.com:allianz/gem-config.git
 -Dorg.aposin.gem.gitconfig.branch=main
 -Dorg.aposin.gem.gitconfig.file=root.conf
       </vmArgs>
